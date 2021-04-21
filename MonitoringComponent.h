@@ -3,6 +3,7 @@
 #include "Ref.h"
 
 using namespace std;
+
 namespace MonitoringComponents {
 	enum class RegisterType {
 		Holding,
@@ -40,7 +41,7 @@ namespace MonitoringComponents {
 
 	private:
 		Ref<MonitoringComponent> _parent;
-		vector<Ref<MonitoringComponent>> _children;
+		std::vector<Ref<MonitoringComponent>> _children;
 		bool _isLooping;
 
 		void loopChildren() {

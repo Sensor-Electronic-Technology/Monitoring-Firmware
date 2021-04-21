@@ -1,9 +1,6 @@
 #pragma once
-#include "Definitions.h"
 #include "Ref.h"
 #include <ArduinoSTL.h>
-
-using namespace  std;
 
 namespace MonitoringComponents {
 
@@ -115,7 +112,7 @@ namespace MonitoringComponents {
         float zeroValue;
         float maxValue;
         int analogFactor;
-        vector<Alert> alerts;
+        std::vector<Alert> alerts;
         bool bypassAlerts;
     };
 

@@ -1,5 +1,11 @@
 #include "ConfigurationReader.h"
 
+#define AnalogFile              "analog.txt"
+#define OutputFile              "output.txt"
+#define DigitalFile             "digital.txt"
+#define ModuleFile              "module.txt"
+#define SizeFile                "size.txt"
+#define LOG_FILENAME            "log.txt"
 
 namespace MonitoringComponents {
 
