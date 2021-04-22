@@ -6,6 +6,7 @@
 #include "Callbacks.h"
 #include "MonitoringComponent.h"
 #include "Configuration.h"
+#include "ArduinoSTL.h"
 
 namespace MonitoringComponents {
 	class DiscreteInputChannel :public MonitoringComponent {
@@ -24,6 +25,12 @@ namespace MonitoringComponents {
 		bool isTriggered();
 
 		void OnTrigger(VoidCallback cbk);
+
+		virtual void Print() override{
+			cout << "Channel: " << this->configuration.channel;
+			cout << " Slot: "<<this->configuration.slot;
+			cout << " Register: " << this->configuration._register << endl;;
+		}
 
 	private:
 		ModuleDiscreteInput inputPin;

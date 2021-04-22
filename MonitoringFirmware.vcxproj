@@ -117,10 +117,12 @@
     <ClInclude Include="DiscreteOuputChannel.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="IO.h" />
+    <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAnalogInput.h" />
     <ClInclude Include="ModuleDiscreteInput.h" />
     <ClInclude Include="ModuleDiscreteOutput.h" />
     <ClInclude Include="MonitoringComponent.h" />
+    <ClInclude Include="MonitoringController.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="UniquePtr.h" />
     <ClInclude Include="Vector.h" />
@@ -130,11 +132,14 @@
     <ClCompile Include="AnalogInputChannel.cpp" />
     <ClCompile Include="ConfigurationReader.cpp" />
     <ClCompile Include="DiscreteInputChannel.cpp" />
+    <ClCompile Include="DiscreteInputModule.cpp" />
     <ClCompile Include="DiscreteOuputChannel.cpp" />
     <ClCompile Include="IO.cpp" />
+    <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleAnalogInput.cpp" />
     <ClCompile Include="ModuleDiscreteInput.cpp" />
     <ClCompile Include="ModuleDiscreteOutput.cpp" />
+    <ClCompile Include="MonitoringController.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
@@ -144,7 +149,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM9" />
+      <UserProperties arduino.upload.port="COM4" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

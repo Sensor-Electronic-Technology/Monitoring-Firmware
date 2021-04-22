@@ -27,32 +27,39 @@ namespace MonitoringComponents {
         this->ModuleSize = 0;
     }
 
+    void ConfigurationReader::PrintSizes() {
+        std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
+        std::cout << OutputFile << " " << this->OutputSize << std::endl;
+        std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
+        std::cout << ModuleFile << " " << this->ModuleSize << std::endl;
+    }
+
     void ConfigurationReader::GetFileSizes() {
+        std::cout << "Opening File" << std::endl;
         File file = SD.open("size.txt");
         String value = "";
         int lineCount = 0;
         if (file) {
+            std::cout << "File Opened" << std::endl;
             char ch;
             while (file.available()) {
                 ch = file.read();
                 if (ch == '\n') {
-                    this->logger->_serialLog->println("Value: " + value);
+                    //this->logger->_serialLog->println("Value: " + value);
+                    std::cout << "Value: " << value << std::endl;
                     this->SetSize(lineCount, value.toInt());
                     lineCount++;
                     value = "";
                     if (lineCount > 4) {
                         break;
                     }
-                }
-                else {
+                }else {
                     value += ch;
                 }
             }
-            this->logger->_serialLog->println(F("Closing Size File"));
             file.close();
-        }
-        else {
-            this->logger->error(F("Error: Could not open file!"));
+        }else {
+            std::cout << "File Open Failed" << std::endl;
         }
     }
 
@@ -83,13 +90,6 @@ namespace MonitoringComponents {
         return true;
     }
 
-    void ConfigurationReader::PrintSizes() {
-        this->logger->_serialLog->println("Digital: " + String(this->DigitalInSize));
-        this->logger->_serialLog->println("Analog: " + String(this->AnalogInSize));
-        this->logger->_serialLog->println("Module: " + String(this->ModuleSize));
-        this->logger->_serialLog->println("Output: " + String(this->OutputSize));
-    }
-
     std::vector<AnalogInputChannel> ConfigurationReader::DeserializeAnalogConfig() {
         if (this->AnalogInSize > 0) {
             DynamicJsonDocument doc(this->AnalogInSize);
@@ -102,15 +102,15 @@ namespace MonitoringComponents {
                 }else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
-                        int chan = elem[F("Input")]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...
-                        int reg = elem[F("Register")]; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...
-                        int slot = elem[F("Module Slot")]; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...
+                        int chan = elem[F("Input")]; 
+                        int reg = elem[F("Register")]; 
+                        int slot = elem[F("Module Slot")];
                         bool connected = elem[F("Connected")];
                         AnalogInConfiguration config(chan, slot, reg, connected);
-                        config.zeroValue = elem[F("ZeroValue")]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        config.maxValue = elem[F("MaxValue")]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        config.analogFactor = elem[F("AnalogFactor")]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        config.bypassAlerts = elem[F("BypassAlerts")]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        config.zeroValue = elem[F("ZeroValue")]; 
+                        config.maxValue = elem[F("MaxValue")]; 
+                        config.analogFactor = elem[F("AnalogFactor")]; 
+                        config.bypassAlerts = elem[F("BypassAlerts")];
                         config.alerts.reserve(3);
                         JsonObject A1 = elem[F("A1")];
                         config.alerts[0].setpoint = A1[F("Setpoint")];
@@ -154,8 +154,7 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
-                    this->logger->_serialLog->println(F("OutputFile Deserializejson error: "));
-                    this->logger->_serialLog->println(error.f_str());
+
                     //log error
                     return outputChannels;
                 }
@@ -172,28 +171,18 @@ namespace MonitoringComponents {
                         config.startState=(LogicType)elem["Start State"];
                         config.outputType=(OutputType)elem["Type"]; 
                         config.action = (OutputAction)elem[F("Action")]; 
-                        config.connected = elem[F("Connected")]; 
-                        outputChannels.push_back(config);
-                        String str = String(Map_To_Channel);
-                        char* temp=strtok((char*)Map_To_Channel, ",");
-                        int i = 0;
-                        while (temp != NULL) {
-                            int val = String(temp).toInt();
+
+                        string str= std::string(Map_To_Channel);
+                        string delimiter = ",";
+                        size_t pos = 0;
+                        string token;
+                        while ((pos = str.find(delimiter)) != std::string::npos) {
+                            token = str.substr(0, pos);
+                            int val = String(token.c_str()).toInt();
                             config.channelMaps.push_back(val);
-                            temp = strtok(NULL, ",");
+                            str.erase(0, pos + delimiter.length());
                         }
-
-
-                        //int Output = elem["Output"]; // 1, 2, 3, 4, 5, 6, 7, 8
-                        //int Module_Slot = elem["Module Slot"]; // 2, 2, 2, 2, 2, 2, 2, 2
-
-                        //int Register_Coil = elem["Register"; // 0, 1, 2, 3, 4, 5, 6, 7
-
-                        //int Start_State = elem["Start State"]; // 0, 0, 1, 1, 1, 1, 1, 1
-                        //int Type = elem["Type"]; // 0, 0, 0, 3, 3, 3, 3, 3
-                        //int Action = elem["Action"]; // 4, 3, 2, 1, 0, 0, 0, 0
-                        //const char* Map_To_Channel = elem["Map To Channel"]; // "0", "0", "0", "4,5,6,7,8", "0", "0", "0", "0"
-                        //int Connected = elem["Connected"]; // 1, 1, 1, 1, 0, 0, 0, 0
+                        outputChannels.push_back(config);
                     }
                     file.close();
                     return outputChannels;
@@ -217,9 +206,9 @@ namespace MonitoringComponents {
                 else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
-                        int chan = elem[F("Input")]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...
+                        int chan = elem[F("Input")];
                         int slot = elem[F("Module Slot")];
-                        int reg = elem[F("Coil")]; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...
+                        int reg = elem[F("Coil")];
                         bool connected = elem[F("Connected")];
                         DigitalInConfiguration config(chan,slot, reg, connected);
                         config.Logic = (LogicType)elem[F("Logic")];
@@ -231,19 +220,6 @@ namespace MonitoringComponents {
                         alert.enabled = Alert[F("Enabled")];
                         alert.prioirty = AlertPriority::Highest;
                         config.alert = alert;
-                        //NEW
-                        //int Input = elem["Input"]; // 1, 2, 3, 4, 5, 6, 7, 8
-                        //int Module_Slot = elem["Module Slot"]; // 1, 1, 1, 1, 1, 1, 1, 1
-                        //int Coil = elem["Coil"]; // 0, 1, 2, 3, 4, 5, 6, 7
-                        //int Logic = elem["Logic"]; // 1, 0, 0, 1, 0, 1, 1, 0
-                        //int Connected = elem["Connected"]; // 1, 1, 1, 1, 1, 1, 1, 1
-
-                        //JsonObject Alert = elem["Alert"];
-                        //int Alert_Setpoint = Alert["Setpoint"]; // 0, 0, 0, 0, 0, 0, 0, 0
-                        //int Alert_Action = Alert["Action"]; // 4, 4, 0, 0, 3, 4, 4, 3
-                        //int Alert_Bypass = Alert["Bypass"]; // 1, 1, 1, 1, 1, 1, 1, 1
-                        //int Alert_Enabled = Alert["Enabled"]; // 0, 0, 0, 0, 0, 0, 0, 0
-
                         digitalChannels.push_back(DiscreteInputChannel(config));
                     }
                     file.close();

@@ -28,6 +28,8 @@ namespace MonitoringComponents {
 			}
 		}
 
+		virtual void Print() = 0;
+
 	protected:
 
 		void SkipLoop() {
@@ -63,5 +65,6 @@ namespace MonitoringComponents {
 		}
 
 		virtual void privateLoop() = 0;
+		
 	};
 };

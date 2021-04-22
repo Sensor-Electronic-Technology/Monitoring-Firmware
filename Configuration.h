@@ -61,7 +61,7 @@ namespace MonitoringComponents {
         Configuration():channel(0),slot(0),_register(0),connected(false) {   }
 
         Configuration(int channel, int slot, int reg, bool connected)
-            :channel(channel), slot(slot), _register(_register), connected(connected) {   }
+            :channel(channel), slot(slot), _register(reg), connected(connected) {   }
 
         const Configuration& operator=(const Configuration& rhs) {
             this->channel = rhs.channel;

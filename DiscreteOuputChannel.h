@@ -16,7 +16,12 @@ namespace MonitoringComponents {
 			//this->triggerOn = (this->configuration.Logic == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
 			this->triggered = false;
 		}
-		DiscreteOutputChannel():MonitoringComponent(nullptr){}
+
+		void Print() {
+			cout << "Channel: " << this->configuration.channel;
+			cout << " Slot: " << this->configuration.slot;
+			cout << " Register: " << this->configuration._register << endl;
+		}
 
 		void Init();
 		bool isOn();
