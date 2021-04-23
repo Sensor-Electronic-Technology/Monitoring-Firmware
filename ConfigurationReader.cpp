@@ -28,10 +28,10 @@ namespace MonitoringComponents {
     }
 
     void ConfigurationReader::PrintSizes() {
-        std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
-        std::cout << OutputFile << " " << this->OutputSize << std::endl;
-        std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
-        std::cout << ModuleFile << " " << this->ModuleSize << std::endl;
+        //std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
+        //std::cout << OutputFile << " " << this->OutputSize << std::endl;
+        //std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
+        //std::cout << ModuleFile << " " << this->ModuleSize << std::endl;
     }
 
     void ConfigurationReader::GetFileSizes() {
@@ -46,7 +46,6 @@ namespace MonitoringComponents {
                 ch = file.read();
                 if (ch == '\n') {
                     //this->logger->_serialLog->println("Value: " + value);
-                    std::cout << "Value: " << value << std::endl;
                     this->SetSize(lineCount, value.toInt());
                     lineCount++;
                     value = "";
@@ -59,7 +58,7 @@ namespace MonitoringComponents {
             }
             file.close();
         }else {
-            std::cout << "File Open Failed" << std::endl;
+            //std::cout << "File Open Failed" << std::endl;
         }
     }
 
@@ -193,17 +192,16 @@ namespace MonitoringComponents {
         }
     }
 
-    std::vector<DiscreteInputChannel> ConfigurationReader::DeserializeDigitalConfig() {
+    std::vector<DigitalInConfiguration> ConfigurationReader::DeserializeDigitalConfig() {
         if (this->DigitalInSize > 0) {
             DynamicJsonDocument doc(this->DigitalInSize);
-            std::vector<DiscreteInputChannel>  digitalChannels;
+            std::vector<DigitalInConfiguration>  configurations;
             File file = SD.open(DigitalFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
-                    return digitalChannels;
-                }
-                else {
+                    return configurations;
+                }else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
                         int chan = elem[F("Input")];
@@ -220,13 +218,13 @@ namespace MonitoringComponents {
                         alert.enabled = Alert[F("Enabled")];
                         alert.prioirty = AlertPriority::Highest;
                         config.alert = alert;
-                        digitalChannels.push_back(DiscreteInputChannel(config));
+                        configurations.push_back(config);
                     }
                     file.close();
-                    return digitalChannels;
+                    return configurations;
                 }
             }else {
-                return digitalChannels;
+                return configurations;
             }
         }
     }

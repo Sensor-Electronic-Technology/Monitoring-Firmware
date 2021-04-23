@@ -47,21 +47,14 @@ namespace MonitoringComponents {
 		bool _isLooping;
 
 		void loopChildren() {
-			for (auto child : _children) {
-				child->loop();
+			for (int i = 0; i < _children.size(); i++) {
+				_children[i]->loop();
+				//_children[i]->loop();
 				if (!_isLooping) {
 					SkipLoop();
 					return;
 				}
 			}
-			//for (int i = 0; i < _children.size(); i++) {
-			//	_children[i]->loop();
-			//	//_children[i]->loop();
-			//	if (!_isLooping) {
-			//		SkipLoop();
-			//		return;
-			//	}
-			//}
 		}
 
 		virtual void privateLoop() = 0;

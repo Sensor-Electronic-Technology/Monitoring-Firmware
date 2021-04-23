@@ -29,7 +29,7 @@ namespace MonitoringComponents {
 
        std::vector<AnalogInputChannel> DeserializeAnalogConfig();
        std::vector<DiscreteOutputChannel> DeserializeOutputConfig();
-       std::vector<DiscreteInputChannel> DeserializeDigitalConfig();
+       std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
        std::vector<ModuleConfiguration> DeserializeModuleConfig();
 
     private:

@@ -63,6 +63,13 @@ namespace MonitoringComponents {
         Configuration(int channel, int slot, int reg, bool connected)
             :channel(channel), slot(slot), _register(reg), connected(connected) {   }
 
+        Configuration(const Configuration& other) {
+            this->channel = other.channel;
+            this->slot = other.slot;
+            this->_register = other._register;
+            this->connected = other.connected;
+        }
+
         const Configuration& operator=(const Configuration& rhs) {
             this->channel = rhs.channel;
             this->_register = rhs._register;
@@ -74,9 +81,14 @@ namespace MonitoringComponents {
 
     class DigitalInConfiguration :public Configuration {
     public:
-        DigitalInConfiguration():Configuration(){   }
+        DigitalInConfiguration():Configuration(){  }
 
         DigitalInConfiguration(int channel, int slot, int reg, bool connected):Configuration(channel,slot,reg,connected) {  }
+
+        DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
+            this->Logic = other.Logic;
+            this->alert = other.alert;
+        }
 
         const DigitalInConfiguration& operator=(const DigitalInConfiguration& rhs) {
             if (this != &rhs) {

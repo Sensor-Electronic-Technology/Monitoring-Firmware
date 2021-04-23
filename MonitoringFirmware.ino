@@ -14,69 +14,74 @@
 #include <iostream>
 #include <algorithm>
 #include "ConfigurationReader.h"
-#include "Module.h"
+#include "DiscreteInputModule.h"
 
 using namespace MonitoringComponents;
 
 ConfigurationReader reader;
+DiscreteInputModule discreteModule;
+
+
 
 void setup(){
     Serial.begin(38400);
     while (!Serial) { ; }
     if (!SD.begin(SDCARD_SS_PIN)) {
-        cout<<"Error: Could not int SD card"<<endl;
+        //cout<<"Error: Could not int SD card"<<endl;
         while (1);
     }
-    cout << "SD Card Initialized, Initializing Reader" << endl;
+    Serial.println("SD Card Initialized, Initializing Reader");
     reader.Init();
-    cout << "Parsing Channels" << endl;
+    //cout << "Parsing and Configuring Module" << endl;
+    Serial.println("Parsing and Configuring Module");
     vector<Ref<MonitoringComponent>> components;
     auto moduleConfigurations = reader.DeserializeModuleConfig();
-    vector<DiscreteInputChannel> dChannels = reader.DeserializeDigitalConfig();
-    cout << "dChannel.size() " << dChannels.size() << endl;
-    for (auto channel : dChannels) {
-        components.push_back(Ref<MonitoringComponent>(channel));
-    }
-    cout << " Components.size() " << components.size()<<endl;
-    for (auto c : components) {
-        c->Print();
-        cout << "Here" << endl;
-    }
-    cout << "after" << endl;
+    vector<DigitalInConfiguration> configurations=reader.DeserializeDigitalConfig();
+
+    
+    ModuleConfiguration config;
+    config.moduleType = ModuleType::DigitalInput;
+    config.channelCount = 8;
+    config.slot = 1;
+    discreteModule.SetConfig(config);
+    discreteModule.CreateChannels(configurations);
+    discreteModule.Print();
+
+
 }
 
-// Add the main program code into the continuous loop() function
 void loop(){
-
-
+    discreteModule.loop();
+    Serial.println("Loop: delaying for 200ms");
+    delay(200);
 }
 
 void TestFileOpen() {
 
 }
 
-void TestingConfiguration() {
-    Serial.begin(38400);
-    while (!Serial) { ; }
-    if (!SD.begin(SDCARD_SS_PIN)) {
-        cout << "Error: Could not int SD card" << endl;
-        while (1);
-    }
-    cout << "SD Card Initialized, Initializing Reader" << endl;
-    reader.Init();
-    cout << "Parsing Channels" << endl;
-    vector<DiscreteInputChannel> dChannels = reader.DeserializeDigitalConfig();
-    cout << "DiscreteInputs Parsed: " << " VectorSize: " << dChannels.size() << endl;
-    for (auto channel : dChannels) {
-        channel.Print();
-    }
-
-    auto oChannels = reader.DeserializeOutputConfig();
-    cout << "Outputs Parses: " << " VectorSize: " << oChannels.size() << endl;
-    for (auto channel : oChannels) {
-        channel.Print();
-    }
-}
+//void TestingConfiguration() {
+//    Serial.begin(38400);
+//    while (!Serial) { ; }
+//    if (!SD.begin(SDCARD_SS_PIN)) {
+//        cout << "Error: Could not int SD card" << endl;
+//        while (1);
+//    }
+//    cout << "SD Card Initialized, Initializing Reader" << endl;
+//    reader.Init();
+//    cout << "Parsing Channels" << endl;
+//    vector<DiscreteInputChannel> dChannels = reader.DeserializeDigitalConfig();
+//    cout << "DiscreteInputs Parsed: " << " VectorSize: " << dChannels.size() << endl;
+//    for (auto channel : dChannels) {
+//        channel.Print();
+//    }
+//
+//    auto oChannels = reader.DeserializeOutputConfig();
+//    cout << "Outputs Parses: " << " VectorSize: " << oChannels.size() << endl;
+//    for (auto channel : oChannels) {
+//        channel.Print();
+//    }
+//}
 
 void TestParseMapChannels() {
     Serial.begin(38400);
@@ -92,9 +97,9 @@ void TestParseMapChannels() {
     string token;
     while ((pos = str.find(delimiter)) != std::string::npos) {
         token = str.substr(0, pos);
-        cout << "Val: " << token << endl;
+        //cout << "Val: " << token << endl;
         int val = String(token.c_str()).toInt();
-        cout << "Int Val: " << val << endl;
+        //cout << "Int Val: " << val << endl;
         //channelMaps.push_back(std::strtol();
         //strtol()
         //strtol

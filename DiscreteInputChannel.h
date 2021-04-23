@@ -1,35 +1,35 @@
 #pragma once
-
+#include <ArduinoSTL.h>
 #include "ModuleDiscreteInput.h"
 #include "Function.h"
 #include "IO.h"
 #include "Callbacks.h"
 #include "MonitoringComponent.h"
 #include "Configuration.h"
-#include "ArduinoSTL.h"
+
 
 namespace MonitoringComponents {
 	class DiscreteInputChannel :public MonitoringComponent {
 	public:
 
 		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), configuration(configuration),
-			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([]() {})
-		{
+			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([](Ref<DiscreteInputChannel>) {}){
 			this->inputPin = ModuleDiscreteInput(configuration.slot, configuration.channel);
 			this->triggerOn = (this->configuration.Logic == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
 			this->_triggered = false;
+			
 		}
 
-		DiscreteInputChannel() :MonitoringComponent(nullptr), _on_trigger([]() {}) {	}
+		DiscreteInputChannel() :MonitoringComponent(nullptr), _on_trigger([](Ref<DiscreteInputChannel>) {  }) {	}
 
 		bool isTriggered();
 
-		void OnTrigger(VoidCallback cbk);
+		void OnTrigger(DiscreteInputCallBack cbk);
 
 		virtual void Print() override{
-			cout << "Channel: " << this->configuration.channel;
-			cout << " Slot: "<<this->configuration.slot;
-			cout << " Register: " << this->configuration._register << endl;;
+			Serial.print(" Channel: " + String(this->configuration.channel));
+			Serial.print(" Slot: " + String(this->configuration.slot));
+			Serial.println(" Register: " + String(this->configuration._register));
 		}
 
 	private:
@@ -39,7 +39,7 @@ namespace MonitoringComponents {
 		bool _triggered;
 		DigitalInConfiguration configuration;
 
-		VoidCallback _on_trigger;
+		DiscreteInputCallBack _on_trigger;
 
 		void privateLoop();
 	};

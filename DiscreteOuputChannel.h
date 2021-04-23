@@ -18,9 +18,9 @@ namespace MonitoringComponents {
 		}
 
 		void Print() {
-			cout << "Channel: " << this->configuration.channel;
-			cout << " Slot: " << this->configuration.slot;
-			cout << " Register: " << this->configuration._register << endl;
+			//cout << "Channel: " << this->configuration.channel;
+			//cout << " Slot: " << this->configuration.slot;
+			//cout << " Register: " << this->configuration._register << endl;
 		}
 
 		void Init();

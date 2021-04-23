@@ -23,7 +23,7 @@ namespace MonitoringComponents {
 
 		void OnTrigger(VoidCallback cbk);
 		void Print() {
-			std::cout << "Analog Print" << std::endl;
+			//std::cout << "Analog Print" << std::endl;
 		}
 
 	private:

@@ -11,7 +11,8 @@ namespace MonitoringComponents {
 
 		ModuleDiscreteInput(int slot, int channel, State defaultState) :ModuleIOPin(slot, channel), state(defaultState) {}
 
-		ModuleDiscreteInput() :ModuleIOPin(0, 0), state(State::Low) {}		
+		ModuleDiscreteInput() :ModuleIOPin(0, 0), state(State::Low) {}	
+
 		bool isHigh();
 		bool isLow();
 	private:

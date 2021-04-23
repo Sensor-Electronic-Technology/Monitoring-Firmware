@@ -99,11 +99,11 @@
     <ClInclude Include="ConfigurationReader.h">
       <Filter>Header Files\Configuration</Filter>
     </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Header Files\MonitoringComponents</Filter>
-    </ClInclude>
     <ClInclude Include="MonitoringController.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscreteInputModule.h">
+      <Filter>Header Files\MonitoringComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -133,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="DiscreteInputModule.cpp">
       <Filter>Source Files\MonitoringComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Module.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonitoringController.cpp">
       <Filter>Source Files</Filter>
