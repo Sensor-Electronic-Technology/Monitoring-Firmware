@@ -2,8 +2,8 @@
 
 namespace MonitoringComponents {
 
-	void ModuleDiscreteOutput::Init() {
-		State initialOutput = (this->state == State::High) ? State::Low : State::High;
+	void ModuleDiscreteOutput::Init(bool initial) {
+		State initialOutput = (initial) ? State::High : State::Low;
 		this->setOutput(initialOutput);
 	}
 

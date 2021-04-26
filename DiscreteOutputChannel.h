@@ -13,26 +13,21 @@ namespace MonitoringComponents {
 			:MonitoringComponent(parent), configuration(configuration),
 			outputPin(configuration.channel, configuration.slot),
 			modbusAddress({ configuration._register,RegisterType::Input }) {
-			//this->triggerOn = (this->configuration.Logic == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
-			this->triggered = false;
+			this->triggerOn = (this->configuration.triggerOn == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
+			this->outputOn = false;
+			this->initialState = (this->configuration.startState == LogicType::High) ? State::High : State::Low;
 		}
-
-		void Print() {
-			//cout << "Channel: " << this->configuration.channel;
-			//cout << " Slot: " << this->configuration.slot;
-			//cout << " Register: " << this->configuration._register << endl;
-		}
-
 		void Init();
+		void TurnOn();
 		bool isOn();
 		
 	private:
 		ModuleDiscreteOutput outputPin;
 		OutputConfiguration configuration;
 		ModbusAddress modbusAddress;
-		//TriggerOn triggerOn;
-		bool triggered;
-
+		TriggerOn triggerOn;
+		State initialState;
+		bool outputOn;
 		void privateLoop();
 	};
 };

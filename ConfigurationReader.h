@@ -4,7 +4,7 @@
 #include <M2M_Logger.h>
 #include <SD.h>
 #include "AnalogInputChannel.h"
-#include "DiscreteOuputChannel.h"
+#include "DiscreteOutputChannel.h"
 #include "DiscreteInputChannel.h"
 
 
@@ -27,8 +27,8 @@ namespace MonitoringComponents {
         void SetSize(int lineCount, int value);
         void PrintSizes();
 
-       std::vector<AnalogInputChannel> DeserializeAnalogConfig();
-       std::vector<DiscreteOutputChannel> DeserializeOutputConfig();
+       std::vector<AnalogInConfiguration> DeserializeAnalogConfig();
+       std::vector<OutputConfiguration> DeserializeOutputConfig();
        std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
        std::vector<ModuleConfiguration> DeserializeModuleConfig();
 

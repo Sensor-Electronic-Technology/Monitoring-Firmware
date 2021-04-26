@@ -1,57 +1,52 @@
 #pragma once
 #include <ArduinoSTL.h>
 #include "P1AM.h"
-#include "MonitoringComponent.h"
+#include "IModule.h"
 #include "DiscreteInputChannel.h"
-#include "DiscreteOuputChannel.h"
+#include "Timer.h"
 
 namespace MonitoringComponents {
-	struct Initialized {
-		Initialized(bool configSet = false):channelsSet(false), configSet(configSet) {}
-		bool channelsSet;
-		bool configSet ;
-		operator bool() const{
-			return this->channelsSet && this->configSet;
-		} 
-	};
-
-	class IModule :public MonitoringComponent {
-	public:
-		IModule(ModuleConfiguration configuration, Ref<MonitoringComponent> parent = nullptr)
-			:configuration(configuration), slot(configuration.slot), isInitialized(true) {	}
-		IModule(Ref<MonitoringComponent> parent=nullptr):MonitoringComponent(parent),isInitialized(){ }
-		virtual int Slot() = 0;
-	protected:
-		ModuleConfiguration configuration;
-		int slot;
-		Initialized isInitialized;
-	};
-
 	class DiscreteInputModule :public IModule {
 	public:
 		DiscreteInputModule(ModuleConfiguration configuration, Ref<MonitoringComponent> parent = nullptr)
-			:IModule(configuration,parent) {	}
+			:IModule(configuration,parent), _on_channel_trigger([](Ref<DiscreteInputChannel>) {}), _on_channel_clear([](Ref<DiscreteInputChannel>) {}) {
+			this->BuildCallbacks();
+		}
 
 		DiscreteInputModule(Ref<MonitoringComponent> parent = nullptr) 
-			:IModule(parent){}
+			:IModule(parent), _on_channel_trigger([](Ref<DiscreteInputChannel>) {}), _on_channel_clear([](Ref<DiscreteInputChannel>) {}) {
+			this->BuildCallbacks();
+		}
 
 		int Slot();
-
 		void CreateChannels(std::vector<DigitalInConfiguration> channelConfigurations);
-
 		void SetConfig(ModuleConfiguration config);
-
-		void Print();
-
-		/*void OnChannelTrigger(DiscreteInputCallBack cbk);*/
-
+		void Initialize();
+		void OnChannelTrigger(DiscreteInputCallback cbk);
+		void OnChannelClear(DiscreteInputCallback cbk);
 		
 	private:
 		std::vector<DiscreteInputChannel*> channels;
-		//ModuleConfiguration configuration;
-		//int slot;
+		std::vector<int> triggeredChannels;
 		Initialized isInitialized;
+		DiscreteInputCallback _on_channel_trigger;
+		DiscreteInputCallback _on_channel_clear;
+		Timer timer;
 
+		void BuildCallbacks() {
+			OnChannelTrigger([&](Ref<DiscreteInputChannel> channel) {
+				cout << "Channel " << channel->Channel() << " Triggered" << endl;
+				auto found = std::find(triggeredChannels.begin(),triggeredChannels.end(), channel->Channel());
+				if (found == triggeredChannels.end()) {
+					triggeredChannels.push_back(channel->Channel());
+				}
+			});
+
+			OnChannelClear([&](Ref<DiscreteInputChannel> channel) {
+				cout << "Removing Channel: " << channel->Channel()<<endl;
+				triggeredChannels.erase(std::remove(triggeredChannels.begin(), triggeredChannels.end(), channel->Channel()), triggeredChannels.end());
+			});
+		}
 		void privateLoop();
 	};
 

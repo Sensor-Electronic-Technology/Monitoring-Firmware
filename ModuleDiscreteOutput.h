@@ -11,7 +11,7 @@ namespace MonitoringComponents {
 		ModuleDiscreteOutput(int slot,int channel):ModuleIOPin(slot,channel),state(State::Low){}
 		//ModuleDiscreteOutput(int slot,int channel,State defaultState):ModuleIOPin(slot, channel), state(defaultState){}
 		ModuleDiscreteOutput() :ModuleDiscreteOutput({0,0},State::Low) {}
-		void Init();
+		void Init(bool initial);
 		void setOutput(State outputState);
 		bool isHigh();
 		bool isLow();

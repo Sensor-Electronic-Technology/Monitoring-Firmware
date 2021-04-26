@@ -11,8 +11,8 @@ namespace MonitoringComponents {
 	}
 
 	void ModuleDiscreteInput::read() {
-		//bool temp = (bool)P1.readDiscrete(this->_address.Slot, this->_address.Channel);
-		//this->state = (temp == true) ? State::High : State::Low;
-		this->state = (this->state == State::High) ? State::Low : State::High;
+		bool val = (bool)P1.readDiscrete(this->_address.Slot, this->_address.Channel);
+		this->state = (val == true) ? State::High : State::Low;
+		//this->state = (this->state == State::High) ? State::Low : State::High;
 	}
 };

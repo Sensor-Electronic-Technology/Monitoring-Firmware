@@ -21,19 +21,20 @@ using namespace MonitoringComponents;
 ConfigurationReader reader;
 DiscreteInputModule discreteModule;
 
-
-
 void setup(){
     Serial.begin(38400);
     while (!Serial) { ; }
     if (!SD.begin(SDCARD_SS_PIN)) {
-        //cout<<"Error: Could not int SD card"<<endl;
         while (1);
     }
-    Serial.println("SD Card Initialized, Initializing Reader");
+    cout<<"SD Card Initialized, Initializing Reader"<<endl;
+    while (!P1.init()) {
+        ;
+    }
+    cout << "P1AM Initialized!" << endl;
+    cout << "Reading Configurations" << endl;
     reader.Init();
-    //cout << "Parsing and Configuring Module" << endl;
-    Serial.println("Parsing and Configuring Module");
+    cout<<"Parsing and Configuring Module"<<endl;
     vector<Ref<MonitoringComponent>> components;
     auto moduleConfigurations = reader.DeserializeModuleConfig();
     vector<DigitalInConfiguration> configurations=reader.DeserializeDigitalConfig();
@@ -45,19 +46,12 @@ void setup(){
     config.slot = 1;
     discreteModule.SetConfig(config);
     discreteModule.CreateChannels(configurations);
-    discreteModule.Print();
-
-
+    discreteModule.Initialize();
+    cout << "Starting loop" << endl;
 }
 
 void loop(){
     discreteModule.loop();
-    Serial.println("Loop: delaying for 200ms");
-    delay(200);
-}
-
-void TestFileOpen() {
-
 }
 
 //void TestingConfiguration() {
@@ -97,12 +91,7 @@ void TestParseMapChannels() {
     string token;
     while ((pos = str.find(delimiter)) != std::string::npos) {
         token = str.substr(0, pos);
-        //cout << "Val: " << token << endl;
         int val = String(token.c_str()).toInt();
-        //cout << "Int Val: " << val << endl;
-        //channelMaps.push_back(std::strtol();
-        //strtol()
-        //strtol
         str.erase(0, pos + delimiter.length());
     }
 }

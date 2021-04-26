@@ -8,29 +8,31 @@
 #include "Configuration.h"
 
 
+
 namespace MonitoringComponents {
 	class DiscreteInputChannel :public MonitoringComponent {
 	public:
 
 		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), configuration(configuration),
-			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([](Ref<DiscreteInputChannel>) {}){
+			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([](Ref<DiscreteInputChannel>) {}),_on_clear([](Ref<DiscreteInputChannel>) {}) {
 			this->inputPin = ModuleDiscreteInput(configuration.slot, configuration.channel);
 			this->triggerOn = (this->configuration.Logic == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
 			this->_triggered = false;
-			
 		}
 
-		DiscreteInputChannel() :MonitoringComponent(nullptr), _on_trigger([](Ref<DiscreteInputChannel>) {  }) {	}
+		DiscreteInputChannel() :MonitoringComponent(nullptr), 
+			_on_trigger([](Ref<DiscreteInputChannel>) { }), 
+			_on_clear([](Ref<DiscreteInputChannel>) {}) {	}
 
 		bool isTriggered();
 
-		void OnTrigger(DiscreteInputCallBack cbk);
+		int Channel();
 
-		virtual void Print() override{
-			Serial.print(" Channel: " + String(this->configuration.channel));
-			Serial.print(" Slot: " + String(this->configuration.slot));
-			Serial.println(" Register: " + String(this->configuration._register));
-		}
+		void OnTrigger(DiscreteInputCallback cbk);
+
+		void OnClear(DiscreteInputCallback cbk);
+
+		void Initialize();
 
 	private:
 		ModuleDiscreteInput inputPin;
@@ -38,8 +40,8 @@ namespace MonitoringComponents {
 		TriggerOn triggerOn;
 		bool _triggered;
 		DigitalInConfiguration configuration;
-
-		DiscreteInputCallBack _on_trigger;
+		DiscreteInputCallback _on_clear;
+		DiscreteInputCallback _on_trigger;
 
 		void privateLoop();
 	};

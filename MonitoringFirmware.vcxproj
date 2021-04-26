@@ -114,8 +114,9 @@
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConfigurationReader.h" />
     <ClInclude Include="DiscreteInputChannel.h" />
-    <ClInclude Include="DiscreteOuputChannel.h" />
+    <ClInclude Include="DiscreteOutputChannel.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="IModule.h" />
     <ClInclude Include="IO.h" />
     <ClInclude Include="DiscreteInputModule.h" />
     <ClInclude Include="ModuleAnalogInput.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="MonitoringComponent.h" />
     <ClInclude Include="MonitoringController.h" />
     <ClInclude Include="Ref.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="UniquePtr.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="__vm\.MonitoringFirmware.vsarduino.h" />
@@ -133,12 +135,13 @@
     <ClCompile Include="ConfigurationReader.cpp" />
     <ClCompile Include="DiscreteInputChannel.cpp" />
     <ClCompile Include="DiscreteInputModule.cpp" />
-    <ClCompile Include="DiscreteOuputChannel.cpp" />
+    <ClCompile Include="DiscreteOutputChannel.cpp" />
     <ClCompile Include="IO.cpp" />
     <ClCompile Include="ModuleAnalogInput.cpp" />
     <ClCompile Include="ModuleDiscreteInput.cpp" />
     <ClCompile Include="ModuleDiscreteOutput.cpp" />
     <ClCompile Include="MonitoringController.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>

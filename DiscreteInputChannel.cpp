@@ -2,20 +2,42 @@
 
 namespace MonitoringComponents {
 	bool DiscreteInputChannel::isTriggered() {
-		if (this->configuration.connected) {
-			this->_triggered = (this->triggerOn == TriggerOn::Low) ? this->inputPin.isLow() : this->inputPin.isHigh();
-			return this->_triggered;
+		if (this->configuration.connected) {		
+			return (this->triggerOn == TriggerOn::Low) ? this->inputPin.isLow() : this->inputPin.isHigh();
 		}
-		this->_triggered = false;
 		return false;
 	}
 
-	void DiscreteInputChannel::OnTrigger(DiscreteInputCallBack cbk) {
+	void DiscreteInputChannel::Initialize() {
+		bool state = this->isTriggered();
+		if (state) {
+			this->_on_trigger(this);
+		}
+		this->_triggered = state;
+	}
+
+	int DiscreteInputChannel::Channel() {
+		return this->configuration.channel;
+	}
+
+	void DiscreteInputChannel::OnTrigger(DiscreteInputCallback cbk) {
 		this->_on_trigger = cbk;
 	}
 
+	void DiscreteInputChannel::OnClear(DiscreteInputCallback cbk) {
+		this->_on_clear=cbk;
+	}
+
 	void DiscreteInputChannel::privateLoop() {
-		this->_on_trigger(this);
+		bool state = this->isTriggered();
+		if (state != this->_triggered) {
+			if (state) {
+				this->_on_trigger(this);
+			}else {
+				this->_on_clear(this);
+			}
+			this->_triggered = state;
+		}
 	}
 };
 

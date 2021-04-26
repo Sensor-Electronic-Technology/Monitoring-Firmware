@@ -149,6 +149,7 @@ namespace MonitoringComponents {
         LogicType startState;
         OutputAction action;
         OutputType outputType;
+        LogicType triggerOn;
     };
 
     class ModuleConfiguration {

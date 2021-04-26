@@ -46,6 +46,18 @@
     <Filter Include="Header Files\Controller">
       <UniqueIdentifier>{596c9293-b1bc-4a81-9b85-ff03e4ec5856}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MonitoringComponents\Modules">
+      <UniqueIdentifier>{37fdd4bc-f942-480b-906a-25b2bd2c5a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MonitoringComponents\Tools">
+      <UniqueIdentifier>{efc4778f-3a6f-447d-aa4e-8df5eb6f33a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Modules">
+      <UniqueIdentifier>{e61dce9b-092e-4ac5-a8f2-4f040c6c1926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Tools">
+      <UniqueIdentifier>{fd565623-b7a7-448e-9940-ab93f4025f31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />
@@ -84,9 +96,6 @@
     <ClInclude Include="DiscreteInputChannel.h">
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
     </ClInclude>
-    <ClInclude Include="DiscreteOuputChannel.h">
-      <Filter>Header Files\MonitoringComponents\Channels</Filter>
-    </ClInclude>
     <ClInclude Include="AnalogInputChannel.h">
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
     </ClInclude>
@@ -102,8 +111,17 @@
     <ClInclude Include="MonitoringController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files\MonitoringComponents\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="DiscreteInputModule.h">
-      <Filter>Header Files\MonitoringComponents</Filter>
+      <Filter>Header Files\MonitoringComponents\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="IModule.h">
+      <Filter>Header Files\MonitoringComponents\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscreteOutputChannel.h">
+      <Filter>Header Files\MonitoringComponents\Channels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,9 +129,6 @@
       <Filter>Source Files\MonitoringComponents\Channels</Filter>
     </ClCompile>
     <ClCompile Include="DiscreteInputChannel.cpp">
-      <Filter>Source Files\MonitoringComponents\Channels</Filter>
-    </ClCompile>
-    <ClCompile Include="DiscreteOuputChannel.cpp">
       <Filter>Source Files\MonitoringComponents\Channels</Filter>
     </ClCompile>
     <ClCompile Include="ConfigurationReader.cpp">
@@ -131,11 +146,17 @@
     <ClCompile Include="IO.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
-    <ClCompile Include="DiscreteInputModule.cpp">
-      <Filter>Source Files\MonitoringComponents</Filter>
-    </ClCompile>
     <ClCompile Include="MonitoringController.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscreteInputModule.cpp">
+      <Filter>Source Files\MonitoringComponents\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files\MonitoringComponents\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscreteOutputChannel.cpp">
+      <Filter>Source Files\MonitoringComponents\Channels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

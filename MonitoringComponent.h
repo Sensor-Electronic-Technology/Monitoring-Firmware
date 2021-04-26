@@ -27,9 +27,6 @@ namespace MonitoringComponents {
 				privateLoop();
 			}
 		}
-
-		virtual void Print() = 0;
-
 	protected:
 
 		void SkipLoop() {
@@ -49,7 +46,6 @@ namespace MonitoringComponents {
 		void loopChildren() {
 			for (int i = 0; i < _children.size(); i++) {
 				_children[i]->loop();
-				//_children[i]->loop();
 				if (!_isLooping) {
 					SkipLoop();
 					return;

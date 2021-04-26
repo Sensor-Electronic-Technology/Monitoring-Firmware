@@ -89,10 +89,10 @@ namespace MonitoringComponents {
         return true;
     }
 
-    std::vector<AnalogInputChannel> ConfigurationReader::DeserializeAnalogConfig() {
+    std::vector<AnalogInConfiguration> ConfigurationReader::DeserializeAnalogConfig() {
         if (this->AnalogInSize > 0) {
             DynamicJsonDocument doc(this->AnalogInSize);
-            vector<AnalogInputChannel> analogChannels;
+            vector<AnalogInConfiguration> analogChannels;
             File file = SD.open(AnalogFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
@@ -134,7 +134,7 @@ namespace MonitoringComponents {
                         std::sort(config.alerts.begin(), config.alerts.end(), [](const Alert& a, const Alert& b)->bool {
                             return a.prioirty > b.prioirty;
                         });
-                        analogChannels.push_back(AnalogInputChannel(config));
+                        analogChannels.push_back(config);
                     }
                     file.close();
                     return analogChannels;
@@ -145,10 +145,10 @@ namespace MonitoringComponents {
         }
     }
 
-    std::vector<DiscreteOutputChannel> ConfigurationReader::DeserializeOutputConfig() {
+    std::vector<OutputConfiguration> ConfigurationReader::DeserializeOutputConfig() {
         if (this->OutputSize > 0) {
             DynamicJsonDocument doc(this->OutputSize);
-            std::vector<DiscreteOutputChannel> outputChannels;
+            std::vector<OutputConfiguration> outputChannels;
             File file = SD.open(OutputFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
