@@ -19,8 +19,9 @@ namespace MonitoringComponents {
 		};
 
 		for (auto ch : discreteConfig) {
-			this->discreteInputs.push_back(new DiscreteInputChannel(ch));
-
+			DiscreteInputChannel* channel = new DiscreteInputChannel(ch);
+			this->discreteInputs.push_back(channel);
+			//channel->OnTrigger()
 		}
 	}
 };

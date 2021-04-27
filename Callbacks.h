@@ -11,7 +11,12 @@ namespace MonitoringComponents {
 	struct DistinctChannel {
 		int channel;
 		int slot;
+		bool operator==(DistinctChannel ch) {
+			return this->channel == ch.channel && this->slot == ch.slot;
+		}
 	};
+
+	
 
 	enum class ChannelAction {
 		Clear,Trigger
@@ -25,6 +30,9 @@ namespace MonitoringComponents {
 	struct ChannelMessage {
 		DistinctChannel channel;
 		ChannelAction action;
+		bool operator==(const ChannelMessage& other) {
+			return this->channel==other.channel && this->action==other.action;
+		}
 	};
 
 	typedef Function<void(void)> VoidCallback;

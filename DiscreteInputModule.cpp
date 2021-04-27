@@ -11,8 +11,9 @@ namespace MonitoringComponents {
 			auto channel = new DiscreteInputChannel(DigitalInConfiguration(channelConfigurations[i]));
 			this->channels.push_back(channel);
 			RegisterChild(channel);
-			channel->OnTrigger(this->_on_channel_trigger);
-			channel->OnClear(this->_on_channel_clear);
+			//channel->OnTrigger(this->_on_channel_trigger);
+			//channel->OnClear(this->_on_channel_clear);
+			channel->OnTrigger(this->_on_ch_trigger);
 		}
 
 		this->isInitialized.channelsSet = true;
@@ -24,9 +25,9 @@ namespace MonitoringComponents {
 		}
 
 		timer.onInterval([&]() {
-			cout << F("Triggered Channels: ");
+			cout <<"Triggered Channels: ";
 			for (int i = 0; i < triggeredChannels.size(); i++) {
-				cout<< triggeredChannels[i]<<' ';
+				cout<<triggeredChannels[i].slot<<','<<triggeredChannels[i].channel<<' ';
 			}
 			cout << endl; 
 		}, 500);
@@ -44,6 +45,10 @@ namespace MonitoringComponents {
 
 	void DiscreteInputModule::OnChannelClear(DiscreteInputCallback cbk) {
 		this->_on_channel_clear = cbk;
+	}
+
+	void DiscreteInputModule::OnChTrigger(ChannelCallback cbk) {
+		this->_on_ch_trigger = cbk;
 	}
 
 	void DiscreteInputModule::privateLoop() {

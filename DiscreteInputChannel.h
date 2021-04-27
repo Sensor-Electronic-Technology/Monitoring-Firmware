@@ -14,7 +14,7 @@ namespace MonitoringComponents {
 	public:
 
 		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), configuration(configuration),
-			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([](Ref<DiscreteInputChannel>) {}),_on_clear([](Ref<DiscreteInputChannel>) {}) {
+			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_trigger([](Ref<DiscreteInputChannel>) {}), _on_clear([](Ref<DiscreteInputChannel>) {}), _on_ch_trigger([](ChannelMessage) {}) {
 			this->inputPin = ModuleDiscreteInput(configuration.slot, configuration.channel);
 			this->triggerOn = (this->configuration.Logic == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
 			this->_triggered = false;
@@ -22,7 +22,8 @@ namespace MonitoringComponents {
 
 		DiscreteInputChannel() :MonitoringComponent(nullptr), 
 			_on_trigger([](Ref<DiscreteInputChannel>) { }), 
-			_on_clear([](Ref<DiscreteInputChannel>) {}) {	}
+			_on_clear([](Ref<DiscreteInputChannel>) { }),
+			_on_ch_trigger([](ChannelMessage){ }) {	}
 
 		bool isTriggered();
 
@@ -31,6 +32,8 @@ namespace MonitoringComponents {
 		void OnTrigger(DiscreteInputCallback cbk);
 
 		void OnClear(DiscreteInputCallback cbk);
+
+		void OnTrigger(ChannelCallback cbk);
 
 		void Initialize();
 
@@ -42,6 +45,7 @@ namespace MonitoringComponents {
 		DigitalInConfiguration configuration;
 		DiscreteInputCallback _on_clear;
 		DiscreteInputCallback _on_trigger;
+		ChannelCallback		  _on_ch_trigger;
 
 		void privateLoop();
 	};

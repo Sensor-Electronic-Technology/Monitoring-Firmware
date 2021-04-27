@@ -183,5 +183,10 @@ namespace MonitoringComponents {
         }
 
     };
+
+    class ActionConfiguration {
+
+    };
+
 };
 
