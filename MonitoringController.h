@@ -20,6 +20,7 @@ namespace MonitoringComponents {
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
+		std::vector<DistinctChannel> triggeredChannels;
 
 		ChannelCallback _on_channel_cbk;
 

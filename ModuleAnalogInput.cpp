@@ -10,5 +10,4 @@ namespace MonitoringComponents {
 	float ModuleAnalogInput::getValue() {
 		return this->value;
 	}
-
 };

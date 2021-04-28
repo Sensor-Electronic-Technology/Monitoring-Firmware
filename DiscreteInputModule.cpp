@@ -13,7 +13,7 @@ namespace MonitoringComponents {
 			RegisterChild(channel);
 			//channel->OnTrigger(this->_on_channel_trigger);
 			//channel->OnClear(this->_on_channel_clear);
-			channel->OnTrigger(this->_on_ch_trigger);
+			channel->OnStateChange(this->_on_ch_trigger);
 		}
 
 		this->isInitialized.channelsSet = true;

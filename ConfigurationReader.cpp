@@ -105,35 +105,37 @@ namespace MonitoringComponents {
                         int reg = elem[F("Register")]; 
                         int slot = elem[F("Module Slot")];
                         bool connected = elem[F("Connected")];
+
                         AnalogInConfiguration config(chan, slot, reg, connected);
                         config.zeroValue = elem[F("ZeroValue")]; 
                         config.maxValue = elem[F("MaxValue")]; 
                         config.analogFactor = elem[F("AnalogFactor")]; 
                         config.bypassAlerts = elem[F("BypassAlerts")];
-                        config.alerts.reserve(3);
+
                         JsonObject A1 = elem[F("A1")];
-                        config.alerts[0].setpoint = A1[F("Setpoint")];
-                        config.alerts[0].action = (AlertAction)A1[F("Action")];
-                        config.alerts[0].bypass = A1[F("Bypass")];
-                        config.alerts[0].enabled = A1[F("Enabled")];
-                        config.alerts[0].prioirty = A1[F("Priority")];
+                        config.alert1.setpoint = A1[F("Setpoint")];
+                        config.alert1.action = (AlertAction)A1[F("Action")];
+                        config.alert1.bypass = A1[F("Bypass")];
+                        config.alert1.enabled = A1[F("Enabled")];
+                        config.alert1.prioirty = A1[F("Priority")];
 
                         JsonObject A2 = elem[F("A2")];
-                        config.alerts[1].setpoint = A2[F("Setpoint")];
-                        config.alerts[1].action = (AlertAction)A2[F("Action")];
-                        config.alerts[1].bypass = A2[F("Bypass")];
-                        config.alerts[1].enabled = A2[F("Enabled")];
-                        config.alerts[1].prioirty = A2[F("Priority")];
+                        config.alert2.setpoint = A2[F("Setpoint")];
+                        config.alert2.action = (AlertAction)A2[F("Action")];
+                        config.alert2.bypass = A2[F("Bypass")];
+                        config.alert2.enabled = A2[F("Enabled")];
+                        config.alert2.prioirty = A2[F("Priority")];
 
                         JsonObject A3 = elem[F("A3")];
-                        config.alerts[2].setpoint = A3[F("Setpoint")];
-                        config.alerts[2].action = (AlertAction)A3[F("Action")];
-                        config.alerts[2].bypass = A3[F("Bypass")];
-                        config.alerts[2].enabled = A3[F("Enabled")];
-                        config.alerts[2].prioirty = A3[F("Priority")];
-                        std::sort(config.alerts.begin(), config.alerts.end(), [](const Alert& a, const Alert& b)->bool {
-                            return a.prioirty > b.prioirty;
-                        });
+                        config.alert3.setpoint = A3[F("Setpoint")];
+                        config.alert3.action = (AlertAction)A3[F("Action")];
+                        config.alert3.bypass = A3[F("Bypass")];
+                        config.alert3.enabled = A3[F("Enabled")];
+                        config.alert3.prioirty = A3[F("Priority")];
+                        
+                        //std::sort(config.alerts, config.alerts+MAXALERTS, [](const Alert& a, const Alert& b)->bool {
+                        //    return a.prioirty > b.prioirty;
+                        //});
                         analogChannels.push_back(config);
                     }
                     file.close();

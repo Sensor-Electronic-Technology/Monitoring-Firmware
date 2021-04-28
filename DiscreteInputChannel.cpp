@@ -15,42 +15,32 @@ namespace MonitoringComponents {
 			msg.channel.slot = this->configuration.slot;
 			msg.channel.channel = this->configuration.channel;
 			msg.action = ChannelAction::Trigger;
-			this->_on_ch_trigger(msg);
+			this->_on_state_change(msg);
 		}
-		this->_triggered = state;
+		this->triggered = state;
 	}
 
 	int DiscreteInputChannel::Channel() {
 		return this->configuration.channel;
 	}
 
-	void DiscreteInputChannel::OnTrigger(DiscreteInputCallback cbk) {
-		this->_on_trigger = cbk;
-	}
-
-	void DiscreteInputChannel::OnClear(DiscreteInputCallback cbk) {
-		this->_on_clear=cbk;
-	}
-
-	void DiscreteInputChannel::OnTrigger(ChannelCallback cbk) {
-		this->_on_ch_trigger = cbk;
+	void DiscreteInputChannel::OnStateChange(ChannelCallback cbk) {
+		this->_on_state_change = cbk;
 	}
 
 	void DiscreteInputChannel::privateLoop() {
 		bool state = this->isTriggered();
-		if (state != this->_triggered) {
+		if (state != this->triggered) {
 			ChannelMessage message;
 			message.channel.channel = this->configuration.channel;
 			message.channel.slot = this->configuration.slot;
 			if (state) {
 				message.action = ChannelAction::Trigger;
-				//this->_on_trigger(this);
 			}else {
 				message.action = ChannelAction::Clear;
-				//this->_on_clear(this);
 			}
-			this->_triggered = state;
-			this->_on_ch_trigger(message);
+			this->triggered = state;
+			this->_on_state_change(message);
 		}
 	}
 };

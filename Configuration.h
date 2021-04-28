@@ -1,6 +1,7 @@
 #pragma once
 #include "Ref.h"
 #include <ArduinoSTL.h>
+#define MAXALERTS	3
 
 namespace MonitoringComponents {
 
@@ -116,7 +117,10 @@ namespace MonitoringComponents {
                 this->maxValue = rhs.maxValue;
                 this->analogFactor = rhs.zeroValue;
                 this->bypassAlerts = rhs.bypassAlerts;
-                this->alerts = rhs.alerts;
+                this->alert1 = rhs.alert1;
+                this->alert2 = rhs.alert2;
+                this->alert3 = rhs.alert3;
+                //std::copy(rhs.alerts, rhs.alerts + MAXALERTS, this->alerts);
             }
             return *this;
         }
@@ -124,7 +128,10 @@ namespace MonitoringComponents {
         float zeroValue;
         float maxValue;
         int analogFactor;
-        std::vector<Alert> alerts;
+        //Alert alerts[3];
+        Alert alert1;
+        Alert alert2;
+        Alert alert3;
         bool bypassAlerts;
     };
 

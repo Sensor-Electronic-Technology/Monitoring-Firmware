@@ -7,8 +7,6 @@
 #include "DiscreteOutputChannel.h"
 #include "DiscreteInputChannel.h"
 
-
-
 namespace MonitoringComponents {
 
     class ConfigurationReader {
