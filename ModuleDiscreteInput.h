@@ -5,7 +5,7 @@
 namespace MonitoringComponents {
 	class ModuleDiscreteInput :public ModuleIOPin {
 	public:
-		ModuleDiscreteInput(PinAddress address) :ModuleIOPin(address),state(State::Low){}
+		ModuleDiscreteInput(ChannelAddress address) :ModuleIOPin(address),state(State::Low){}
 
 		ModuleDiscreteInput(int slot,int channel):ModuleIOPin(slot,channel), state(State::Low){}
 

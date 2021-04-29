@@ -10,7 +10,7 @@ namespace MonitoringComponents {
 	void ModuleDiscreteOutput::setOutput(State outputState) {
 		this->state = outputState;
 		int outputValue = (outputState == State::High) ? 1 : 0;
-		P1.writeDiscrete(outputValue, this->_address.Slot, this->_address.Channel);
+		P1.writeDiscrete(outputValue, this->_address.slot, this->_address.channel);
 	}
 
 	bool ModuleDiscreteOutput::isHigh() {

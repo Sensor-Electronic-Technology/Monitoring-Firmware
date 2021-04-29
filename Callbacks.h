@@ -8,31 +8,10 @@ namespace MonitoringComponents {
 	class DiscreteInputChannel;
 	class AnalogInputChannel;
 
-	struct DistinctChannel {
-		int channel;
-		int slot;
-		bool operator==(DistinctChannel ch) {
-			return this->channel == ch.channel && this->slot == ch.slot;
-		}
-	};
-
-	
-
-	enum class ChannelAction {
-		Clear,Trigger
-	};
-
-	struct AlertMessage {
-		AlertAction action;
-		DistinctChannel channel;
-	};
-
 	struct ChannelMessage {
-		DistinctChannel channel;
-		ChannelAction action;
-		bool operator==(const ChannelMessage& other) {
-			return this->channel==other.channel && this->action==other.action;
-		}
+		ChannelAction channelAction;
+		Action systemAction;
+		ChannelAddress channel;
 	};
 
 	typedef Function<void(void)> VoidCallback;

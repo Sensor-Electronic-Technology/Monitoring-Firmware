@@ -1,81 +1,38 @@
 #pragma once
-#include "Ref.h"
 #include <ArduinoSTL.h>
-#define MAXALERTS	3
+#include "Data.h"
+#include "Ref.h"
 
 namespace MonitoringComponents {
 
-    enum InputType { Analog = 1, Digital = 0, NoType = 2 };
-    enum LogicType { High = 1, Low = 0, NA = 2 };
-    enum AlertAction { Alarm = 4, Warn = 3, SoftWarn = 2, Maintenance = 1, Nothing = 0 };
-    enum OutputAction { OutAlarm = 4, OutWarn = 3, Okay = 2, TriggerFromMap = 1, NoAction = 1 };
-    enum OutputType{NO=0,NC=1,NOHC=2, NCHO=3};
-    enum ModuleType { DigitalInput = 1, DigitalOutput = 2, AnalogInput = 0, None = 3 };
-    enum Module { P116ND3 = 0, P108ADL1 = 1, P108TD2 = 2, NoModule = 3 };
-    enum ConfigurationType { DigitalIn, AnalogIn, Output, ModuleConfig, NoConfig };
-    enum AlertPriority{Highest=2,Medium=1,Lowest=0};
 
-    struct Alert {
-        float setpoint;
-        int setPointFactor;
-        AlertPriority prioirty;     
-        AlertAction action;
-        bool bypass;
-        bool enabled;
-
-        Alert() {
-            this->setpoint = 0;
-            this->setPointFactor = 0;
-            this->action = AlertAction::Nothing;
-            this->prioirty = AlertPriority::Lowest;
-            this->enabled = false;
-            this->bypass = false;
-        }
-
-        Alert(const Alert& alert) {
-            this->setpoint = alert.setpoint;
-            this->action = alert.action;
-            this->enabled = alert.enabled;
-            this->setPointFactor = alert.setPointFactor;
-            this->bypass = alert.bypass;
-            this->prioirty = alert.prioirty;
-        }
-
-        Alert& operator =(const Alert& rhs) {
-            this->setpoint = rhs.setpoint;
-            this->action = rhs.action;
-            this->enabled = rhs.enabled;
-            this->setPointFactor = rhs.setPointFactor;
-            this->bypass = rhs.bypass;
-            this->prioirty = rhs.prioirty;
-            return *this;
-        }
-    };
 
     class Configuration {
     public:
         int channel;
-        int slot;
+        ChannelAddress address;
         int _register;
         bool connected;
 
-        Configuration():channel(0),slot(0),_register(0),connected(false) {   }
+        Configuration() :channel(0), address({ 0, 0}), _register(0), connected(false) {   }
 
-        Configuration(int channel, int slot, int reg, bool connected)
-            :channel(channel), slot(slot), _register(reg), connected(connected) {   }
+        Configuration(int channel,ChannelAddress address, int reg, bool connected)
+            :channel(channel), address(address), _register(reg), connected(connected) {   }
 
         Configuration(const Configuration& other) {
             this->channel = other.channel;
-            this->slot = other.slot;
             this->_register = other._register;
             this->connected = other.connected;
+            this->address = other.address;
+            this->channel = other.channel;
         }
 
         const Configuration& operator=(const Configuration& rhs) {
             this->channel = rhs.channel;
             this->_register = rhs._register;
             this->connected = rhs.connected;
-            this->slot = rhs.slot;
+            this->address = rhs.address;
+            this->channel = rhs.channel;
             return *this;
         }
     };
@@ -87,21 +44,21 @@ namespace MonitoringComponents {
         DigitalInConfiguration(int channel, int slot, int reg, bool connected):Configuration(channel,slot,reg,connected) {  }
 
         DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
-            this->Logic = other.Logic;
+            this->triggerOn = other.triggerOn;
             this->alert = other.alert;
         }
 
         const DigitalInConfiguration& operator=(const DigitalInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
-                this->Logic = rhs.Logic;
+                this->triggerOn = rhs.triggerOn;
                 this->alert = rhs.alert;
             }
             return *this;
         }
 
-        LogicType Logic;
-        Alert alert;
+        TriggerOn triggerOn;
+        DigitalAlert alert;
     };
 
     class AnalogInConfiguration :public Configuration {
@@ -120,7 +77,6 @@ namespace MonitoringComponents {
                 this->alert1 = rhs.alert1;
                 this->alert2 = rhs.alert2;
                 this->alert3 = rhs.alert3;
-                //std::copy(rhs.alerts, rhs.alerts + MAXALERTS, this->alerts);
             }
             return *this;
         }
@@ -128,10 +84,9 @@ namespace MonitoringComponents {
         float zeroValue;
         float maxValue;
         int analogFactor;
-        //Alert alerts[3];
-        Alert alert1;
-        Alert alert2;
-        Alert alert3;
+        AnalogAlert alert1;
+        AnalogAlert alert2;
+        AnalogAlert alert3;
         bool bypassAlerts;
     };
 
@@ -147,16 +102,14 @@ namespace MonitoringComponents {
                 this->action = rhs.action;
                 this->outputType = rhs.outputType;
                 this->startState = rhs.startState;
-                this->channelMaps = rhs.channelMaps;
             }
             return *this;
         }
 
-        std::vector<int> channelMaps;
-        LogicType startState;
+        State startState;
         OutputAction action;
         OutputType outputType;
-        LogicType triggerOn;
+        TriggerOn triggerOn;
     };
 
     class ModuleConfiguration {
@@ -192,7 +145,12 @@ namespace MonitoringComponents {
     };
 
     class ActionConfiguration {
-
+    public:
+        int actionId;
+        ChannelAddress outputChannel1;
+        ChannelAddress outputChannel2;
+        State startState;
+        ModbusAddress modbusAddress;
     };
 
 };

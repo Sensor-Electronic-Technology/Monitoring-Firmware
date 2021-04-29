@@ -1,5 +1,6 @@
 #pragma once
 #include <ArduinoSTL.h>
+#include <map>
 #include "Timer.h"
 #include "Configuration.h"
 #include "ConfigurationReader.h"
@@ -20,8 +21,8 @@ namespace MonitoringComponents {
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
-		std::vector<DistinctChannel> triggeredChannels;
-
+		std::map<ChannelAction, std::vector<ChannelAddress>> triggeredMap;
+		std::map<ChannelAction, int> actionMap;
 		ChannelCallback _on_channel_cbk;
 
 		ControllerState controllerState;

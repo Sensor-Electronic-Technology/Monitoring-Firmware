@@ -8,7 +8,7 @@ namespace MonitoringComponents {
 		ch.channel = this->configuration.channel;
 		this->channel = ch;
 
-		this->alert1 = ChannelAlert(this->configuration.alert1,ch);
+		this->alert1 = AnalogAlert(this->configuration.alert1,ch);
 		this->alert2 = ChannelAlert(this->configuration.alert2, ch);
 		this->alert3 = ChannelAlert(this->configuration.alert3, ch);
 
@@ -31,7 +31,11 @@ namespace MonitoringComponents {
 			}
 
 			if (alert1.activated) {
-
+				ChannelMessage message;
+				message.action = ChannelAction::Clear;
+				message.channel = this->channel;
+				alert2.activated = false;
+				this->_on_channel_trigger(message);
 			}
 		} else if (reading<alert3.setpoint && reading >= alert2.setpoint) {
 			if (alert2.enabled) {

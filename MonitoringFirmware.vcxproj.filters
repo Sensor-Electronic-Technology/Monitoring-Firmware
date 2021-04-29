@@ -43,9 +43,6 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{96933842-defb-4372-b8d4-cd356f1d67b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Controller">
-      <UniqueIdentifier>{596c9293-b1bc-4a81-9b85-ff03e4ec5856}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\MonitoringComponents\Modules">
       <UniqueIdentifier>{37fdd4bc-f942-480b-906a-25b2bd2c5a76}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Source Files\MonitoringComponents\Tools">
       <UniqueIdentifier>{fd565623-b7a7-448e-9940-ab93f4025f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MonitoringComponents\Controller">
+      <UniqueIdentifier>{596c9293-b1bc-4a81-9b85-ff03e4ec5856}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +108,6 @@
     <ClInclude Include="ConfigurationReader.h">
       <Filter>Header Files\Configuration</Filter>
     </ClInclude>
-    <ClInclude Include="MonitoringController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\MonitoringComponents\Tools</Filter>
     </ClInclude>
@@ -122,6 +119,15 @@
     </ClInclude>
     <ClInclude Include="DiscreteOutputChannel.h">
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="MonitoringController.h">
+      <Filter>Header Files\MonitoringComponents\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelAlert.h">
+      <Filter>Header Files\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Header Files\Configuration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,27 +1,14 @@
 #pragma once
+#include "Data.h"
 
 namespace MonitoringComponents {
-	struct PinAddress {
-		int Slot;
-		int Channel;
-	};
-
 	class ModuleIOPin {
 	public:
-		ModuleIOPin(PinAddress addr):_address(addr){}
+		ModuleIOPin(ChannelAddress addr):_address(addr){}
 		ModuleIOPin(int slot, int channel);
+		ChannelAddress Address();
 	protected:
-		PinAddress _address;
-	};
-
-	enum class State : bool {
-		High = true,
-		Low = false
-	};
-
-	enum class TriggerOn {
-		High,
-		Low
+		ChannelAddress _address;
 	};
 };
 

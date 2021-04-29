@@ -111,8 +111,10 @@
   <ItemGroup>
     <ClInclude Include="AnalogInputChannel.h" />
     <ClInclude Include="Callbacks.h" />
+    <ClInclude Include="ChannelAlert.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConfigurationReader.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="DiscreteInputChannel.h" />
     <ClInclude Include="DiscreteOutputChannel.h" />
     <ClInclude Include="Function.h" />

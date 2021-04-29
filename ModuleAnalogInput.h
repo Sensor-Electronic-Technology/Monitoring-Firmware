@@ -8,7 +8,7 @@
 namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
 	public:
-		ModuleAnalogInput(PinAddress address):ModuleIOPin(address){}
+		ModuleAnalogInput(ChannelAddress address):ModuleIOPin(address){}
 
 		ModuleAnalogInput(int slot, int channel) :ModuleIOPin(slot, channel), value(0.00){}
 

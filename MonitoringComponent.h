@@ -5,17 +5,7 @@
 using namespace std;
 
 namespace MonitoringComponents {
-	enum class RegisterType {
-		Holding,
-		Coil,
-		DiscreteInput,
-		Input
-	};
 
-	struct ModbusAddress {
-		int address;
-		RegisterType type;
-	};
 
 	class MonitoringComponent {
 	public:
