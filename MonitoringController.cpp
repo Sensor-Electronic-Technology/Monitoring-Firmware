@@ -9,18 +9,18 @@ namespace MonitoringComponents {
 		auto outputConfig = reader.DeserializeOutputConfig();
 
 		auto cbk = [&](ChannelMessage message) {
-			if (message.action == ChannelAction::Trigger) {
-				auto found = std::find_if(triggeredChannels.begin(), triggeredChannels.end(), [&](DistinctChannel ch) {
-						return ch == message.channel;
-					});
-				if (found == triggeredChannels.end()) {
-					triggeredChannels.push_back(message.channel);
-				}
-			} else if (message.action == ChannelAction::Clear) {
-				triggeredChannels.erase(std::remove_if(triggeredChannels.begin(), triggeredChannels.end(), [&](DistinctChannel ch) {
-						return ch == message.channel;
-					}), triggeredChannels.end());
-			}
+			//if (message.action == ChannelAction::Trigger) {
+			//	auto found = std::find_if(triggeredChannels.begin(), triggeredChannels.end(), [&](DistinctChannel ch) {
+			//			return ch == message.channel;
+			//		});
+			//	if (found == triggeredChannels.end()) {
+			//		triggeredChannels.push_back(message.channel);
+			//	}
+			//} else if (message.action == ChannelAction::Clear) {
+			//	triggeredChannels.erase(std::remove_if(triggeredChannels.begin(), triggeredChannels.end(), [&](DistinctChannel ch) {
+			//			return ch == message.channel;
+			//		}), triggeredChannels.end());
+			//}
 		};
 
 		for (auto ch : discreteConfig) {

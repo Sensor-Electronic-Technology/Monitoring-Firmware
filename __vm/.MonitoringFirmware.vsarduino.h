@@ -23,9 +23,10 @@
 #define USB_PID 0x4000
 #define USBCON
 #define __cplusplus 201103L
-//#define __GNUC__ 2
+#define __GNUC__ 2
 #define _Pragma(x)
-#define __ARMCC_VERSION 6010050
+//#define __ARMCC_VERSION 6010050
+#define	_ISOC11_SOURCE
 
 #define __PTRDIFF_TYPE__ int
 #define __ARM__
@@ -53,6 +54,17 @@ typedef int __builtin_bswap16;
 #define _Pragma(x)
 #define __ASM
 #define __INLINE
+#define _PTR void *
+#define __INTPTR_TYPE__ int
+#define __INT32_TYPE__ long int
+#define __UINT32_TYPE__ long int
+#define __VALIST char*
+#define __INT8_TYPE__ int
+#define __UINT8_TYPE__ int
+#define __INT16_TYPE__ long
+#define __UINT16_TYPE__ long
+#define __INT64_TYPE__ long long
+#define __UINT64_TYPE__ long long
 
 #include "samd.h"
 //#include "samd21/include/samd21.h"
@@ -414,6 +426,21 @@ char 	*strchrnul(const char *, int) {
 	return 0;
 }
 
+int snprintf(const char *, ...) {
+	return 0;
+}
+
+int sprintf(const char *, ...) {
+	return 0;
+}
+
+int fprintf(const char *, ...) {
+	return 0;
+}
+
+int printf(const char *, ...) {
+	return 0;
+}
 #endif
 
 #include "MonitoringFirmware.ino"

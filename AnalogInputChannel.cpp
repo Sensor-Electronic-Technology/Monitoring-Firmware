@@ -13,10 +13,10 @@ namespace MonitoringComponents {
 		this->alert3 = ChannelAlert(this->configuration.alert3, ch);
 
 		float reading = this->inputPin.read();
-		if (reading >= alert3.setpoint) {
+		if (reading >= alert3.setPoint) {
 			if (alert3.enabled) {
 				ChannelMessage message;
-				message.action = ChannelAction::Trigger;
+				message. = ChannelAction::Trigger;
 				message.channel = this->channel;
 				alert3.activated = true;
 				this->_on_channel_trigger(message);

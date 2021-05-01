@@ -5,8 +5,6 @@
 
 namespace MonitoringComponents {
 
-
-
     class Configuration {
     public:
         int channel;
@@ -99,16 +97,12 @@ namespace MonitoringComponents {
         const OutputConfiguration& operator=(const OutputConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
-                this->action = rhs.action;
-                this->outputType = rhs.outputType;
                 this->startState = rhs.startState;
             }
             return *this;
         }
 
         State startState;
-        OutputAction action;
-        OutputType outputType;
         TriggerOn triggerOn;
     };
 
@@ -147,11 +141,35 @@ namespace MonitoringComponents {
     class ActionConfiguration {
     public:
         int actionId;
-        ChannelAddress outputChannel1;
-        ChannelAddress outputChannel2;
-        State startState;
-        ModbusAddress modbusAddress;
-    };
+        ChannelAddress addr1;
+        State outputlevel1;
 
+        ChannelAddress addr2;
+        State outputlevel2;
+
+        ChannelAddress addr3;
+        State outputlevel3;
+
+        State startState;
+        OutputType type;
+        ModbusAddress modbusAddress;
+        const ActionConfiguration& operator=(const ActionConfiguration& rhs) {
+            if (this != &rhs) {
+                this->actionId = rhs.actionId;
+
+                this->addr1 = rhs.addr1;
+                this->outputlevel1 = rhs.outputlevel1;
+                this->addr2 = rhs.addr2;
+                this->outputlevel2= rhs.outputlevel2;
+                this->addr3 = rhs.addr3;
+                this->outputlevel3 = rhs.outputlevel3;
+
+                this->startState = rhs.startState;
+                this->type = rhs.type;
+                this->modbusAddress = rhs.modbusAddress;
+            }
+            return *this;
+        }
+    };
 };
 

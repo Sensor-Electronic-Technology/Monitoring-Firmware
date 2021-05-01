@@ -18,7 +18,7 @@ namespace MonitoringComponents {
 		AnalogInputChannel(AnalogInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) 
 			:MonitoringComponent(parent), configuration(configuration), _on_channel_trigger([](ChannelMessage){}),
 			modbusAddress({configuration._register,RegisterType::Holding}) { 
-			inputPin = ModuleAnalogInput(configuration.slot, configuration.channel);
+			inputPin = ModuleAnalogInput(configuration.address);
 		}
 
 		void Initialize();

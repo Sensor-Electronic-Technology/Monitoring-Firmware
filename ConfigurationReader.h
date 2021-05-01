@@ -29,12 +29,14 @@ namespace MonitoringComponents {
        std::vector<OutputConfiguration> DeserializeOutputConfig();
        std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
        std::vector<ModuleConfiguration> DeserializeModuleConfig();
+       std::vector<ActionConfiguration> DeserializeActions();
 
     private:
         long DigitalInSize;
         long AnalogInSize;
         long ModuleSize;
         long OutputSize;
+        long ActionSize;
         File configFile;
         Logger* logger = nullptr;
         bool configLoaded = false;

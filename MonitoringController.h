@@ -21,8 +21,8 @@ namespace MonitoringComponents {
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
-		std::map<ChannelAction, std::vector<ChannelAddress>> triggeredMap;
-		std::map<ChannelAction, int> actionMap;
+		
+
 		ChannelCallback _on_channel_cbk;
 
 		ControllerState controllerState;

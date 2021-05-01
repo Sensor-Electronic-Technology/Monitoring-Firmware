@@ -4,6 +4,7 @@
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
 #define ModuleFile              "module.txt"
+#define ActionFile              "action.txt"
 #define SizeFile                "size.txt"
 #define LOG_FILENAME            "log.txt"
 
@@ -35,8 +36,7 @@ namespace MonitoringComponents {
     }
 
     void ConfigurationReader::GetFileSizes() {
-        std::cout << "Opening File" << std::endl;
-        File file = SD.open("size.txt");
+        File file = SD.open(SizeFile);
         String value = "";
         int lineCount = 0;
         if (file) {
@@ -72,12 +72,16 @@ namespace MonitoringComponents {
                 this->AnalogInSize = value;
                 break;
             }
+            //case 2: {
+            //    this->ModuleSize = value;
+            //    break;
+            //}
             case 2: {
-                this->ModuleSize = value;
+                this->OutputSize = value;
                 break;
             }
             case 3: {
-                this->OutputSize = value;
+                this->ActionSize = value;
                 break;
             }
         }
@@ -132,6 +136,36 @@ namespace MonitoringComponents {
                         config.alert3.bypass = A3[F("Bypass")];
                         config.alert3.enabled = A3[F("Enabled")];
                         config.alert3.prioirty = A3[F("Priority")];
+
+                        //int Input = elem["Input"]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+
+                        //int Address_Channel = elem["Address"]["Channel"]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...
+                        //int Address_Slot = elem["Address"]["Slot"]; // 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+
+                        //int Register = elem["Register"]; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+                        //int ZeroValue = elem["ZeroValue"]; // 4, 4, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int MaxValue = elem["MaxValue"]; // 20, 20, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int AnalogFactor = elem["AnalogFactor"]; // 10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int BypassAlerts = elem["BypassAlerts"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int Connected = elem["Connected"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+                        //JsonObject A1 = elem["A1"];
+                        //float A1_Setpoint = A1["Setpoint"]; // 15.56, 10.65, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A1_Action = A1["Action"]; // 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A1_Bypass = A1["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A1_Enabled = A1["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+                        //JsonObject A2 = elem["A2"];
+                        //float A2_Setpoint = A2["Setpoint"]; // 17.5, 12.6, -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A2_Action = A2["Action"]; // 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A2_Bypass = A2["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A2_Enabled = A2["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+                        //JsonObject A3 = elem["A3"];
+                        //float A3_Setpoint = A3["Setpoint"]; // 19.65, 15.95, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A3_Action = A3["Action"]; // 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A3_Bypass = A3["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        //int A3_Enabled = A3["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                         
                         //std::sort(config.alerts, config.alerts+MAXALERTS, [](const Alert& a, const Alert& b)->bool {
                         //    return a.prioirty > b.prioirty;
@@ -258,6 +292,44 @@ namespace MonitoringComponents {
         }else {
             return modules;
         }
+    }
+
+    std::vector<ActionConfiguration> ConfigurationReader::DeserializeActions(){
+        DynamicJsonDocument doc(this->ActionSize);
+        File file = SD.open(ActionFile);
+        std::vector<ActionConfiguration> actions;
+        DeserializationError error = deserializeJson(doc, file);
+
+        if (error) {
+            Serial.print(F("deserializeJson() failed: "));
+            Serial.println(error.f_str());
+            return;
+        }
+        for (JsonObject elem : doc.as<JsonArray>()) {
+            ActionConfiguration config;
+            config.actionId = elem["ActionId"]; // 0, 1, 2, 3, 4, 5
+
+            config.addr1.channel = elem["O1"]["Address"]["Channel"]; 
+            config.addr1.slot = elem["O1"]["Address"]["Slot"];
+            config.outputlevel1= (elem["O1"]["Level"].as<bool>()==true)? State::High:State::Low; 
+
+            config.addr2.channel = elem["O2"]["Address"]["Channel"];
+            config.addr2.slot = elem["O2"]["Address"]["Slot"];
+            config.outputlevel2 = (elem["O2"]["Level"].as<bool>() == true) ? State::High : State::Low;
+
+            config.addr3.channel = elem["O3"]["Address"]["Channel"];
+            config.addr3.slot = elem["O3"]["Address"]["Slot"];
+            config.outputlevel3 = (elem["O3"]["Level"].as<bool>() == true) ? State::High : State::Low;
+
+
+
+            config.startState= (elem["Start State"].as<bool>()==true)? State::High:State::Low; 
+            config.type = (OutputType)elem["OutputType"]; 
+            config.modbusAddress.address = elem["ModbusRegister"]; 
+            config.modbusAddress.type = RegisterType::DiscreteInput;
+            actions.push_back(config);
+        }
+        return actions;
     }
 
     ConfigurationReader::~ConfigurationReader() {   }

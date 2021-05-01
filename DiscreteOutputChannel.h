@@ -9,25 +9,25 @@
 namespace MonitoringComponents {
 	class DiscreteOutputChannel :public MonitoringComponent {
 	public:
+
+		DiscreteOutputChannel():MonitoringComponent(){}
+
 		DiscreteOutputChannel(OutputConfiguration configuration, Ref<MonitoringComponent> parent = nullptr)
 			:MonitoringComponent(parent), configuration(configuration),
-			outputPin(configuration.channel, configuration.slot),
-			modbusAddress({ configuration._register,RegisterType::Input }) {
-			this->triggerOn = (this->configuration.triggerOn == LogicType::High) ? TriggerOn::High : TriggerOn::Low;
-			this->outputOn = false;
-			this->initialState = (this->configuration.startState == LogicType::High) ? State::High : State::Low;
+			outputPin(configuration.address),
+			modbusAddress({configuration._register,RegisterType::Input }) {
+			this->initialState = this->configuration.startState;
 		}
 		void Init();
-		void TurnOn();
-		bool isOn();
+		void Init(State initial);
+		void SetOutput(State level);
+		bool OutputState();
 		
 	private:
 		ModuleDiscreteOutput outputPin;
 		OutputConfiguration configuration;
 		ModbusAddress modbusAddress;
-		TriggerOn triggerOn;
 		State initialState;
-		bool outputOn;
 		void privateLoop();
 	};
 };
