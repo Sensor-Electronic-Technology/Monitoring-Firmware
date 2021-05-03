@@ -10,8 +10,11 @@ namespace MonitoringComponents {
 
 	struct ChannelMessage {
 		ChannelAction channelAction;
-		Action systemAction;
+		int actionId;
+		ActionType type;
 		ChannelAddress channel;
+
+
 	};
 
 	typedef Function<void(void)> VoidCallback;

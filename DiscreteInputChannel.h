@@ -15,12 +15,13 @@ namespace MonitoringComponents {
 
 		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), configuration(configuration),
 			modbusAddress({ configuration._register,RegisterType::DiscreteInput }), _on_state_change([](ChannelMessage) {}) {
-			this->inputPin = ModuleDiscreteInput(configuration.slot, configuration.channel);
+			this->inputPin = ModuleDiscreteInput(configuration.address);
 			this->triggerOn = this->configuration.triggerOn;
 			this->triggered = false;
 		}
 
 		DiscreteInputChannel() :MonitoringComponent(nullptr),_on_state_change([](ChannelMessage){ }) {	}
+
 		void Initialize();
 		bool isTriggered();
 		int Channel();

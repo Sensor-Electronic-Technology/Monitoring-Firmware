@@ -1,6 +1,7 @@
 #pragma once
 #include <ArduinoSTL.h>
 #include "Data.h"
+#include "ChannelAlert.h"
 #include "Ref.h"
 
 namespace MonitoringComponents {
@@ -39,7 +40,7 @@ namespace MonitoringComponents {
     public:
         DigitalInConfiguration():Configuration(){  }
 
-        DigitalInConfiguration(int channel, int slot, int reg, bool connected):Configuration(channel,slot,reg,connected) {  }
+        DigitalInConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0,{ channel,slot }, reg, connected) {  }
 
         DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
             this->triggerOn = other.triggerOn;
@@ -63,7 +64,7 @@ namespace MonitoringComponents {
     public:
         AnalogInConfiguration():Configuration(){}
         
-        AnalogInConfiguration(int channel, int slot, int reg, bool connected) :Configuration(channel, slot, reg, connected) { }
+        AnalogInConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0, {channel,slot}, reg, connected) { }
         
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
@@ -92,7 +93,7 @@ namespace MonitoringComponents {
     public:
         OutputConfiguration() :Configuration() {}
 
-        OutputConfiguration(int channel, int slot, int reg, bool connected) :Configuration(channel, slot, reg, connected) { }
+        OutputConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0, {channel,slot}, reg, connected) { }
 
         const OutputConfiguration& operator=(const OutputConfiguration& rhs) {
             if (this != &rhs) {
@@ -141,6 +142,8 @@ namespace MonitoringComponents {
     class ActionConfiguration {
     public:
         int actionId;
+        ActionType actionType;
+
         ChannelAddress addr1;
         State outputlevel1;
 
@@ -153,10 +156,11 @@ namespace MonitoringComponents {
         State startState;
         OutputType type;
         ModbusAddress modbusAddress;
+
         const ActionConfiguration& operator=(const ActionConfiguration& rhs) {
             if (this != &rhs) {
                 this->actionId = rhs.actionId;
-
+                this->actionType = rhs.actionType;
                 this->addr1 = rhs.addr1;
                 this->outputlevel1 = rhs.outputlevel1;
                 this->addr2 = rhs.addr2;

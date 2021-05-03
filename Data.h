@@ -5,8 +5,14 @@ namespace MonitoringComponents {
 	struct ChannelAddress {
 		int slot;
 		int channel;
+		~ChannelAddress(){}
+
 		bool operator==(ChannelAddress addr) {
 			return this->channel == addr.channel && this->slot == addr.slot;
+		}
+
+		 operator bool() {
+			 return this->channel != 0 && this->slot != 0;
 		}
 	};
 
@@ -36,15 +42,20 @@ namespace MonitoringComponents {
 		Clear, Trigger
 	};
 
-	enum class Action:int {
+	enum class ActionType:int {
 		Okay=6,
 		Alarm=5,
 		Warning=4,
 		SoftWarn=3,
 		Maintenance=2,
-		MapTrigger=1,
-		Nothing=0
+		Custom=1
 	};
+
+	//enum class SystemState :int {
+	//	Alarming,
+	//	Warning,
+	//	Okay
+	//};
 
 
 
@@ -59,40 +70,39 @@ namespace MonitoringComponents {
 	enum AlertPriority { Highest = 2, Medium = 1, Lowest = 0 };
 
 
-	struct Alert {
-		float setpoint;
-		int setPointFactor;
-		AlertPriority prioirty;  //delete   
-		Action action;
-		bool bypass;
-		bool enabled;
+	//struct Alert {
+	//	float setpoint;
+	//	int setPointFactor;
+	//	AlertPriority prioirty;  //delete   
+	//	ActionType action;
+	//	bool bypass;
+	//	bool enabled;
 
-		Alert() {
-			this->setpoint = 0;
-			this->setPointFactor = 0;
-			this->action = Action::Nothing;
-			this->prioirty = AlertPriority::Lowest;
-			this->enabled = false;
-			this->bypass = false;
-		}
+	//	Alert() {
+	//		this->setpoint = 0;
+	//		this->setPointFactor = 0;
+	//		this->prioirty = AlertPriority::Lowest;
+	//		this->enabled = false;
+	//		this->bypass = false;
+	//	}
 
-		Alert(const Alert& alert) {
-			this->setpoint = alert.setpoint;
-			this->action = alert.action;
-			this->enabled = alert.enabled;
-			this->setPointFactor = alert.setPointFactor;
-			this->bypass = alert.bypass;
-			this->prioirty = alert.prioirty;
-		}
+	//	Alert(const Alert& alert) {
+	//		this->setpoint = alert.setpoint;
+	//		this->action = alert.action;
+	//		this->enabled = alert.enabled;
+	//		this->setPointFactor = alert.setPointFactor;
+	//		this->bypass = alert.bypass;
+	//		this->prioirty = alert.prioirty;
+	//	}
 
-		Alert& operator =(const Alert& rhs) {
-			this->setpoint = rhs.setpoint;
-			this->action = rhs.action;
-			this->enabled = rhs.enabled;
-			this->setPointFactor = rhs.setPointFactor;
-			this->bypass = rhs.bypass;
-			this->prioirty = rhs.prioirty;
-			return *this;
-		}
-	};
+	//	Alert& operator =(const Alert& rhs) {
+	//		this->setpoint = rhs.setpoint;
+	//		this->action = rhs.action;
+	//		this->enabled = rhs.enabled;
+	//		this->setPointFactor = rhs.setPointFactor;
+	//		this->bypass = rhs.bypass;
+	//		this->prioirty = rhs.prioirty;
+	//		return *this;
+	//	}
+	//};
 };

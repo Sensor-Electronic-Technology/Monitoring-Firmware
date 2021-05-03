@@ -14,12 +14,11 @@
 #include <iostream>
 #include <algorithm>
 #include "ConfigurationReader.h"
-#include "DiscreteInputModule.h"
 
 using namespace MonitoringComponents;
 
 ConfigurationReader reader;
-DiscreteInputModule discreteModule;
+//DiscreteInputModule discreteModule;
 
 void setup(){
     Serial.begin(38400);
@@ -44,14 +43,14 @@ void setup(){
     config.moduleType = ModuleType::DigitalInput;
     config.channelCount = 8;
     config.slot = 1;
-    discreteModule.SetConfig(config);
-    discreteModule.CreateChannels(configurations);
-    discreteModule.Initialize();
+    //discreteModule.SetConfig(config);
+    //discreteModule.CreateChannels(configurations);
+    //discreteModule.Initialize();
     cout << "Starting loop" << endl;
 }
 
 void loop(){
-    discreteModule.loop();
+    //discreteModule.loop();
 }
 
 //void TestingConfiguration() {

@@ -1,26 +1,40 @@
 #pragma once
 #include <ArduinoSTL.h>
 #include "MonitoringComponent.h"
-#include "ModuleDiscreteOutput.h"
 #include "DiscreteOutputChannel.h"
+
 namespace MonitoringComponents {
 
 	class ActionOutput {
 	public:
 		ActionOutput(){}
-		void Set(ChannelAddress address, State level);
-		void Initialize();
-		void ConfigureChannel(OutputConfiguration outputConfig);
-		void Invoke();
 
-		ActionOutput& operator=(const ActionOutput& other) {
+		ActionOutput(DiscreteOutputChannel* output, State level) {
+			this->channel = output;
+			this->level = level;
+		}
 
+		void ConfigureChannel(DiscreteOutputChannel* channel) {
+			this->channel = channel;
+		}
+
+		void TriggerOutput(){
+			this->channel->SetOutput(this->level);
+		}
+
+		void Reset() {
+			State clearLevel = (this->level == State::High) ? State::Low : State::High;
+			this->channel->SetOutput(clearLevel);
+		}
+
+		~ActionOutput() {
+			//delete this->channel;
 		}
 
 	private:
-		ChannelAddress channelAddress;
+		//ChannelAddress channelAddress;
 		State level;
-		DiscreteOutputChannel channel;
+		DiscreteOutputChannel* channel;
 	};
 };
 

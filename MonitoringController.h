@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Configuration.h"
 #include "ConfigurationReader.h"
+#include "Action.h"
 
 namespace MonitoringComponents {
 
@@ -18,10 +19,14 @@ namespace MonitoringComponents {
 		void BuildChannels();
 		void OnChannelCallback(ChannelCallback cbk); 
 	private:
+		typedef std::vector<ChannelAddress> Registrations;
+
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
-		
+		std::vector<Action*> actions;
+
+		std::map<int,Registrations*> actionTracking;
 
 		ChannelCallback _on_channel_cbk;
 

@@ -18,6 +18,11 @@ namespace MonitoringComponents {
 			modbusAddress({configuration._register,RegisterType::Input }) {
 			this->initialState = this->configuration.startState;
 		}
+
+		ChannelAddress Address() {
+			return this->outputPin.Address();
+		}
+
 		void Init();
 		void Init(State initial);
 		void SetOutput(State level);

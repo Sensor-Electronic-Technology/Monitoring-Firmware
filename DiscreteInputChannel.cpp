@@ -12,9 +12,9 @@ namespace MonitoringComponents {
 		bool state = this->isTriggered();
 		if (state) {
 			ChannelMessage msg;
-			msg.channel.slot = this->configuration.slot;
-			msg.channel.channel = this->configuration.channel;
-			msg.action = ChannelAction::Trigger;
+			//msg.channel.slot = this->configuration.slot;
+			//msg.channel.channel = this->configuration.channel;
+			//msg.action = ChannelAction::Trigger;
 			this->_on_state_change(msg);
 		}
 		this->triggered = state;
@@ -32,13 +32,13 @@ namespace MonitoringComponents {
 		bool state = this->isTriggered();
 		if (state != this->triggered) {
 			ChannelMessage message;
-			message.channel.channel = this->configuration.channel;
-			message.channel.slot = this->configuration.slot;
-			if (state) {
-				message.action = ChannelAction::Trigger;
-			}else {
-				message.action = ChannelAction::Clear;
-			}
+			//message.channel.channel = this->configuration.channel;
+			//message.channel.slot = this->configuration.slot;
+			//if (state) {
+			//	message.action = ChannelAction::Trigger;
+			//}else {
+			//	message.action = ChannelAction::Clear;
+			//}
 			this->triggered = state;
 			this->_on_state_change(message);
 		}

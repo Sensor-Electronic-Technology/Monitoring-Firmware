@@ -43,14 +43,8 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{96933842-defb-4372-b8d4-cd356f1d67b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\MonitoringComponents\Modules">
-      <UniqueIdentifier>{37fdd4bc-f942-480b-906a-25b2bd2c5a76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\MonitoringComponents\Tools">
       <UniqueIdentifier>{efc4778f-3a6f-447d-aa4e-8df5eb6f33a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\MonitoringComponents\Modules">
-      <UniqueIdentifier>{e61dce9b-092e-4ac5-a8f2-4f040c6c1926}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MonitoringComponents\Tools">
       <UniqueIdentifier>{fd565623-b7a7-448e-9940-ab93f4025f31}</UniqueIdentifier>
@@ -111,12 +105,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files\MonitoringComponents\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="DiscreteInputModule.h">
-      <Filter>Header Files\MonitoringComponents\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="IModule.h">
-      <Filter>Header Files\MonitoringComponents\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="DiscreteOutputChannel.h">
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
     </ClInclude>
@@ -128,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>Header Files\Configuration</Filter>
-    </ClInclude>
-    <ClInclude Include="ActionDispatcher.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Action.h">
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
@@ -164,17 +149,11 @@
     <ClCompile Include="MonitoringController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DiscreteInputModule.cpp">
-      <Filter>Source Files\MonitoringComponents\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\MonitoringComponents\Tools</Filter>
     </ClCompile>
     <ClCompile Include="DiscreteOutputChannel.cpp">
       <Filter>Source Files\MonitoringComponents\Channels</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionDispatcher.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ActionOutput.cpp">
       <Filter>Source Files</Filter>
