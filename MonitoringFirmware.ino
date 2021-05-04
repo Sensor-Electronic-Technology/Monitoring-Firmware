@@ -14,11 +14,13 @@
 #include <iostream>
 #include <algorithm>
 #include "ConfigurationReader.h"
+#include "MonitoringController.h"
 
 using namespace MonitoringComponents;
 
-ConfigurationReader reader;
+//ConfigurationReader reader;
 //DiscreteInputModule discreteModule;
+MonitoringController controller;
 
 void setup(){
     Serial.begin(38400);
@@ -31,26 +33,32 @@ void setup(){
         ;
     }
     cout << "P1AM Initialized!" << endl;
-    cout << "Reading Configurations" << endl;
-    reader.Init();
-    cout<<"Parsing and Configuring Module"<<endl;
-    vector<Ref<MonitoringComponent>> components;
-    auto moduleConfigurations = reader.DeserializeModuleConfig();
-    vector<DigitalInConfiguration> configurations=reader.DeserializeDigitalConfig();
+    controller.Setup();
+    controller.Initialize();
 
-    
-    ModuleConfiguration config;
-    config.moduleType = ModuleType::DigitalInput;
-    config.channelCount = 8;
-    config.slot = 1;
-    //discreteModule.SetConfig(config);
-    //discreteModule.CreateChannels(configurations);
-    //discreteModule.Initialize();
-    cout << "Starting loop" << endl;
 }
 
 void loop(){
+    controller.loop();
     //discreteModule.loop();
+}
+
+void TestingConfigurationAndCallbacks() {
+    //reader.Init();
+//cout<<"Parsing and Configuring Module"<<endl;
+//vector<Ref<MonitoringComponent>> components;
+//auto moduleConfigurations = reader.DeserializeModuleConfig();
+//vector<DigitalInConfiguration> configurations=reader.DeserializeDigitalConfig();
+
+//
+//ModuleConfiguration config;
+//config.moduleType = ModuleType::DigitalInput;
+//config.channelCount = 8;
+//config.slot = 1;
+////discreteModule.SetConfig(config);
+////discreteModule.CreateChannels(configurations);
+////discreteModule.Initialize();
+//cout << "Starting loop" << endl;
 }
 
 //void TestingConfiguration() {

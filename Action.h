@@ -13,6 +13,10 @@ namespace MonitoringComponents {
 			this->actionType = configuration.actionType;
 			this->initialState = configuration.startState;
 			this->address = configuration.modbusAddress;
+			this->output1 = nullptr;
+			this->output2 = nullptr;
+			this->output3 = nullptr;
+			
 		}
 
 		int Id() {
@@ -48,6 +52,8 @@ namespace MonitoringComponents {
 		}
 
 		void SetOutput(ActionOutput* output, int outputNumber) {
+			std::cout << "Creating Action Output" << std::endl;
+			//std::cout<<output->
 			if (outputNumber == 1) {
 				this->output1 = output;
 			} else if (outputNumber == 2) {
@@ -63,8 +69,6 @@ namespace MonitoringComponents {
 		OutputType type;
 		State initialState;
 		ModbusAddress address;
-
-
 		ActionOutput* output1;
 		ActionOutput* output2;
 		ActionOutput* output3;

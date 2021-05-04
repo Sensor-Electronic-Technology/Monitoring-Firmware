@@ -52,6 +52,9 @@
     <Filter Include="Header Files\MonitoringComponents\Controller">
       <UniqueIdentifier>{596c9293-b1bc-4a81-9b85-ff03e4ec5856}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Controller">
+      <UniqueIdentifier>{be94722c-7b67-4423-b96a-5bbdec91ca95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />
@@ -121,7 +124,7 @@
       <Filter>Header Files\MonitoringComponents\Channels</Filter>
     </ClInclude>
     <ClInclude Include="ActionOutput.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +149,6 @@
     <ClCompile Include="IO.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
-    <ClCompile Include="MonitoringController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\MonitoringComponents\Tools</Filter>
     </ClCompile>
@@ -156,7 +156,10 @@
       <Filter>Source Files\MonitoringComponents\Channels</Filter>
     </ClCompile>
     <ClCompile Include="ActionOutput.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MonitoringController.cpp">
+      <Filter>Source Files\MonitoringComponents\Controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

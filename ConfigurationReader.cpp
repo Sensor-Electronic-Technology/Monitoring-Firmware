@@ -4,7 +4,7 @@
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
 #define ModuleFile              "module.txt"
-#define ActionFile              "action.txt"
+#define ActionFile              "actions.txt"
 #define SizeFile                "size.txt"
 #define LOG_FILENAME            "log.txt"
 
@@ -29,10 +29,10 @@ namespace MonitoringComponents {
     }
 
     void ConfigurationReader::PrintSizes() {
-        //std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
-        //std::cout << OutputFile << " " << this->OutputSize << std::endl;
-        //std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
-        //std::cout << ModuleFile << " " << this->ModuleSize << std::endl;
+        std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
+        std::cout << OutputFile << " " << this->OutputSize << std::endl;
+        std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
+        std::cout << ActionFile << " " << this->ActionSize << std::endl;
     }
 
     void ConfigurationReader::GetFileSizes() {
@@ -101,50 +101,52 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
+                    std::cout << "DeserializeAnalog Failed" << endl;
                     return analogChannels;
                 }else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
-                        int chan = elem[F("Input")]; 
-                        int reg = elem[F("Register")]; 
-                        int slot = elem[F("Module Slot")];
-                        bool connected = elem[F("Connected")];
+                        AnalogAlert alert1, alert2, alert3;
 
-                        AnalogInConfiguration config(chan, slot, reg, connected);
-                        config.zeroValue = elem[F("ZeroValue")]; 
-                        config.maxValue = elem[F("MaxValue")]; 
-                        config.analogFactor = elem[F("AnalogFactor")]; 
-                        config.bypassAlerts = elem[F("BypassAlerts")];
+                        int input = elem[F("Input")]; 
+                        ChannelAddress address;
+                        address.channel = elem[F("Address")][F("Channel")];
+                        address.slot = elem[F("Address")][F("Slot")];
 
-                        //int Input = elem["Input"]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+                        int reg = elem[F("Register")];
+                        int zeroValue = elem[F("ZeroValue")];
+                        int maxValue = elem[F("MaxValue")];
+                        int analogFactor = elem[F("AnalogFactor")];
+                        int bypassAlerts = elem[F("BypassAlerts")];
+                        int connected = elem[F("Connected")];
 
-                        //int Address_Channel = elem["Address"]["Channel"]; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...
-                        //int Address_Slot = elem["Address"]["Slot"]; // 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+                        AnalogInConfiguration config(input,address, reg, connected);
 
-                        //int Register = elem["Register"]; // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-                        //int ZeroValue = elem["ZeroValue"]; // 4, 4, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int MaxValue = elem["MaxValue"]; // 20, 20, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int AnalogFactor = elem["AnalogFactor"]; // 10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int BypassAlerts = elem["BypassAlerts"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int Connected = elem["Connected"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        JsonObject A1 = elem[F("A1")];
+                        alert1.setPoint = A1[F("Setpoint")];
+                        alert1.actionId = A1[F("Action")];
+                        alert1.bypass = A1[F("Bypass")];
+                        alert1.enabled = A1[F("Enabled")];
+                        alert1.setPointFactor = 1;
 
-                        //JsonObject A1 = elem["A1"];
-                        //float A1_Setpoint = A1["Setpoint"]; // 15.56, 10.65, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A1_Action = A1["Action"]; // 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A1_Bypass = A1["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A1_Enabled = A1["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        JsonObject A2 = elem[F("A2")];
+                        alert2.setPoint = A2[F("Setpoint")];
+                        alert2.actionId = A2[F("Action")];
+                        alert2.bypass = A2[F("Bypass")];
+                        alert2.enabled = A2[F("Enabled")];
+                        alert2.setPointFactor = 1;
 
-                        //JsonObject A2 = elem["A2"];
-                        //float A2_Setpoint = A2["Setpoint"]; // 17.5, 12.6, -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A2_Action = A2["Action"]; // 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A2_Bypass = A2["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A2_Enabled = A2["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        JsonObject A3 = elem["A3"];
+                        alert3.setPoint = A3[F("Setpoint")];
+                        alert3.actionId = A3[F("Action")];
+                        alert3.bypass = A3[F("Bypass")];
+                        alert3.enabled = A3[F("Enabled")];
+                        alert3.setPointFactor = 1;
 
-                        //JsonObject A3 = elem["A3"];
-                        //float A3_Setpoint = A3["Setpoint"]; // 19.65, 15.95, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A3_Action = A3["Action"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A3_Bypass = A3["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        //int A3_Enabled = A3["Enabled"]; // 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        config.alert1 = alert1;
+                        config.alert2 = alert2;
+                        config.alert3 = alert3;
+
                         analogChannels.push_back(config);
                     }
                     file.close();
@@ -164,20 +166,22 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
-
                     //log error
+                    std::cout << "Deserialize Output Failed" << endl;
                     return outputChannels;
                 }
                 else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
-                        int chan = elem[F("Output")]; 
+                        int channel = elem[F("Output")]; 
+                        ChannelAddress address;
+                        address.channel = elem[F("Addr")][F("Channel")]; 
+                        address.slot = elem[F("Addr")][F("Module Slot")]; 
                         int reg = elem[F("Register")]; 
-                        int slot = elem[F("Module Slot")];
-                        bool connected = elem[F("Connected")];
-                        OutputConfiguration config(chan,slot, reg, connected);
-                        const char* Map_To_Channel = elem["Map To Channel"];
-
+                        int connected = elem[F("Connected")];
+                        State startState = (elem[F("Start State")].as<bool>() == true) ? State::High : State::Low;
+                        OutputConfiguration config(channel,address,reg,startState,connected);
+                        outputChannels.push_back(config);
                         //config.startState=(LogicType)elem["Start State"];
                         //config.outputType=(OutputType)elem["Type"]; 
                         //config.action = (OutputAction)elem[F("Action")]; 
@@ -192,7 +196,7 @@ namespace MonitoringComponents {
                         //    config.channelMaps.push_back(val);
                         //    str.erase(0, pos + delimiter.length());
                         //}
-                        outputChannels.push_back(config);
+
                     }
                     file.close();
                     return outputChannels;
@@ -211,36 +215,31 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
+                    std::cout << "Deserialize Digital Failed" << endl;
                     return configurations;
                 }else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
+                        
+                        ChannelAddress address;
 
-                        //DigitalInConfiguration config(chan,slot, reg, connected);
-                        int Input = elem["Input"]; // 1, 2, 3, 4, 5, 6, 7, 8
+                        int input = elem[F("Input")];
+                        address.channel = elem[F("Address")][F("Channel")];
+                        address.slot = elem[F("Address")][F("Slot")];
+                        int reg = elem[F("Coil")];
+                        int connected = elem[F("Connected")];
 
-                        int Address_Channel = elem["Address"]["Channel"]; // 1, 2, 3, 4, 5, 6, 7, 8
-                        int Address_Slot = elem["Address"]["Slot"]; // 1, 1, 1, 1, 1, 1, 1, 1
+                        DigitalInConfiguration config(input,address,reg,connected);
 
-                        int Coil = elem["Coil"]; // 0, 1, 2, 3, 4, 5, 6, 7
-                        int Connected = elem["Connected"]; // 1, 1, 1, 1, 1, 1, 1, 1
+                        DigitalAlert alert;
+                        JsonObject Alert = elem[F("Alert")];
+                        alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
+                        alert.actionId = Alert[F("Action")];
+                        alert.bypass = Alert[F("Bypass")].as<bool>();
+                        alert.enabled = Alert[F("Enabled")].as<bool>();
+                        config.alert = alert;
 
-                        JsonObject Alert = elem["Alert"];
-                        int Alert_TriggerOn = Alert["TriggerOn"]; // 1, 0, 0, 0, 1, 0, 1, 0
-                        int Alert_Action = Alert["Action"]; // 1, 1, 4, 5, 3, 1, 1, 1
-                        int Alert_Bypass = Alert["Bypass"]; // 0, 0, 0, 0, 0, 0, 0, 0
-                        int Alert_Enabled = Alert["Enabled"]; // 1, 1, 1, 1, 1, 1, 1, 1
-
-                        //int Output = elem["Output"]; // 1, 2, 3, 4, 5, 6, 7, 8
-
-                        //int Addr_Channel = elem["Addr"]["Channel"]; // 1, 2, 3, 4, 5, 6, 7, 8
-                        //int Addr_Module_Slot = elem["Addr"]["Module Slot"]; // 2, 2, 2, 2, 2, 2, 2, 2
-
-                        //int Register = elem["Register"]; // 0, 1, 2, 3, 4, 5, 6, 7
-                        //int Start_State = elem["Start State"]; // 0, 0, 0, 0, 0, 0, 0, 0
-                        //int Connected = elem["Connected"]; // 1, 1, 1, 1, 0, 0, 0, 0
-
-                       // configurations.push_back(config);
+                        configurations.push_back(config);
                     }
                     file.close();
                     return configurations;
@@ -285,31 +284,29 @@ namespace MonitoringComponents {
         File file = SD.open(ActionFile);
         std::vector<ActionConfiguration> actions;
         DeserializationError error = deserializeJson(doc, file);
-
         if (error) {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.f_str());
+            std::cout << "Deserialize Action Failed" << std::endl;
             return actions;
         }
         for (JsonObject elem : doc.as<JsonArray>()) {
             ActionConfiguration config;
             config.actionId = elem["ActionId"]; // 0, 1, 2, 3, 4, 5
 
-            config.addr1.channel = elem["O1"]["Address"]["Channel"]; 
-            config.addr1.slot = elem["O1"]["Address"]["Slot"];
-            config.outputlevel1= (elem["O1"]["Level"].as<bool>()==true)? State::High:State::Low; 
+            config.addr1.channel = elem[F("O1")][F("Address")][F("Channel")];
+            config.addr1.slot = elem[F("O1")][F("Address")][F("Slot")];
+            config.outputlevel1= (elem[F("O1")][F("Level")].as<bool>()==true)? State::High:State::Low;
 
-            config.addr2.channel = elem["O2"]["Address"]["Channel"];
-            config.addr2.slot = elem["O2"]["Address"]["Slot"];
-            config.outputlevel2 = (elem["O2"]["Level"].as<bool>() == true) ? State::High : State::Low;
+            config.addr2.channel = elem[F("O2")][F("Address")][F("Channel")];
+            config.addr2.slot = elem[F("O2")][F("Address")][F("Slot")];
+            config.outputlevel2 = (elem[F("O2")][F("Level")].as<bool>() == true) ? State::High : State::Low;
 
-            config.addr3.channel = elem["O3"]["Address"]["Channel"];
-            config.addr3.slot = elem["O3"]["Address"]["Slot"];
-            config.outputlevel3 = (elem["O3"]["Level"].as<bool>() == true) ? State::High : State::Low;
+            config.addr3.channel = elem[F("O3")][F("Address")][F("Channel")];
+            config.addr3.slot = elem[F("O3")][F("Address")][F("Slot")];
+            config.outputlevel3 = (elem[F("O3")][F("Level")].as<bool>() == true) ? State::High : State::Low;
 
-            config.startState= (elem["Start State"].as<bool>()==true)? State::High:State::Low; 
-            config.type = (OutputType)elem["OutputType"]; 
-            config.modbusAddress.address = elem["ModbusRegister"]; 
+            config.startState= (elem[F("Start State")].as<bool>()==true)? State::High:State::Low;
+            config.type = (OutputType)elem[F("OutputType")];
+            config.modbusAddress.address = elem[F("ModbusRegister")];
             config.modbusAddress.type = RegisterType::DiscreteInput;
             actions.push_back(config);
 
@@ -334,6 +331,7 @@ namespace MonitoringComponents {
             //int OutputType = elem["OutputType"]; // 0, 0, 0, 0, 0, 2
             //int ModbusRegister = elem["ModbusRegister"]; // 1, 2, 3, 4, 5, 6
         }
+        file.close();
         return actions;
     }
 

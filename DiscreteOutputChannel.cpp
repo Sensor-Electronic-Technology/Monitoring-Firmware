@@ -19,7 +19,6 @@ namespace MonitoringComponents {
 		return this->outputPin.isHigh();
 	}
 
-
 	void DiscreteOutputChannel::privateLoop() {
 
 	}

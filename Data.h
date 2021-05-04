@@ -7,6 +7,12 @@ namespace MonitoringComponents {
 		int channel;
 		~ChannelAddress(){}
 
+		ChannelAddress& operator=(const ChannelAddress& rhs) {
+			this->channel = rhs.channel;
+			this->slot = rhs.slot;
+			return *this;
+		}
+
 		bool operator==(ChannelAddress addr) {
 			return this->channel == addr.channel && this->slot == addr.slot;
 		}

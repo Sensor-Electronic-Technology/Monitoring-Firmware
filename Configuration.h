@@ -40,7 +40,7 @@ namespace MonitoringComponents {
     public:
         DigitalInConfiguration():Configuration(){  }
 
-        DigitalInConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0,{ channel,slot }, reg, connected) {  }
+        DigitalInConfiguration(int channel,ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) {  }
 
         DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
             this->triggerOn = other.triggerOn;
@@ -64,14 +64,14 @@ namespace MonitoringComponents {
     public:
         AnalogInConfiguration():Configuration(){}
         
-        AnalogInConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0, {channel,slot}, reg, connected) { }
+        AnalogInConfiguration(int channel, ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) { }
         
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
                 this->zeroValue = rhs.zeroValue;
                 this->maxValue = rhs.maxValue;
-                this->analogFactor = rhs.zeroValue;
+                this->analogFactor = rhs.analogFactor;
                 this->bypassAlerts = rhs.bypassAlerts;
                 this->alert1 = rhs.alert1;
                 this->alert2 = rhs.alert2;
@@ -93,12 +93,13 @@ namespace MonitoringComponents {
     public:
         OutputConfiguration() :Configuration() {}
 
-        OutputConfiguration(int channel, int slot, int reg, bool connected) :Configuration(0, {channel,slot}, reg, connected) { }
+        OutputConfiguration(int channel,ChannelAddress addr, int reg, State startState,bool connected) :Configuration(channel,addr, reg, connected),startState(startState) { }
 
         const OutputConfiguration& operator=(const OutputConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
                 this->startState = rhs.startState;
+                this->triggerOn = rhs.triggerOn;
             }
             return *this;
         }

@@ -13,8 +13,6 @@ namespace MonitoringComponents {
 		int actionId;
 		ActionType type;
 		ChannelAddress channel;
-
-
 	};
 
 	typedef Function<void(void)> VoidCallback;

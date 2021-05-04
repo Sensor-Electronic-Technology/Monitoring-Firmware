@@ -10,13 +10,16 @@ namespace MonitoringComponents {
 
 	void DiscreteInputChannel::Initialize() {
 		bool state = this->isTriggered();
+		//if (this->alert.enabled && !this->alert.bypass) {
 		if (state) {
 			ChannelMessage msg;
-			//msg.channel.slot = this->configuration.slot;
-			//msg.channel.channel = this->configuration.channel;
-			//msg.action = ChannelAction::Trigger;
+			msg.actionId = this->alert.actionId;
+			msg.channel = this->inputPin.Address();
+			msg.channelAction = ChannelAction::Trigger;
+			this->alert.activated = true;
 			this->_on_state_change(msg);
 		}
+		//}
 		this->triggered = state;
 	}
 
@@ -30,16 +33,19 @@ namespace MonitoringComponents {
 
 	void DiscreteInputChannel::privateLoop() {
 		bool state = this->isTriggered();
-		if (state != this->triggered) {
+		if (state!=this->alert.activated) {
 			ChannelMessage message;
-			//message.channel.channel = this->configuration.channel;
-			//message.channel.slot = this->configuration.slot;
-			//if (state) {
-			//	message.action = ChannelAction::Trigger;
-			//}else {
-			//	message.action = ChannelAction::Clear;
-			//}
+			message.actionId = this->alert.actionId;
+			message.channel = this->inputPin.Address();			
+			if (state) {
+				message.channelAction = ChannelAction::Trigger;
+				this->alert.activated = true;
+			}else {
+				message.channelAction = ChannelAction::Clear;
+				this->alert.activated = false;
+			}
 			this->triggered = state;
+
 			this->_on_state_change(message);
 		}
 	}
