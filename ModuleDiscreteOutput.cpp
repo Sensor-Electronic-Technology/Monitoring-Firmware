@@ -10,7 +10,7 @@ namespace MonitoringComponents {
 	void ModuleDiscreteOutput::setOutput(State outputState) {
 		this->state = outputState;
 		int outputValue = (outputState == State::High) ? 1 : 0;
-		//std::cout << "Set Output " << "{" << this->_address.channel << "," << this->_address.slot << "}" << std::endl;
+		std::cout << "Set Output " << "{" << this->_address.channel << "," << this->_address.slot << "} " <<outputValue<<std::endl;
 		P1.writeDiscrete(outputValue, this->_address.slot, this->_address.channel);
 	}
 

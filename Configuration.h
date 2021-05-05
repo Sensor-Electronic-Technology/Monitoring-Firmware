@@ -146,13 +146,16 @@ namespace MonitoringComponents {
         ActionType actionType;
 
         ChannelAddress addr1;
-        State outputlevel1;
+        State onLevel1;
+        State offLevel1;
 
         ChannelAddress addr2;
-        State outputlevel2;
+        State onLevel2;
+        State offLevel2;
 
         ChannelAddress addr3;
-        State outputlevel3;
+        State onLevel3;
+        State offLevel3;
 
         State startState;
         OutputType type;
@@ -163,12 +166,14 @@ namespace MonitoringComponents {
                 this->actionId = rhs.actionId;
                 this->actionType = rhs.actionType;
                 this->addr1 = rhs.addr1;
-                this->outputlevel1 = rhs.outputlevel1;
+                this->onLevel1 = rhs.onLevel1;
+                this->offLevel1 = rhs.offLevel1;
                 this->addr2 = rhs.addr2;
-                this->outputlevel2= rhs.outputlevel2;
+                this->onLevel2= rhs.onLevel2;
+                this->offLevel2 = rhs.offLevel2;
                 this->addr3 = rhs.addr3;
-                this->outputlevel3 = rhs.outputlevel3;
-
+                this->onLevel3 = rhs.onLevel3;
+                this->offLevel3 = rhs.offLevel3;
                 this->startState = rhs.startState;
                 this->type = rhs.type;
                 this->modbusAddress = rhs.modbusAddress;

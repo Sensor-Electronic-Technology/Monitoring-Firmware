@@ -292,17 +292,34 @@ namespace MonitoringComponents {
             ActionConfiguration config;
             config.actionId = elem["ActionId"]; // 0, 1, 2, 3, 4, 5
 
-            config.addr1.channel = elem[F("O1")][F("Address")][F("Channel")];
-            config.addr1.slot = elem[F("O1")][F("Address")][F("Slot")];
-            config.outputlevel1= (elem[F("O1")][F("Level")].as<bool>()==true)? State::High:State::Low;
+            JsonObject O1 = elem[F("O1")];
 
-            config.addr2.channel = elem[F("O2")][F("Address")][F("Channel")];
-            config.addr2.slot = elem[F("O2")][F("Address")][F("Slot")];
-            config.outputlevel2 = (elem[F("O2")][F("Level")].as<bool>() == true) ? State::High : State::Low;
+            config.addr1.channel = O1[F("Address")][F("Channel")];
+            config.addr1.slot = O1[F("Address")][F("Slot")];
+            config.onLevel1= (O1[F("OnLevel")].as<bool>()==true)? State::High:State::Low;
+            config.offLevel1 = (O1[F("OffLevel")].as<bool>() == true) ? State::High : State::Low;
 
-            config.addr3.channel = elem[F("O3")][F("Address")][F("Channel")];
-            config.addr3.slot = elem[F("O3")][F("Address")][F("Slot")];
-            config.outputlevel3 = (elem[F("O3")][F("Level")].as<bool>() == true) ? State::High : State::Low;
+            JsonObject O2 = elem[F("O2")];
+
+            config.addr2.channel = O2[F("Address")][F("Channel")];
+            config.addr2.slot = O2[F("Address")][F("Slot")];
+            config.onLevel2 = (O2[F("OnLevel")].as<bool>() == true) ? State::High : State::Low;
+            config.offLevel2 = (O2[F("OffLevel")].as<bool>() == true) ? State::High : State::Low;
+
+            JsonObject O3 = elem[F("O3")];
+
+            config.addr3.channel = O3[F("Address")][F("Channel")];
+            config.addr3.slot = O3[F("Address")][F("Slot")];
+            config.onLevel3 = (O3[F("OnLevel")].as<bool>() == true) ? State::High : State::Low;
+            config.offLevel3 = (O3[F("OffLevel")].as<bool>() == true) ? State::High : State::Low;
+
+            //config.addr2.channel = elem[F("O2")][F("Address")][F("Channel")];
+            //config.addr2.slot = elem[F("O2")][F("Address")][F("Slot")];
+            //config.onLevel2 = (elem[F("O2")][F("Level")].as<bool>() == true) ? State::High : State::Low;
+
+            //config.addr3.channel = elem[F("O3")][F("Address")][F("Channel")];
+            //config.addr3.slot = elem[F("O3")][F("Address")][F("Slot")];
+            //config.onLevel3 = (elem[F("O3")][F("Level")].as<bool>() == true) ? State::High : State::Low;
 
             config.startState= (elem[F("Start State")].as<bool>()==true)? State::High:State::Low;
             config.type = (OutputType)elem[F("OutputType")];

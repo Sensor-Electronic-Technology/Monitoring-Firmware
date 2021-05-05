@@ -23,6 +23,10 @@ namespace MonitoringComponents {
 			return this->actionId;
 		}
 
+		ActionType ActionType() {
+			return this->actionType;
+		}
+
 		void Invoke() {
 			if (this->output1 != nullptr) {
 				this->output1->TriggerOutput();
@@ -52,8 +56,6 @@ namespace MonitoringComponents {
 		}
 
 		void SetOutput(ActionOutput* output, int outputNumber) {
-			std::cout << "Creating Action Output" << std::endl;
-			//std::cout<<output->
 			if (outputNumber == 1) {
 				this->output1 = output;
 			} else if (outputNumber == 2) {

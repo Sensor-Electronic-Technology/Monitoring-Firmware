@@ -9,6 +9,8 @@ namespace MonitoringComponents {
 	}
 
 	void DiscreteInputChannel::Initialize() {
+		//ChannelAddress addr = this->inputPin.Address();
+		//std::cout << "Initializing Discrete InputPin: {" << addr.channel << "," << addr.slot << "} " << std::endl;
 		bool state = this->isTriggered();
 		//if (this->alert.enabled && !this->alert.bypass) {
 		if (state) {

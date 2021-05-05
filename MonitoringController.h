@@ -12,17 +12,85 @@ namespace MonitoringComponents {
 		Alarming,Warning,Maintenance,Okay
 	};
 
+	enum class Transition {
+		To,
+		From
+	};
+
+	struct SystemActionIds {
+		int alarmIndex = 0;
+		int warningIndex = 0;
+		int okayIndex = 0;
+		int softWarnIndex = 0;
+		int maintenanceIndex = 0;
+
+		void setId(ActionType type,int i) {
+			switch (type) {
+				case ActionType::Alarm: {
+					this->alarmIndex = i;
+					break;
+				}
+				case ActionType::Maintenance: {
+					this->maintenanceIndex = i;
+					break;
+				}
+				case ActionType::Warning: {
+					this->warningIndex = i;
+					break;
+				}
+				case ActionType::SoftWarn: {
+					this->softWarnIndex = i;
+					break;
+				}
+				case ActionType::Okay: {
+					this->okayIndex = i;
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+		}
+		int getId(ActionType type) {
+			switch (type) {
+				case ActionType::Alarm: {
+					return this->alarmIndex;
+				}
+				case ActionType::Maintenance: {
+					return this->alarmIndex;
+				}
+				case ActionType::Warning: {
+					return this->alarmIndex;
+				}
+				case ActionType::SoftWarn: {
+					return this->alarmIndex;
+				}
+				case ActionType::Okay: {
+					return this->alarmIndex;
+				}
+				default: {
+					return -1;
+				}
+			}
+		}
+	};
+
 	class MonitoringController:public MonitoringComponent {
 	public:
 		MonitoringController() :MonitoringComponent(), _on_channel_cbk([](ChannelMessage) {}){}
 		void Setup();
 		void Run();
+		void SetState(ActionType actionType);
 		void Initialize();
+	private:
 		void BuildChannels();
 		void OnChannelCallback(ChannelCallback cbk);
+		void HandleAction(ChannelMessage channelMessage);
+		void TransitionState(Transition direction, ControllerState newState);
+		Action* FindActionByType(ActionType type);
+		bool ActionCleared();
 	private:
 		typedef std::vector<ChannelAddress> Registrations;
-
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
@@ -32,6 +100,7 @@ namespace MonitoringComponents {
 		ControllerState controllerState;
 		//Timer resetTimer;
 		Timer printTimer;
+		SystemActionIds systemActionIds;
 
 		void privateLoop();
 

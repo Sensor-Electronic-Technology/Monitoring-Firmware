@@ -9,22 +9,22 @@ namespace MonitoringComponents {
 	public:
 		ActionOutput(){}
 
-		ActionOutput(DiscreteOutputChannel* output, State level) {
+		ActionOutput(Ref<DiscreteOutputChannel> output, State onLevel,State offLevel) {
 			this->channel = output;
-			this->level = level;
+			this->OnLevel = onLevel;
+			this->OffLevel = offLevel;
 		}
 
-		void ConfigureChannel(DiscreteOutputChannel* channel) {
+		void ConfigureChannel(Ref<DiscreteOutputChannel> channel) {
 			this->channel = channel;
 		}
 
 		void TriggerOutput(){
-			this->channel->SetOutput(this->level);
+			this->channel->SetOutput(this->OnLevel);
 		}
 
 		void Reset() {
-			State clearLevel = (this->level == State::High) ? State::Low : State::High;
-			this->channel->SetOutput(clearLevel);
+			this->channel->SetOutput(this->OffLevel);
 		}
 
 		~ActionOutput() {
@@ -33,8 +33,9 @@ namespace MonitoringComponents {
 
 	private:
 		//ChannelAddress channelAddress;
-		State level;
-		DiscreteOutputChannel* channel;
+		State OnLevel;
+		State OffLevel;
+		Ref<DiscreteOutputChannel> channel;
 	};
 };
 
