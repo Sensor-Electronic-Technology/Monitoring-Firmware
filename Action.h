@@ -23,7 +23,7 @@ namespace MonitoringComponents {
 			return this->actionId;
 		}
 
-		ActionType ActionType() {
+		ActionType GetActionType() {
 			return this->actionType;
 		}
 

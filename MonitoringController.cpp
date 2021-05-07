@@ -16,7 +16,10 @@ namespace MonitoringComponents {
 		}
 		for (int i = 0; i < actionConfig.size();i++) {
 			Action* action=new Action(actionConfig[i]);
-			//this->systemIndexes=
+			if (actionConfig[i].actionType != ActionType::Custom) {
+				//No need to track custom, it will trigger only what designated
+				this->systemActMap[actionConfig[i].actionType] = i;
+			}
 			if (actionConfig[i].addr1) {
 				auto outputChannel=std::find_if(outputChannels.begin(), outputChannels.end(), [&](DiscreteOutputChannel* output) {
 					return actionConfig[i].addr1 == output->Address();
@@ -115,20 +118,71 @@ namespace MonitoringComponents {
 		//}
 	}
 
+	void TransitionState(Transition direction, ControllerState newState) {
+		
+	}
+
 	void MonitoringController::SetState(ActionType actionType) {
-		switch (actionType) {
-			case ActionType::Alarm:{
-				if (controllerState != ControllerState::Maintenance) {
-					this->controllerState = ControllerState::Alarming;
+
+	}
+
+	void MonitoringController::HandleAction(ChannelMessage message) {
+		auto action = find_if(actions.begin(), actions.end(), [&](Action* act) {
+			return message.actionId == act->Id();
+		});
+		if (action != actions.end()) {
+			int id = (*action)->Id();
+			Registrations* registrations = actionTracking[id];
+
+			bool isNew = false;
+			if (registrations == nullptr) {
+				registrations = new Registrations;
+				actionTracking[id] = registrations;
+				isNew = true;
+			}
+
+			if (message.channelAction == ChannelAction::Trigger) {
+				if (isNew) {
+					registrations->push_back(message.channel);
+					//(*action)->Invoke();
+				} else {
+					auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
+						return address == message.channel;
+					});
+					if (channel == registrations->end()) {
+						registrations->push_back(message.channel);
+
+						//(*action)->Invoke();
+					}//else channel already triggered.  do not trigger again
 				}
-				break;
+
+			} else if (message.channelAction == ChannelAction::Clear) {
+				auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
+						return address == message.channel;
+				}), registrations->end());
+				if (registrations->empty()) {
+
+					//(*action)->Clear();			
+				}
+			}
+		}
+	}
+
+	bool MonitoringController::CheckCanTransition(ActionType newAction) {
+		switch (newAction) {
+			case ActionType::Alarm: {
+				if (this->ActionCleared(ActionType::Maintenance)) {
+					this->controllerState = ControllerState::Alarming;
+					return true;
+				} else {
+					return false;
+				}
 			}
 			case ActionType::Maintenance: {
-				this->controllerState = ControllerState::Maintenance;
-				break;
+				return true;
 			}
 			case ActionType::Warning: {
-				if (controllerState != ControllerState::Alarming && controllerState!=ControllerState::Maintenance) {
+				if (controllerState != ControllerState::Alarming && controllerState != ControllerState::Maintenance) {
 					this->controllerState = ControllerState::Warning;
 				}
 				break;
@@ -139,76 +193,16 @@ namespace MonitoringComponents {
 		}
 	}
 
-	void MonitoringController::HandleAction(ChannelMessage message) {
-		auto action = find_if(actions.begin(), actions.end(), [&](Action* act) {
-			return message.actionId == act->Id();
-		});
-		if (action != actions.end()) {
-			int id = (*action)->Id();
-			Registrations* registrations = actionTracking[id];
-			bool isNew = false;
-			if (registrations == nullptr) {
-				registrations = new Registrations;
-				actionTracking[id] = registrations;
-				isNew = true;
-			}
-			if (message.channelAction == ChannelAction::Trigger) {
-				if (isNew) {
-					registrations->push_back(message.channel);
-					(*action)->Invoke();
-				} else {
-					if (message.type!=ActionType::Custom || message.type!=ActionType::Okay) {
-						//Alarm,Warning,SoftWarn,or Maintence
-
-					}
-
-					auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-						return address == message.channel;
-					});
-					if (channel == registrations->end()) {
-						registrations->push_back(message.channel);
-						(*action)->Invoke();
-					}//else channel already triggered.  do not trigger again
-				}
-			} else if (message.channelAction == ChannelAction::Clear) {
-				auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-						return address == message.channel;
-				}), registrations->end());
-
-				if (registrations->empty()) {
-					(*action)->Clear();			
-				}
-			}
+	bool MonitoringController::ActionCleared(ActionType actionType) {
+		int index = systemActMap[actionType];
+		if (index >= 0) {
+			return this->actionTracking[systemActMap[actionType]]->empty();
+		} else {
+			return false;
 		}
 	}
-
-
-	Action* MonitoringController::FindActionByType(ActionType actionType) {
-		auto action = std::find_if(actions.begin(), actions.end(), [&](Action* act) {
-				return act->ActionType() == actionType;
-			});
-		return *action;
-	}
-
-	bool MonitoringController::ActionCleared(ActionType actionType) {
-		auto action = std::find_if(actions.begin(), actions.end(), [&](Action* act) {
-			return act->ActionType() == actionType;
-			});
-		return *action;
-	}
-	
-	bool MonitoringController::AlarmsCleared() {
-
-		//return this->
-	}
-
-	
-
 
 	void MonitoringController::Run() {
 		this->loop();
 	}
-
-
-
 };

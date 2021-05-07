@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="MonitoringComponents::AnalogInputChannel">
+    <Position X="6" Y="4.25" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAQAAAAAICAAAAACABCAAAFACCgAAAAA=</HashCode>
+      <FileName>AnalogInputChannel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::DiscreteInputChannel">
+    <Position X="18" Y="4.25" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAMgAAAAAQAAAgAICAAAAACAAAAEAEAACgQAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Configuration">
+    <Position X="12" Y="18.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAIAAAAAABAAAAAAIAAAAAgAAgAAAAAAA=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::DigitalInConfiguration">
+    <Position X="5.5" Y="22" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAQAAAAAAAAAAAAAAAAAAAAAAAAAAgAgAAAAA=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::AnalogInConfiguration">
+    <Position X="11.5" Y="22" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAACAAACAAAAAgAgAQAAE=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::OutputConfiguration">
+    <Position X="17.5" Y="22" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAwAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ModuleConfiguration" Collapsed="true">
+    <Position X="37.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAgAIAAAAEAAAAAAAAAAAAAAAAAAAiAAAAAAI=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ActionConfiguration" Collapsed="true">
+    <Position X="39" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAEABABAAgAAAAIgCAAAAIABAAAAAAggAAAAAQA=</HashCode>
+      <FileName>Configuration.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Function&lt;ReturnValue(Args...)&gt;" Collapsed="true">
+    <Position X="6.25" Y="14" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAEAAAAAIAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Function.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ModuleIOPin">
+    <Position X="19.5" Y="11.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAEAAAAA=</HashCode>
+      <FileName>IO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::MonitoringComponent">
+    <Position X="19.25" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAACAAAAgAACAAQAEAAAAgAAAAAAQgAAAA=</HashCode>
+      <FileName>MonitoringComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Ref&lt;T&gt;" Collapsed="true">
+    <Position X="39" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAgAEAAAAAgAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Ref.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::UniquePtr&lt;T&gt;" Collapsed="true">
+    <Position X="40.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIABAAAIEAAAAAgAAAAAAAAAACAAgAAAAAAA=</HashCode>
+      <FileName>UniquePtr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Vector&lt;Ty&gt;" Collapsed="true">
+    <Position X="42.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAgAIIIQIACAAAAAAAAAUAIAQAAAAA=</HashCode>
+      <FileName>Vector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ConfigurationReader" Collapsed="true">
+    <Position X="42.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkUQAgAAEgAEACAAAIAAAEAAAAAAACAAQiQQAIAAA=</HashCode>
+      <FileName>ConfigurationReader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ModuleAnalogInput">
+    <Position X="24.25" Y="14.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAgACAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>ModuleAnalogInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ModuleDiscreteInput">
+    <Position X="14.25" Y="14.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAECAAAAAAAAAAAAAEAAAAAAABAAA=</HashCode>
+      <FileName>ModuleDiscreteInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ModuleDiscreteOutput">
+    <Position X="19" Y="14.25" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAQAAAAAAAAAAAAAAAAAAAAEAAACBAABAAA=</HashCode>
+      <FileName>ModuleDiscreteOutput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Timer">
+    <Position X="25" Y="4.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>gABAAAAAAAAAgAJAAAAACAAAgAAABAAAASQAAAAEAAA=</HashCode>
+      <FileName>Timer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::DiscreteOutputChannel">
+    <Position X="30" Y="4.25" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>AAoAAAEAAAAAAAAAAAAACAAAAACAAAAGAAAGgAAAAAA=</HashCode>
+      <FileName>DiscreteOutputChannel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::MonitoringController">
+    <Position X="12.75" Y="4.25" Width="4.5" />
+    <NestedTypes>
+      <Typedef Name="MonitoringComponents::MonitoringController::Registrations" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MonitoringController.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAABAAAGCAABaACEAggCAAEAAAAAABCAAgCBEAAAAI=</HashCode>
+      <FileName>MonitoringController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ChannelAlert">
+    <Position X="27" Y="17.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACASAAAAgAAgAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ChannelAlert.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::AnalogAlert">
+    <Position X="25" Y="20.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAE=</HashCode>
+      <FileName>ChannelAlert.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::DigitalAlert">
+    <Position X="29.25" Y="20.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ChannelAlert.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::ActionOutput" Collapsed="true">
+    <Position X="40.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAACAAAAAAAJAKAAAAAAAAAAAAAAAAAAAAAAAAIAAI=</HashCode>
+      <FileName>ActionOutput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitoringComponents::Action" Collapsed="true">
+    <Position X="37.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABICEAAAAAAIAAAAAAAACAAAAAIXAAAAAAAEAABAAAQ=</HashCode>
+      <FileName>Action.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MonitoringComponents::ChannelMessage" Collapsed="true">
+    <Position X="39" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAgCAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MonitoringComponents::SystemActionIds" Collapsed="true">
+    <Position X="42.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAEAAAAAAAAAAAACAAAAAAAAAAAACAAQAAAIAgAAA=</HashCode>
+      <FileName>MonitoringController.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MonitoringComponents::ChannelAddress" Collapsed="true">
+    <Position X="37.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAEAAAAAQAAACAAAAAAAAAiAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MonitoringComponents::ModbusAddress" Collapsed="true">
+    <Position X="40.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="MonitoringComponents::VoidCallback" Collapsed="true">
+    <Position X="10.5" Y="14" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MonitoringComponents::DiscreteInputCallback" Collapsed="true">
+    <Position X="0.5" Y="14" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MonitoringComponents::AnalogInputCallback" Collapsed="true">
+    <Position X="4.75" Y="18" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MonitoringComponents::ChannelCallback" Collapsed="true">
+    <Position X="5" Y="16" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Callbacks.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="MonitoringComponents::ControllerState" Collapsed="true">
+    <Position X="37.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAgAAAABAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>MonitoringController.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::Transition" Collapsed="true">
+    <Position X="39" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MonitoringController.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::State" Collapsed="true">
+    <Position X="37.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::TriggerOn" Collapsed="true">
+    <Position X="40.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::RegisterType" Collapsed="true">
+    <Position X="42.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAgAECAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::ChannelAction" Collapsed="true">
+    <Position X="40.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::ActionType" Collapsed="true">
+    <Position X="37.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAgAAAABAAAgAAAAAAAABCAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::InputType" Collapsed="true">
+    <Position X="39" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEBAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::LogicType" Collapsed="true">
+    <Position X="40.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::OutputAction" Collapsed="true">
+    <Position X="39" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAICAAAAAQAAgAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::OutputType" Collapsed="true">
+    <Position X="40.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAGAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::ModuleType" Collapsed="true">
+    <Position X="37.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAIEBAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::Module" Collapsed="true">
+    <Position X="42.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACACCAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::ConfigurationType" Collapsed="true">
+    <Position X="42.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAIEAAAAAAAIQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MonitoringComponents::AlertPriority" Collapsed="true">
+    <Position X="39" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAQEAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

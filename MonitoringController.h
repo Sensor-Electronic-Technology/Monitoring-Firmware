@@ -88,22 +88,26 @@ namespace MonitoringComponents {
 		void HandleAction(ChannelMessage channelMessage);
 		void TransitionState(Transition direction, ControllerState newState);
 		Action* FindActionByType(ActionType type);
-		bool ActionCleared();
+
+
+		bool ActionCleared(ActionType actionType);
+		bool CheckCanTransition(ActionType actionType);
 	private:
 		typedef std::vector<ChannelAddress> Registrations;
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
 		std::vector<Action*> actions;
+
 		std::map<int,Registrations*> actionTracking;
+		std::map<ActionType, int> systemActMap;
+
 		ChannelCallback _on_channel_cbk;
 		ControllerState controllerState;
 		//Timer resetTimer;
 		Timer printTimer;
-		SystemActionIds systemActionIds;
 
 		void privateLoop();
-
 	};
 };
 

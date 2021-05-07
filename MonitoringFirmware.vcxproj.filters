@@ -40,9 +40,6 @@
     <Filter Include="Source Files\Configuration">
       <UniqueIdentifier>{534791ab-69af-4911-9f5a-7ab9f56af6d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utility">
-      <UniqueIdentifier>{96933842-defb-4372-b8d4-cd356f1d67b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\MonitoringComponents\Tools">
       <UniqueIdentifier>{efc4778f-3a6f-447d-aa4e-8df5eb6f33a2}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,16 @@
     <Filter Include="Source Files\MonitoringComponents\Controller">
       <UniqueIdentifier>{be94722c-7b67-4423-b96a-5bbdec91ca95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MonitoringComponents\Actions">
+      <UniqueIdentifier>{4a058aa8-b02d-4106-934a-d09fa394a6ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Actions">
+      <UniqueIdentifier>{2740df5d-1878-48ed-ad91-3fe4f738f47d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.MonitoringFirmware.vsarduino.h">
@@ -121,10 +125,10 @@
       <Filter>Header Files\Configuration</Filter>
     </ClInclude>
     <ClInclude Include="Action.h">
-      <Filter>Header Files\MonitoringComponents\Channels</Filter>
+      <Filter>Header Files\MonitoringComponents\Actions</Filter>
     </ClInclude>
     <ClInclude Include="ActionOutput.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\MonitoringComponents\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +158,6 @@
     </ClCompile>
     <ClCompile Include="DiscreteOutputChannel.cpp">
       <Filter>Source Files\MonitoringComponents\Channels</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionOutput.cpp">
-      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="MonitoringController.cpp">
       <Filter>Source Files\MonitoringComponents\Controller</Filter>
