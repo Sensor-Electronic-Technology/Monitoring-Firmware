@@ -1,10 +1,13 @@
 #pragma once
 #include <ArduinoSTL.h>
 #include <map>
+#include <ArduinoModbus.h>
+#include <ArduinoRS485.h>
 #include "Timer.h"
 #include "Configuration.h"
 #include "ConfigurationReader.h"
 #include "Action.h"
+
 
 namespace MonitoringComponents {
 
@@ -80,32 +83,33 @@ namespace MonitoringComponents {
 		MonitoringController() :MonitoringComponent(), _on_channel_cbk([](ChannelMessage) {}){}
 		void Setup();
 		void Run();
-		void SetState(ActionType actionType);
 		void Initialize();
 	private:
 		void BuildChannels();
 		void OnChannelCallback(ChannelCallback cbk);
-		void HandleAction(ChannelMessage channelMessage);
-		void TransitionState(Transition direction, ControllerState newState);
-		Action* FindActionByType(ActionType type);
-
-
-		bool ActionCleared(ActionType actionType);
-		bool CheckCanTransition(ActionType actionType);
+		void ProcessChannelMessage(ChannelMessage channelMessage);
+		void ProcessStateChanges();
+		void InvokeSystemAction(ActionType actionType);
 	private:
 		typedef std::vector<ChannelAddress> Registrations;
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
+
 		std::vector<Action*> actions;
+		//std::map<ActionType, Action*> actionMap;
 
 		std::map<int,Registrations*> actionTracking;
 		std::map<ActionType, int> systemActMap;
+		std::map<ActionType, bool> systemActionLatches;
 
 		ChannelCallback _on_channel_cbk;
 		ControllerState controllerState;
+		ControllerState nextState;
 		//Timer resetTimer;
 		Timer printTimer;
+		Timer checkStateTimer;
+		Timer resetTimer;
 
 		void privateLoop();
 	};

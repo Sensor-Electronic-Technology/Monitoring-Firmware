@@ -235,6 +235,7 @@ namespace MonitoringComponents {
                         JsonObject Alert = elem[F("Alert")];
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
                         alert.actionId = Alert[F("Action")];
+                        alert.actionType =(ActionType)Alert[F("ActionType")].as<int>();
                         alert.bypass = Alert[F("Bypass")].as<bool>();
                         alert.enabled = Alert[F("Enabled")].as<bool>();
                         config.alert = alert;
@@ -291,7 +292,7 @@ namespace MonitoringComponents {
         for (JsonObject elem : doc.as<JsonArray>()) {
             ActionConfiguration config;
             config.actionId = elem["ActionId"]; // 0, 1, 2, 3, 4, 5
-
+            config.actionType =(ActionType)elem["ActionType"].as<int>();
             JsonObject O1 = elem[F("O1")];
 
             config.addr1.channel = O1[F("Address")][F("Channel")];

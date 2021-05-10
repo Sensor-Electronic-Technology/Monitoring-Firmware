@@ -12,6 +12,7 @@ namespace MonitoringComponents {
 		bool enabled;
 		bool bypass;
 		bool activated;
+		ActionType actionType;
 
 		ChannelAlert() {
 			this->activated = false;
@@ -22,6 +23,7 @@ namespace MonitoringComponents {
 			this->activated = rhs.activated;
 			this->enabled = rhs.enabled;
 			this->bypass = rhs.bypass;
+			this->actionType = rhs.actionType;
 			return *this;
 		}
 	};
@@ -42,7 +44,6 @@ namespace MonitoringComponents {
 	class DigitalAlert :public ChannelAlert {
 	public:
 		TriggerOn triggerOn;
-
 		DigitalAlert& operator=(const DigitalAlert& rhs) {
 			ChannelAlert::operator=(rhs);
 			this->triggerOn = rhs.triggerOn;

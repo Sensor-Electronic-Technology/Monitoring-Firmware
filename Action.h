@@ -16,7 +16,6 @@ namespace MonitoringComponents {
 			this->output1 = nullptr;
 			this->output2 = nullptr;
 			this->output3 = nullptr;
-			
 		}
 
 		int Id() {

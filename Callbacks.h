@@ -13,6 +13,13 @@ namespace MonitoringComponents {
 		int actionId;
 		ActionType type;
 		ChannelAddress channel;
+
+		ChannelMessage& operator=(const ChannelMessage& msg) {
+			this->channelAction = msg.channelAction;
+			this->actionId = msg.actionId;
+			this->type = msg.type;
+			this->channel = msg.channel;
+		}
 	};
 
 	typedef Function<void(void)> VoidCallback;

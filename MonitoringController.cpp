@@ -6,8 +6,11 @@ namespace MonitoringComponents {
 		ConfigurationReader reader;
 		reader.Init();
 		auto discreteConfig = reader.DeserializeDigitalConfig();
-		//auto analogConfig = reader.DeserializeAnalogConfig();
+		//discreteInputs = discreteConfig.size();
+		auto analogConfig = reader.DeserializeAnalogConfig();
+		//inputRegisters = analogConfig.size();
 		auto outputConfig = reader.DeserializeOutputConfig();
+		//inputs = outputConfig.size();
 		auto actionConfig = reader.DeserializeActions();
 
 		for (auto output : outputConfig) {
@@ -55,18 +58,20 @@ namespace MonitoringComponents {
 			this->actions.push_back(action);
 		}
 
-		this->OnChannelCallback([&](ChannelMessage message) {
-			HandleAction(message);
-		});
-
 		for (auto ch : discreteConfig) {
 			DiscreteInputChannel* channel = new DiscreteInputChannel(ch);
-			std::cout << "Input Channel: {" << ch.address.channel << "," << ch.address.slot << "} ";
 			this->discreteInputs.push_back(channel);
 			RegisterChild(channel);
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
-		std::cout << std::endl;
+		
+		//for (int i = 0; i < this->actions.size(); i++) {
+		//	cout << "Action[" << i << " ].ActionType="<< (int)actions[i]->GetActionType()<<endl;
+		//}
+
+		//for (auto index : systemActMap) {
+		//	cout << "ActionType: " <<(int)index.first << " Index: " << index.second << endl;
+		//}
 
 		//for (auto config : analogConfig) {
 		//	AnalogInputChannel* channel = new AnalogInputChannel(config);
@@ -80,27 +85,55 @@ namespace MonitoringComponents {
 		this->_on_channel_cbk = cbk;
 	}
 
-	void MonitoringController::privateLoop(){
-
-	}
-
 	void MonitoringController::Setup() {
+
+		//ModbusTCPServer.
+		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Alarm, false));
+		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Warning, false));
+		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::SoftWarn, false));
+		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Maintenance, false));
+		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Okay, false));
+		for (auto actionLatches : systemActionLatches) {
+			cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
+		}
+		this->OnChannelCallback([&](ChannelMessage message) {
+				ProcessChannelMessage(message);
+			});
 		this->BuildChannels();
 		this->printTimer.onInterval([&]() {
-			std::cout << "Triggered Channels by Action" << std::endl;
-			for (auto key : actionTracking) {
-				std::cout << "Action[" << key.first << "]" << " Channels Tracked: ";
-				for (auto channel : (*key.second)) {
-					std::cout << "{"<<channel.channel << "," << channel.slot << "} ";
-				}
-				std::cout << std::endl;
+			std::cout << "Latches: "<< std::endl;
+			for (auto actionLatches : systemActionLatches) {
+				cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
 			}
+			//std::cout << "Channel State: " << (int)controllerState << std::endl;
+			//std::cout << "Triggered Channels by Action" << std::endl;
+			//for (auto key : actionTracking) {
+			//	std::cout << "Action[" << key.first << "]" << " Channels Tracked: ";
+			//	for (auto channel : (*key.second)) {
+			//		std::cout << "{"<<channel.channel << "," << channel.slot << "} ";
+			//	}
+			//	std::cout << std::endl;
+			//}
 			//std::cout << "Free Ram: " << FreeRam() << std::endl;
 		}, 500);
+		this->checkStateTimer.onInterval([&]() {
+			ProcessStateChanges();
+		},300);
 		RegisterChild(this->printTimer);
+		RegisterChild(this->checkStateTimer);
+		//this->controllerState = ControllerState::Okay;
+		//this->InvokeSystemAction(Action)
 	}
 
 	void MonitoringController::Initialize() {
+		for (auto output : outputChannels) {
+			output->SetOutput(State::Low);
+		}
+
+		for (auto action : actions) {
+			action->Clear();
+		}
+
 		for (auto dinput : discreteInputs) {
 			dinput->Initialize();
 		}
@@ -108,32 +141,18 @@ namespace MonitoringComponents {
 		//for (auto ainput : analogInputs) {
 		//	ainput->Initialize();
 		//}
-
-		for (auto output : outputChannels) {
-			output->SetOutput(State::Low);
-		}
-
-		//for (auto action : actions) {
-		//	action->Clear();
-		//}
+		//check actions and set state
 	}
 
-	void TransitionState(Transition direction, ControllerState newState) {
+	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {
 		
-	}
-
-	void MonitoringController::SetState(ActionType actionType) {
-
-	}
-
-	void MonitoringController::HandleAction(ChannelMessage message) {
 		auto action = find_if(actions.begin(), actions.end(), [&](Action* act) {
 			return message.actionId == act->Id();
 		});
+
 		if (action != actions.end()) {
 			int id = (*action)->Id();
 			Registrations* registrations = actionTracking[id];
-
 			bool isNew = false;
 			if (registrations == nullptr) {
 				registrations = new Registrations;
@@ -144,65 +163,73 @@ namespace MonitoringComponents {
 			if (message.channelAction == ChannelAction::Trigger) {
 				if (isNew) {
 					registrations->push_back(message.channel);
-					//(*action)->Invoke();
+					if (message.type == ActionType::Custom) {
+						(*action)->Invoke();
+					}
 				} else {
 					auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
 						return address == message.channel;
 					});
 					if (channel == registrations->end()) {
 						registrations->push_back(message.channel);
-
-						//(*action)->Invoke();
+						if (message.type == ActionType::Custom) {
+							(*action)->Invoke();
+						}
 					}//else channel already triggered.  do not trigger again
 				}
-
+				this->systemActionLatches[message.type] = true;
 			} else if (message.channelAction == ChannelAction::Clear) {
 				auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
 						return address == message.channel;
 				}), registrations->end());
-				if (registrations->empty()) {
-
-					//(*action)->Clear();			
+				if (registrations->empty()) {	
+					if (message.type == ActionType::Custom) {
+						(*action)->Clear();
+					} else {
+						this->systemActionLatches[message.type] = false;
+					}
 				}
 			}
 		}
 	}
 
-	bool MonitoringController::CheckCanTransition(ActionType newAction) {
-		switch (newAction) {
-			case ActionType::Alarm: {
-				if (this->ActionCleared(ActionType::Maintenance)) {
-					this->controllerState = ControllerState::Alarming;
-					return true;
-				} else {
-					return false;
-				}
-			}
-			case ActionType::Maintenance: {
-				return true;
-			}
-			case ActionType::Warning: {
-				if (controllerState != ControllerState::Alarming && controllerState != ControllerState::Maintenance) {
-					this->controllerState = ControllerState::Warning;
-				}
-				break;
-			}
-			default: {
-				break;
-			}
+	void MonitoringController::InvokeSystemAction(ActionType actionType) {
+		if (actionType != ActionType::Custom) {
+			int index = systemActMap[actionType];
+			Action* action = actions[index];
+			action->Invoke();
 		}
 	}
 
-	bool MonitoringController::ActionCleared(ActionType actionType) {
-		int index = systemActMap[actionType];
-		if (index >= 0) {
-			return this->actionTracking[systemActMap[actionType]]->empty();
+	void MonitoringController::ProcessStateChanges() {
+		if (systemActionLatches[ActionType::Maintenance]) {
+			if (this->controllerState != ControllerState::Maintenance) {
+				this->controllerState = ControllerState::Maintenance;
+				this->InvokeSystemAction(ActionType::Maintenance);
+			}
+		} else if (systemActionLatches[ActionType::Alarm]) {
+			if (this->controllerState != ControllerState::Alarming) {
+				this->controllerState = ControllerState::Alarming;
+				this->InvokeSystemAction(ActionType::Alarm);
+			}
+		} else if (systemActionLatches[ActionType::Warning]) {
+			if (this->controllerState != ControllerState::Warning) {
+				this->controllerState = ControllerState::Warning;
+				this->InvokeSystemAction(ActionType::Warning);
+			}
 		} else {
-			return false;
+			if (this->controllerState != ControllerState::Okay) {
+				this->controllerState = ControllerState::Okay;
+				this->InvokeSystemAction(ActionType::Okay);
+			}
 		}
 	}
 
 	void MonitoringController::Run() {
 		this->loop();
+	}
+
+	void MonitoringController::privateLoop() {
+
 	}
 };

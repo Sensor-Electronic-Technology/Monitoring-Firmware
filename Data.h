@@ -57,14 +57,6 @@ namespace MonitoringComponents {
 		Custom=1
 	};
 
-	//enum class SystemState :int {
-	//	Alarming,
-	//	Warning,
-	//	Okay
-	//};
-
-
-
 	enum InputType { Analog = 1, Digital = 0, NoType = 2 };
 	enum LogicType { High = 1, Low = 0, NA = 2 };
 	//enum AlertAction { Alarm = 4, Warn = 3, SoftWarn = 2, Maintenance = 1, Nothing = 0 };
@@ -74,41 +66,4 @@ namespace MonitoringComponents {
 	enum Module { P116ND3 = 0, P108ADL1 = 1, P108TD2 = 2, NoModule = 3 };
 	enum ConfigurationType { DigitalIn, AnalogIn, Output, ModuleConfig, NoConfig };
 	enum AlertPriority { Highest = 2, Medium = 1, Lowest = 0 };
-
-
-	//struct Alert {
-	//	float setpoint;
-	//	int setPointFactor;
-	//	AlertPriority prioirty;  //delete   
-	//	ActionType action;
-	//	bool bypass;
-	//	bool enabled;
-
-	//	Alert() {
-	//		this->setpoint = 0;
-	//		this->setPointFactor = 0;
-	//		this->prioirty = AlertPriority::Lowest;
-	//		this->enabled = false;
-	//		this->bypass = false;
-	//	}
-
-	//	Alert(const Alert& alert) {
-	//		this->setpoint = alert.setpoint;
-	//		this->action = alert.action;
-	//		this->enabled = alert.enabled;
-	//		this->setPointFactor = alert.setPointFactor;
-	//		this->bypass = alert.bypass;
-	//		this->prioirty = alert.prioirty;
-	//	}
-
-	//	Alert& operator =(const Alert& rhs) {
-	//		this->setpoint = rhs.setpoint;
-	//		this->action = rhs.action;
-	//		this->enabled = rhs.enabled;
-	//		this->setPointFactor = rhs.setPointFactor;
-	//		this->bypass = rhs.bypass;
-	//		this->prioirty = rhs.prioirty;
-	//		return *this;
-	//	}
-	//};
 };
