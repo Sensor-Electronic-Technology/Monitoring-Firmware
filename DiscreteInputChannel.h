@@ -1,5 +1,6 @@
 #pragma once
 #include <ArduinoSTL.h>
+#include "ModbusService.h"
 #include "ModuleDiscreteInput.h"
 #include "Function.h"
 #include "IO.h"

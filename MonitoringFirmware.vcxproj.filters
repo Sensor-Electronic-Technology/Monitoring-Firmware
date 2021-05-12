@@ -55,9 +55,6 @@
     <Filter Include="Header Files\MonitoringComponents\Actions">
       <UniqueIdentifier>{4a058aa8-b02d-4106-934a-d09fa394a6ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\MonitoringComponents\Actions">
-      <UniqueIdentifier>{2740df5d-1878-48ed-ad91-3fe4f738f47d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />
@@ -130,6 +127,9 @@
     <ClInclude Include="ActionOutput.h">
       <Filter>Header Files\MonitoringComponents\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="ModbusService.h">
+      <Filter>Header Files\MonitoringComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogInputChannel.cpp">
@@ -161,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="MonitoringController.cpp">
       <Filter>Source Files\MonitoringComponents\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ModbusService.cpp">
+      <Filter>Source Files\MonitoringComponents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

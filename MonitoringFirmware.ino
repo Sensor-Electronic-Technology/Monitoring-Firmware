@@ -1,8 +1,10 @@
 
-
+#include <SPI.h>
+#include <Ethernet.h>
 #include <M2M_Logger.h>
 #include <SD.h>
 #include <P1AM.h>
+#include "ModbusService.h"
 #include <ArduinoRS485.h>
 #include <ArduinoModbus.h>
 #include <ArduinoSTL.h>
@@ -29,9 +31,8 @@ void setup(){
     if (!SD.begin(SDCARD_SS_PIN)) {
         while (1);
     }
-    cout<<"SD Card Initialized, Initializing Reader"<<endl;
     while (!P1.init()) {;}
-    cout << "P1AM Initialized!" << endl;
+    ModbusService::Initialize();
     controller.Setup();
     controller.Initialize();
 
@@ -39,4 +40,5 @@ void setup(){
 
 void loop(){
     controller.loop();
+    ModbusService::Poll();
 }
