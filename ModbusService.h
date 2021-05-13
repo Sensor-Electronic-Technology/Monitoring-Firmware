@@ -20,7 +20,6 @@ public:
 
 	static bool Connected() {
 		return true;
-		//return ModbusService::Instance()->modbusServer.;
 	}
 
 	static void Initialize() {
@@ -29,56 +28,67 @@ public:
 		IPAddress dns(172, 20, 3,5);
 		IPAddress gateway(172, 20, 5, 1);
 		byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x93 };
-		Ethernet.init(5);   //CS pin for P1AM-ETH
-		Ethernet.begin(macAddress);
-		if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-			Serial.println("Ethernet shield not detected");
-			//log error
-		}
-		if (Ethernet.linkStatus() == LinkOFF) {
-			Serial.println("Ethernet cable is not connected");
-		}
 		auto instance = ModbusService::Instance();
-		instance->ethServer.begin();
-		IPAddress address=Ethernet.localIP();
-		address.printTo(Serial);
-		std::cout << std::endl;
-		if (!instance->modbusServer.begin()) {
-			std::cout << "Error starting Modbus Server" << std::endl;
+		Ethernet.init(5);   //CS pin for P1AM-ETH
+		int success = Ethernet.begin(macAddress, 1000, 1000);
+		if (success) {
+			instance->ethServer.begin();
+			IPAddress address = Ethernet.localIP();
+			address.printTo(Serial);
+			std::cout << std::endl;
+			if (!instance->modbusServer.begin()) {
+				//log error
+				instance->initialized = false;
+			} else {
+				instance->initialized = true;
+			}
+			instance->modbusServer.configureCoils(0, 1000);
+			instance->modbusServer.configureDiscreteInputs(0, 121);
+		} else {
+			instance->initialized = false;
 		}
-		instance->modbusServer.configureCoils(0, 1000);
-		instance->modbusServer.configureDiscreteInputs(0, 121);
 	}
 
 	static void Poll() {
 		auto instance = ModbusService::Instance();
-		EthernetClient client = instance->ethServer.available();
-		if (client) {
-			instance->modbusServer.accept(client);
-			while (client.connected()) {
-				instance->modbusServer.poll();
+		if (instance->initialized) {
+			EthernetClient client = instance->ethServer.available();
+			if (client) {
+				instance->modbusServer.accept(client);
+				while (client.connected()) {
+					instance->modbusServer.poll();
+				}
 			}
 		}
 	}
 
 	static void UpdateHoldingRegister(int addr, uint16_t value) {
 		auto instance = ModbusService::Instance();
-		instance->modbusServer.holdingRegisterWrite(addr, value);
+		if (instance->initialized) {
+			instance->modbusServer.holdingRegisterWrite(addr, value);
+		}
 	}
 
 	static void UpdateInputRegister(int addr, uint16_t value) {
 		auto instance = ModbusService::Instance();
-		instance->modbusServer.inputRegisterWrite(addr, value);
+		if (instance->initialized) {
+			instance->modbusServer.inputRegisterWrite(addr, value);
+		}
 	}
 
 	static void UpdateCoil(int addr, bool value) {
 		auto instance = ModbusService::Instance();
-		instance->modbusServer.coilWrite(addr, value);
+		if (instance->initialized) {
+			instance->modbusServer.coilWrite(addr, value);
+		}
 	}
 
 	static void UpdateDiscreteInput(int addr, bool value) {
 		auto instance = ModbusService::Instance();
-		instance->modbusServer.discreteInputWrite(addr, value);
+		if (instance->initialized) {
+			instance->modbusServer.discreteInputWrite(addr, value);
+		}
+
 	}
 
 	//static void ReadHoldingRegister(int addr);
@@ -90,5 +100,6 @@ private:
 	static ModbusService* instance;
 	EthernetServer ethServer;
 	ModbusTCPServer modbusServer;
+	bool initialized=false;
 };
 

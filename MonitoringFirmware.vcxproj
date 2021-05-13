@@ -155,7 +155,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM4" config.Release.customdebug_P1AM-100_p1am-100_samd_P1AM-100_native_debugger_type="none" debug.view.FreeMemory="1" VM.DebugVariablesWindow.ColumnVisibleFunctionName="1" />
+      <UserProperties arduino.upload.port="COM3" config.Release.customdebug_P1AM-100_p1am-100_samd_P1AM-100_native_debugger_type="none" debug.view.FreeMemory="1" VM.DebugVariablesWindow.ColumnVisibleFunctionName="1" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

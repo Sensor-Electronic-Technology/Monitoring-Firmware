@@ -114,8 +114,8 @@ namespace MonitoringComponents {
                         address.slot = elem[F("Address")][F("Slot")];
 
                         int reg = elem[F("Register")];
-                        int zeroValue = elem[F("ZeroValue")];
-                        int maxValue = elem[F("MaxValue")];
+                        int zeroValue = elem[F("Slope")];
+                        int maxValue = elem[F("Offset")];
                         int analogFactor = elem[F("AnalogFactor")];
                         int bypassAlerts = elem[F("BypassAlerts")];
                         int connected = elem[F("Connected")];
@@ -182,21 +182,6 @@ namespace MonitoringComponents {
                         State startState = (elem[F("Start State")].as<bool>() == true) ? State::High : State::Low;
                         OutputConfiguration config(channel,address,reg,startState,connected);
                         outputChannels.push_back(config);
-                        //config.startState=(LogicType)elem["Start State"];
-                        //config.outputType=(OutputType)elem["Type"]; 
-                        //config.action = (OutputAction)elem[F("Action")]; 
-
-                        //string str= std::string(Map_To_Channel);
-                        //string delimiter = ",";
-                        //size_t pos = 0;
-                        //string token;
-                        //while ((pos = str.find(delimiter)) != std::string::npos) {
-                        //    token = str.substr(0, pos);
-                        //    int val = String(token.c_str()).toInt();
-                        //    config.channelMaps.push_back(val);
-                        //    str.erase(0, pos + delimiter.length());
-                        //}
-
                     }
                     file.close();
                     return outputChannels;
@@ -235,11 +220,13 @@ namespace MonitoringComponents {
                         JsonObject Alert = elem[F("Alert")];
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
                         alert.actionId = Alert[F("Action")];
-                        alert.actionType =(ActionType)Alert[F("ActionType")].as<int>();
+                        alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
                         alert.bypass = Alert[F("Bypass")].as<bool>();
                         alert.enabled = Alert[F("Enabled")].as<bool>();
                         config.alert = alert;
-
+                        if (alert.actionId == -1 || ((int)alert.actionType < 1 || (int)alert.actionType>6)) {
+                            alert.enabled = false;
+                        }
                         configurations.push_back(config);
                     }
                     file.close();
@@ -314,40 +301,11 @@ namespace MonitoringComponents {
             config.onLevel3 = (O3[F("OnLevel")].as<bool>() == true) ? State::High : State::Low;
             config.offLevel3 = (O3[F("OffLevel")].as<bool>() == true) ? State::High : State::Low;
 
-            //config.addr2.channel = elem[F("O2")][F("Address")][F("Channel")];
-            //config.addr2.slot = elem[F("O2")][F("Address")][F("Slot")];
-            //config.onLevel2 = (elem[F("O2")][F("Level")].as<bool>() == true) ? State::High : State::Low;
-
-            //config.addr3.channel = elem[F("O3")][F("Address")][F("Channel")];
-            //config.addr3.slot = elem[F("O3")][F("Address")][F("Slot")];
-            //config.onLevel3 = (elem[F("O3")][F("Level")].as<bool>() == true) ? State::High : State::Low;
-
             config.startState= (elem[F("Start State")].as<bool>()==true)? State::High:State::Low;
             config.type = (OutputType)elem[F("OutputType")];
             config.modbusAddress.address = elem[F("ModbusRegister")];
             config.modbusAddress.type = RegisterType::DiscreteInput;
             actions.push_back(config);
-
-            //int ActionId = elem["ActionId"]; // 0, 1, 2, 3, 4, 5
-
-            //int O1_Address_Channel = elem["O1"]["Address"]["Channel"]; // 1, 2, 3, 0, 3, 6
-            //int O1_Address_Slot = elem["O1"]["Address"]["Slot"]; // 2, 2, 2, 0, 2, 2
-
-            //int O1_Level = elem["O1"]["Level"]; // 1, 1, 1, 0, 1, 0
-
-            //int O2_Address_Channel = elem["O2"]["Address"]["Channel"]; // 1, 2, 3, 0, 3, 6
-            //int O2_Address_Slot = elem["O2"]["Address"]["Slot"]; // 1, 2, 3, 0, 3, 6
-
-            //int O2_Level = elem["O2"]["Level"]; // 0, 0, 0, 0, 1, 0
-
-            //int O3_Address_Channel = elem["O3"]["Address"]["Channel"]; // 1, 2, 3, 0, 3, 6
-            //int O3_Address_Slot = elem["O3"]["Address"]["Slot"]; // 1, 2, 3, 0, 3, 6
-
-            //int O3_Level = elem["O3"]["Level"]; // 0, 0, 0, 0, 0, 0
-
-            //int Start_State = elem["Start State"]; // 0, 0, 0, 0, 0, 0
-            //int OutputType = elem["OutputType"]; // 0, 0, 0, 0, 0, 2
-            //int ModbusRegister = elem["ModbusRegister"]; // 1, 2, 3, 4, 5, 6
         }
         file.close();
         return actions;

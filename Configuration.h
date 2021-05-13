@@ -69,8 +69,8 @@ namespace MonitoringComponents {
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
-                this->zeroValue = rhs.zeroValue;
-                this->maxValue = rhs.maxValue;
+                this->slope = rhs.slope;
+                this->offset = rhs.offset;
                 this->analogFactor = rhs.analogFactor;
                 this->bypassAlerts = rhs.bypassAlerts;
                 this->alert1 = rhs.alert1;
@@ -80,8 +80,8 @@ namespace MonitoringComponents {
             return *this;
         }
 
-        float zeroValue;
-        float maxValue;
+        float slope;
+        float offset;
         int analogFactor;
         AnalogAlert alert1;
         AnalogAlert alert2;

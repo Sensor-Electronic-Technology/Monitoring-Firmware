@@ -9,15 +9,10 @@ namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
 	public:
 		ModuleAnalogInput(ChannelAddress address):ModuleIOPin(address){}
-
 		ModuleAnalogInput(int slot, int channel) :ModuleIOPin(slot, channel), value(0.00){}
-
 		ModuleAnalogInput() :ModuleIOPin(0, 0),value(0.00) {}
-		
 		float read();
-		
 		float getValue();
-
 	private:
 		float value;
 	};

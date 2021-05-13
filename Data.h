@@ -59,7 +59,6 @@ namespace MonitoringComponents {
 
 	enum InputType { Analog = 1, Digital = 0, NoType = 2 };
 	enum LogicType { High = 1, Low = 0, NA = 2 };
-	//enum AlertAction { Alarm = 4, Warn = 3, SoftWarn = 2, Maintenance = 1, Nothing = 0 };
 	enum OutputAction { OutAlarm = 4, OutWarn = 3, Okay = 2, TriggerFromMap = 1, NoAction = 1 };
 	enum OutputType { NO = 0, NC = 1, NOHC = 2, NCHO = 3 };
 	enum ModuleType { DigitalInput = 1, DigitalOutput = 2, AnalogInput = 0, None = 3 };

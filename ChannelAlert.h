@@ -26,12 +26,21 @@ namespace MonitoringComponents {
 			this->actionType = rhs.actionType;
 			return *this;
 		}
+
+		operator bool() {
+			return this->activated;
+		}
+
 	};
 
 	class AnalogAlert :public ChannelAlert {
 	public:
 		float setPoint;
 		float setPointFactor;
+
+		bool Check(float value) {
+			return value >= this->setPoint;
+		}
 
 		AnalogAlert& operator=(const AnalogAlert& rhs) {
 			ChannelAlert::operator=(rhs);

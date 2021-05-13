@@ -3,112 +3,155 @@
 namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Initialize() {
-		//DistinctChannel ch;
-		//ch.slot = this->configuration.slot;
-		//ch.channel = this->configuration.channel;
-		//this->channel = ch;
-
-		//this->alert1 = AnalogAlert(this->configuration.alert1,ch);
-		//this->alert2 = ChannelAlert(this->configuration.alert2, ch);
-		//this->alert3 = ChannelAlert(this->configuration.alert3, ch);
-
-		//float reading = this->inputPin.read();
-		//if (reading >= alert3.setPoint) {
-		//	if (alert3.enabled) {
-		//		ChannelMessage message;
-		//		message. = ChannelAction::Trigger;
-		//		message.channel = this->channel;
-		//		alert3.activated = true;
-		//		this->_on_channel_trigger(message);
-		//	}
-
-		//	if (alert2.activated) {
-		//		ChannelMessage message;
-		//		message.action = ChannelAction::Clear;
-		//		message.channel = this->channel;
-		//		alert2.activated = false;
-		//		this->_on_channel_trigger(message);
-		//	}
-
-		//	if (alert1.activated) {
-		//		ChannelMessage message;
-		//		message.action = ChannelAction::Clear;
-		//		message.channel = this->channel;
-		//		alert2.activated = false;
-		//		this->_on_channel_trigger(message);
-		//	}
-		//} else if (reading<alert3.setpoint && reading >= alert2.setpoint) {
-		//	if (alert2.enabled) {
-
-		//	}
-
-		//	if (alert3.activated) {
-		//		//clear
-		//	}
-
-		//	if (alert1.activated) {
-
-		//	}
-
-		//} else if (reading < alert2.setpoint && reading >= alert1.setpoint) {
-		//	if (alert1.enabled) {
-
-		//	}
-		//	if (alert3.activated) {
-		//		//clear
-		//	}
-
-		//	if (alert2.activated) {
-
-		//	}
-		//} else {
-		//	if (alert1.activated) {
-
-		//	}
-
-		//	if (alert3.activated) {
-		//		//clear
-		//	}
-
-		//	if (alert2.activated) {
-
-		//	}
-		//}
-		//this->value = reading;
+		float reading = this->inputPin.read();
+		if (alert3.Check(reading) && alert3.enabled) {
+			ChannelMessage message;
+			message.actionId = alert3.actionId;
+			message.channelAction = ChannelAction::Trigger;
+			message.channel = inputPin.Address();
+			message.type = alert3.actionType;
+			alert3.activated = true;
+			_on_channel_trigger(message);
+		}else if(alert2.Check(reading) && alert2.enabled) {
+			ChannelMessage message;
+			message.actionId = alert2.actionId;
+			message.channelAction = ChannelAction::Trigger;
+			message.channel = inputPin.Address();
+			message.type = alert2.actionType;
+			alert2.activated = true;
+			_on_channel_trigger(message);
+		} else if (alert1.Check(reading) && alert1.enabled) {
+			ChannelMessage message;
+			message.actionId = alert1.actionId;
+			message.channelAction = ChannelAction::Trigger;
+			message.channel = inputPin.Address();
+			message.type = alert1.actionType;
+			alert1.activated = true;
+			_on_channel_trigger(message);
+		}
+		this->value = value;
 	}
 
 	bool AnalogInputChannel::isTriggered() {
-		//float value = this->inputPin.read();
-		//float delta = value * .05;
-
-
-		//for (int i = 0; i < MAXALERTS; i++) {
-		//	float reading = this->inputPin.read();
-		//	ChannelAlert& chAlert = this->channelAlerts[i];
-
-		//	if (chAlert.alert.enabled && !chAlert.alert.bypass) {
-		//		if (reading >= chAlert.alert.setpoint) {
-		//			if (!chAlert.activated) {
-		//				ChannelMessage message;
-		//				message.action = ChannelAction::Trigger;
-		//				message.channel = this->channel;
-		//				chAlert.activated = true;
-		//				this->_on_channel_trigger(message);
-		//			}
-		//		} else {
-		//			
-		//		}
-		//	}//end check enabled
-		//}
 		return false;
 	}
-	
-	
-	void AnalogInputChannel::OnChannelTrigger(ChannelCallback cbk) {
+		
+	void AnalogInputChannel::OnStateChange(ChannelCallback cbk) {
 		this->_on_channel_trigger = cbk;
 	}
 
 	void AnalogInputChannel::privateLoop() {
+		float reading = this->inputPin.read();
+		
+		ModbusService::UpdateInputRegister(this->inputPin.Address().channel, reading);
+		if (alert3.Check(reading) && alert3.enabled) {
+			if (alert2) {
+				alert2.activated = false;
+				ChannelMessage message;
+				message.actionId = alert2.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (alert1) {
+				alert1.activated = false;
+				ChannelMessage message;
+				message.actionId = alert1.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (!alert3) {
+				ChannelMessage message;
+				message.actionId = alert3.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert3.actionType;
+				alert3.activated = true;
+				_on_channel_trigger(message);
+			}
+		} else if (alert2.Check(reading) && alert2.enabled) {
+			if (alert3) {
+				alert3.activated = false;
+				ChannelMessage message;
+				message.actionId = alert3.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (alert1) {
+				alert1.activated = false;
+				ChannelMessage message;
+				message.actionId = alert1.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (!alert2) {
+				ChannelMessage message;
+				message.actionId = alert2.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert2.actionType;
+				alert2.activated = true;
+				_on_channel_trigger(message);
+			}
+		} else if (alert1.Check(reading) && alert1.enabled) {
+			if (alert3) {
+				alert3.activated = false;
+				ChannelMessage message;
+				message.actionId = alert3.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (alert2) {
+				alert2.activated = false;
+				ChannelMessage message;
+				message.actionId = alert2.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				_on_channel_trigger(message);
+			}
+			if (!alert1) {
+				ChannelMessage message;
+				message.actionId = alert1.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert1.actionType;
+				alert1.activated = true;
+				_on_channel_trigger(message);
+			}
+		} else {
+			if (alert1 && alert1.enabled) {
+				ChannelMessage message;
+				message.actionId = alert1.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				message.type = alert1.actionType;
+				alert1.activated = false;
+				_on_channel_trigger(message);
+			}
 
+			if (alert2 && alert2.enabled) {
+				ChannelMessage message;
+				message.actionId = alert2.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				message.type = alert2.actionType;
+				alert2.activated = false;
+				_on_channel_trigger(message);
+			}
+
+			if (alert3 && alert3.enabled) {
+				ChannelMessage message;
+				message.actionId = alert3.actionId;
+				message.channelAction = ChannelAction::Clear;
+				message.channel = inputPin.Address();
+				message.type = alert3.actionType;
+				alert3.activated = false;
+				_on_channel_trigger(message);
+			}
+		}
 	}
 };

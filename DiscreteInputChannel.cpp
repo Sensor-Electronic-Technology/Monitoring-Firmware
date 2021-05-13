@@ -35,21 +35,23 @@ namespace MonitoringComponents {
 	void DiscreteInputChannel::privateLoop() {
 		bool state = this->isTriggered();
 		ModbusService::UpdateCoil(this->modbusAddress.address,state);
-		if (state!=this->alert.activated) {
-			ChannelMessage message;
-			message.actionId = this->alert.actionId;
-			message.channel = this->inputPin.Address();		
-			message.type = this->alert.actionType;
-			if (state) {
-				message.channelAction = ChannelAction::Trigger;
+		if (state!= this->triggered) {
+			if (this->alert.enabled) {
+				ChannelMessage message;
+				message.actionId = this->alert.actionId;
+				message.channel = this->inputPin.Address();
+				message.type = this->alert.actionType;
+				if (state) {
+					message.channelAction = ChannelAction::Trigger;
+					this->alert.activated = true;
+				} else {
+					message.channelAction = ChannelAction::Clear;
+					this->alert.activated = false;
+				}
 				this->alert.activated = true;
-			}else {
-				message.channelAction = ChannelAction::Clear;
-				this->alert.activated = false;
+				this->_on_state_change(message);
 			}
 			this->triggered = state;
-
-			this->_on_state_change(message);
 		}
 	}
 };

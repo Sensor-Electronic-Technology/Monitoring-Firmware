@@ -27,7 +27,7 @@ MonitoringController controller;
 
 void setup(){
     Serial.begin(38400);
-    while (!Serial) { ; }
+    //while (!Serial) { ; }
     if (!SD.begin(SDCARD_SS_PIN)) {
         while (1);
     }

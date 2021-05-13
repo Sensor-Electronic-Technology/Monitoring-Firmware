@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MonitoringComponent.h"
+#include "ModbusService.h"
 #include "P1AM.h"
 #include "Ref.h"
 #include "Callbacks.h"
@@ -10,25 +11,21 @@
 #include "ChannelAlert.h"
 
 namespace MonitoringComponents {
-	
-
 
 	class AnalogInputChannel :public MonitoringComponent {
 	public:
 		AnalogInputChannel(AnalogInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) 
 			:MonitoringComponent(parent), configuration(configuration), _on_channel_trigger([](ChannelMessage){}),
-			modbusAddress({configuration._register,RegisterType::Holding}) { 
+			modbusAddress({configuration._register,RegisterType::Input}) { 
 			inputPin = ModuleAnalogInput(configuration.address);
+			this->alert1 = configuration.alert1;
+			this->alert2 = configuration.alert2;
+			this->alert3 = configuration.alert3; 
 		}
-
-		void Initialize();
-
-		bool isTriggered();
-
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {	}
-
-		void OnChannelTrigger(ChannelCallback cbk);
-
+		void Initialize();
+		bool isTriggered();
+		void OnStateChange(ChannelCallback cbk);
 	private:
 		ModuleAnalogInput inputPin;
 		ModbusAddress modbusAddress;

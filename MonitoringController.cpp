@@ -64,21 +64,13 @@ namespace MonitoringComponents {
 			RegisterChild(channel);
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
-		
-		//for (int i = 0; i < this->actions.size(); i++) {
-		//	cout << "Action[" << i << " ].ActionType="<< (int)actions[i]->GetActionType()<<endl;
-		//}
 
-		//for (auto index : systemActMap) {
-		//	cout << "ActionType: " <<(int)index.first << " Index: " << index.second << endl;
-		//}
-
-		//for (auto config : analogConfig) {
-		//	AnalogInputChannel* channel = new AnalogInputChannel(config);
-		//	this->analogInputs.push_back(channel);
-		//	RegisterChild(channel);
-		//	channel->OnChannelTrigger(cbk);
-		//}
+		for (auto ch : analogConfig) {
+			AnalogInputChannel* channel = new AnalogInputChannel(ch);
+			this->analogInputs.push_back(channel);
+			RegisterChild(channel);
+			channel->OnStateChange(this->_on_channel_cbk);
+		}
 	}
 
 	void MonitoringController::OnChannelCallback(ChannelCallback cbk) {
@@ -86,8 +78,6 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::Setup() {
-
-		//ModbusTCPServer.
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Alarm, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Warning, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::SoftWarn, false));
@@ -96,33 +86,20 @@ namespace MonitoringComponents {
 		for (auto actionLatches : systemActionLatches) {
 			cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
 		}
+
 		this->OnChannelCallback([&](ChannelMessage message) {
 				ProcessChannelMessage(message);
 			});
+		
 		this->BuildChannels();
 		this->printTimer.onInterval([&]() {
 			std::cout << "Latches: "<< std::endl;
 			for (auto actionLatches : systemActionLatches) {
 				cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
 			}
-			//std::cout << "Channel State: " << (int)controllerState << std::endl;
-			//std::cout << "Triggered Channels by Action" << std::endl;
-			//for (auto key : actionTracking) {
-			//	std::cout << "Action[" << key.first << "]" << " Channels Tracked: ";
-			//	for (auto channel : (*key.second)) {
-			//		std::cout << "{"<<channel.channel << "," << channel.slot << "} ";
-			//	}
-			//	std::cout << std::endl;
-			//}
-			//std::cout << "Free Ram: " << FreeRam() << std::endl;
 		}, 500);
-		this->checkStateTimer.onInterval([&]() {
-			ProcessStateChanges();
-		},300);
 		RegisterChild(this->printTimer);
 		RegisterChild(this->checkStateTimer);
-		//this->controllerState = ControllerState::Okay;
-		//this->InvokeSystemAction(Action)
 	}
 
 	void MonitoringController::Initialize() {
@@ -138,14 +115,18 @@ namespace MonitoringComponents {
 			dinput->Initialize();
 		}
 
-		//for (auto ainput : analogInputs) {
-		//	ainput->Initialize();
-		//}
-		//check actions and set state
+		for (auto ainput : analogInputs) {
+			ainput->Initialize();
+		}
+
+		ProcessStateChanges();
+
+		this->checkStateTimer.onInterval([&]() {
+			ProcessStateChanges();
+		}, 100);
 	}
 
-	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {
-		
+	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {	
 		auto action = find_if(actions.begin(), actions.end(), [&](Action* act) {
 			return message.actionId == act->Id();
 		});
@@ -174,7 +155,7 @@ namespace MonitoringComponents {
 						registrations->push_back(message.channel);
 						if (message.type == ActionType::Custom) {
 							(*action)->Invoke();
-						}
+						} 
 					}//else channel already triggered.  do not trigger again
 				}
 				this->systemActionLatches[message.type] = true;
