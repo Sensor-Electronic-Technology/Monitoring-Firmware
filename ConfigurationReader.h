@@ -30,6 +30,7 @@ namespace MonitoringComponents {
        std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
        std::vector<ModuleConfiguration> DeserializeModuleConfig();
        std::vector<ActionConfiguration> DeserializeActions();
+       NetConfiguration DeserializeNetConfiguration();
 
     private:
         long DigitalInSize;
@@ -37,6 +38,7 @@ namespace MonitoringComponents {
         long ModuleSize;
         long OutputSize;
         long ActionSize;
+        long NetConfigSize;
         File configFile;
         Logger* logger = nullptr;
         bool configLoaded = false;

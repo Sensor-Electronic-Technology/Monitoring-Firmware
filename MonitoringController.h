@@ -7,6 +7,7 @@
 #include "Configuration.h"
 #include "ConfigurationReader.h"
 #include "Action.h"
+#include "ModbusService.h"
 
 
 namespace MonitoringComponents {
@@ -85,7 +86,7 @@ namespace MonitoringComponents {
 		void Run();
 		void Initialize();
 	private:
-		void BuildChannels();
+		void Build();
 		void OnChannelCallback(ChannelCallback cbk);
 		void ProcessChannelMessage(ChannelMessage channelMessage);
 		void ProcessStateChanges();

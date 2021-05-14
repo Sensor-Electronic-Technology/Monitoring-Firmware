@@ -25,20 +25,30 @@ using namespace MonitoringComponents;
 //DiscreteInputModule discreteModule;
 MonitoringController controller;
 
+void(*resetFunc)(void) = 0;
+bool resetLatched;
+
 void setup(){
     Serial.begin(38400);
-    //while (!Serial) { ; }
+    while (!Serial) { ; }
     if (!SD.begin(SDCARD_SS_PIN)) {
         while (1);
     }
     while (!P1.init()) {;}
-    ModbusService::Initialize();
+    pinMode(SWITCH_BUILTIN, INPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, HIGH);
+    resetLatched = digitalRead(SWITCH_BUILTIN);
+
     controller.Setup();
     controller.Initialize();
-
 }
 
 void loop(){
+    bool resetSwitch = digitalRead(SWITCH_BUILTIN);  
+    if (resetSwitch!=resetLatched) {
+        resetFunc();
+    }
     controller.loop();
     ModbusService::Poll();
 }

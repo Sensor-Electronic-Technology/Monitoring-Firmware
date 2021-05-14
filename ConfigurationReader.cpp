@@ -1,10 +1,13 @@
 #include "ConfigurationReader.h"
+#include <cstdlib>
+#include <string>
 
 #define AnalogFile              "analog.txt"
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
 #define ModuleFile              "module.txt"
 #define ActionFile              "actions.txt"
+#define NetConfigFile           "netconfig.txt"
 #define SizeFile                "size.txt"
 #define LOG_FILENAME            "log.txt"
 
@@ -17,6 +20,7 @@ namespace MonitoringComponents {
         this->OutputSize = 0;
         this->AnalogInSize = 0;
         this->ModuleSize = 0;
+        this->NetConfigSize = 0;
     }
 
     ConfigurationReader::ConfigurationReader() {
@@ -26,6 +30,7 @@ namespace MonitoringComponents {
         this->OutputSize = 0;
         this->AnalogInSize = 0;
         this->ModuleSize = 0;
+        this->NetConfigSize = 0;
     }
 
     void ConfigurationReader::PrintSizes() {
@@ -33,6 +38,7 @@ namespace MonitoringComponents {
         std::cout << OutputFile << " " << this->OutputSize << std::endl;
         std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
         std::cout << ActionFile << " " << this->ActionSize << std::endl;
+        std::cout << NetConfigFile << " " << this->NetConfigSize << std::endl;
     }
 
     void ConfigurationReader::GetFileSizes() {
@@ -45,11 +51,10 @@ namespace MonitoringComponents {
             while (file.available()) {
                 ch = file.read();
                 if (ch == '\n') {
-                    //this->logger->_serialLog->println("Value: " + value);
                     this->SetSize(lineCount, value.toInt());
                     lineCount++;
                     value = "";
-                    if (lineCount > 4) {
+                    if (lineCount > 5) {
                         break;
                     }
                 }else {
@@ -72,16 +77,16 @@ namespace MonitoringComponents {
                 this->AnalogInSize = value;
                 break;
             }
-            //case 2: {
-            //    this->ModuleSize = value;
-            //    break;
-            //}
             case 2: {
                 this->OutputSize = value;
                 break;
             }
             case 3: {
                 this->ActionSize = value;
+                break;
+            }
+            case 4: {
+                this->NetConfigSize = value;
                 break;
             }
         }
@@ -309,6 +314,63 @@ namespace MonitoringComponents {
         }
         file.close();
         return actions;
+    }
+
+    NetConfiguration ConfigurationReader::DeserializeNetConfiguration() {
+        NetConfiguration netConfig;
+        if (this->NetConfigSize > 0) {
+            DynamicJsonDocument doc(this->NetConfigSize);
+            File file = SD.open(NetConfigFile,FILE_WRITE);
+            if (file) {
+                DeserializationError error = deserializeJson(doc, file);
+                if (error) {
+                    std::cout << "Deserialize NetConfig Failed: " << std::endl;
+                    return netConfig;
+                } else {
+                    JsonObject root_0 = doc[0];
+                    const char* IpAddress = root_0["Ip Address"]; // "172.20.5.56"
+                    const char* DNS = root_0["DNS"]; // "172.20.3.5"
+                    JsonObject MacOct = root_0["MacOct"];
+                    int MacOct1 = MacOct["One"]; // 60
+                    int MacOct2 = MacOct["Two"]; // 52
+                    int MacOct3 = MacOct["Three"]; // 0
+                    int MacOct4 = MacOct["Four"]; // 60
+                    int MacOct5 = MacOct["Five"]; // 70
+                    int MacOct6 = MacOct["Six"]; // 93
+
+                    const char* Gateway = root_0["Gateway"]; // "172.20.5.1"
+                    int InputRegsters = root_0["InputRegsters"]; // 121
+                    int Coils = root_0["Coils"]; // 1000
+
+                    netConfig.ip.fromString(IpAddress);
+                    std::cout << "IP: " << IpAddress << std::endl;
+                    netConfig.gateway.fromString(DNS);
+                    std::cout << "DNS: " << DNS << std::endl;
+                    netConfig.gateway.fromString(Gateway);
+                    std::cout << "Gateway: " << Gateway << std::endl;
+                    
+                    netConfig.mac[0] = (byte)String(MacOct1).toInt();
+                    netConfig.mac[1] = (byte)String(MacOct2).toInt();
+                    netConfig.mac[2] = (byte)String(MacOct3).toInt();
+                    netConfig.mac[3] = (byte)String(MacOct4).toInt();
+                    netConfig.mac[4] = (byte)String(MacOct5).toInt();
+                    netConfig.mac[5] = (byte)String(MacOct6).toInt();
+
+                    netConfig.coils = Coils;
+                    std::cout <<" Coils: " << Coils << std::endl;
+                    netConfig.inputRegisters = InputRegsters;
+                    std::cout << "Registers: " << IpAddress << std::endl;
+
+                    return netConfig;
+                }
+            } else {
+                std::cout << "Error opening netconfig" << std::endl;
+                return netConfig;
+            }
+
+        } else {
+            return netConfig;
+        }
     }
 
     ConfigurationReader::~ConfigurationReader() {   }

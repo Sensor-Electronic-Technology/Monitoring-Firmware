@@ -2,6 +2,7 @@
 #include <ArduinoSTL.h>
 #include "Data.h"
 #include "ChannelAlert.h"
+#include <Ethernet.h>
 #include "Ref.h"
 
 namespace MonitoringComponents {
@@ -179,6 +180,25 @@ namespace MonitoringComponents {
                 this->modbusAddress = rhs.modbusAddress;
             }
             return *this;
+        }
+    };
+
+    class NetConfiguration {
+    public:
+        int inputRegisters;
+        int coils;
+        IPAddress ip;
+        byte mac[6];
+        IPAddress dns;
+        IPAddress gateway;
+
+        const NetConfiguration& operator=(const NetConfiguration& rhs) {
+            this->inputRegisters = rhs.inputRegisters;
+            this->coils = rhs.coils;
+            this->ip = rhs.ip;
+            std::copy(rhs.mac, rhs.mac + 6, this->mac);
+            this->dns = rhs.dns;
+            this->gateway = rhs.gateway;
         }
     };
 };

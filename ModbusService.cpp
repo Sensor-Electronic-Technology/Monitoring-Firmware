@@ -1,3 +1,5 @@
 #include "ModbusService.h"
 
-ModbusService* ModbusService::instance = nullptr;
+namespace MonitoringComponents {
+	ModbusService* ModbusService::instance = nullptr;
+};

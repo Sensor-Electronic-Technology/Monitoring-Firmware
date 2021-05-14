@@ -2,7 +2,7 @@
 
 namespace MonitoringComponents {
 
-	void MonitoringController::BuildChannels() {
+	void MonitoringController::Build() {
 		ConfigurationReader reader;
 		reader.Init();
 		auto discreteConfig = reader.DeserializeDigitalConfig();
@@ -13,6 +13,17 @@ namespace MonitoringComponents {
 		//inputs = outputConfig.size();
 		auto actionConfig = reader.DeserializeActions();
 
+		auto netConfig = reader.DeserializeNetConfiguration();
+		std::cout << "Mac Address: " << std::endl;
+		std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
+		for (int i = 0; i < 6; i++) {
+			std::cout << netConfig.mac[i] << " ";
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+
+		ModbusService::Initialize(netConfig);
+
 		for (auto output : outputConfig) {
 			DiscreteOutputChannel* channel = new DiscreteOutputChannel(output);
 			this->outputChannels.push_back(channel);
@@ -20,7 +31,6 @@ namespace MonitoringComponents {
 		for (int i = 0; i < actionConfig.size();i++) {
 			Action* action=new Action(actionConfig[i]);
 			if (actionConfig[i].actionType != ActionType::Custom) {
-				//No need to track custom, it will trigger only what designated
 				this->systemActMap[actionConfig[i].actionType] = i;
 			}
 			if (actionConfig[i].addr1) {
@@ -71,6 +81,8 @@ namespace MonitoringComponents {
 			RegisterChild(channel);
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
+
+	
 	}
 
 	void MonitoringController::OnChannelCallback(ChannelCallback cbk) {
@@ -83,6 +95,7 @@ namespace MonitoringComponents {
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::SoftWarn, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Maintenance, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Okay, false));
+
 		for (auto actionLatches : systemActionLatches) {
 			cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
 		}
@@ -91,7 +104,8 @@ namespace MonitoringComponents {
 				ProcessChannelMessage(message);
 			});
 		
-		this->BuildChannels();
+		this->Build();
+
 		this->printTimer.onInterval([&]() {
 			std::cout << "Latches: "<< std::endl;
 			for (auto actionLatches : systemActionLatches) {
