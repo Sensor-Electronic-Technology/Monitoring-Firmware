@@ -19,6 +19,8 @@
 #include "ConfigurationReader.h"
 #include "MonitoringController.h"
 
+#define CREATEFILES 0
+
 using namespace MonitoringComponents;
 
 //ConfigurationReader reader;
@@ -29,12 +31,19 @@ void(*resetFunc)(void) = 0;
 bool resetLatched;
 
 void setup(){
+#if CREATEFILES==1
+    Serial.begin(38400);
+    while (!Serial) { ; }
+    std::cout << "Starting Create Files" << std::endl;
+    ConfigurationReader::CreatConfigFiles();
+    while (1);
+#else
     Serial.begin(38400);
     while (!Serial) { ; }
     if (!SD.begin(SDCARD_SS_PIN)) {
         while (1);
     }
-    while (!P1.init()) {;}
+    while (!P1.init()) { ; }
     pinMode(SWITCH_BUILTIN, INPUT);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, HIGH);
@@ -42,6 +51,7 @@ void setup(){
 
     controller.Setup();
     controller.Initialize();
+#endif
 }
 
 void loop(){

@@ -130,6 +130,9 @@
     <ClInclude Include="ModbusService.h">
       <Filter>Header Files\MonitoringComponents</Filter>
     </ClInclude>
+    <ClInclude Include="UtilityFunctions.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogInputChannel.cpp">

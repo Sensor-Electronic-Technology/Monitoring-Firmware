@@ -14,20 +14,13 @@ namespace MonitoringComponents {
 		auto actionConfig = reader.DeserializeActions();
 
 		auto netConfig = reader.DeserializeNetConfiguration();
-		std::cout << "Mac Address: " << std::endl;
-		std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
-		for (int i = 0; i < 6; i++) {
-			std::cout << netConfig.mac[i] << " ";
-		}
-		std::cout << std::endl;
-		std::cout << std::endl;
-
 		ModbusService::Initialize(netConfig);
 
 		for (auto output : outputConfig) {
 			DiscreteOutputChannel* channel = new DiscreteOutputChannel(output);
 			this->outputChannels.push_back(channel);
 		}
+
 		for (int i = 0; i < actionConfig.size();i++) {
 			Action* action=new Action(actionConfig[i]);
 			if (actionConfig[i].actionType != ActionType::Custom) {

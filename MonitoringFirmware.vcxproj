@@ -131,6 +131,7 @@
     <ClInclude Include="Ref.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UniquePtr.h" />
+    <ClInclude Include="UtilityFunctions.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="__vm\.MonitoringFirmware.vsarduino.h" />
   </ItemGroup>
@@ -155,7 +156,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM6" config.Release.customdebug_P1AM-100_p1am-100_samd_P1AM-100_native_debugger_type="none" debug.view.FreeMemory="1" VM.DebugVariablesWindow.ColumnVisibleFunctionName="1" />
+      <UserProperties arduino.upload.port="COM4" config.Release.customdebug_P1AM-100_p1am-100_samd_P1AM-100_native_debugger_type="none" debug.view.FreeMemory="1" VM.DebugVariablesWindow.ColumnVisibleFunctionName="1" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -1,13 +1,11 @@
 #include "ConfigurationReader.h"
-#include <cstdlib>
-#include <string>
 
 #define AnalogFile              "analog.txt"
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
 #define ModuleFile              "module.txt"
 #define ActionFile              "actions.txt"
-#define NetConfigFile           "netconfig.txt"
+#define NetConfigFile           "network.txt"
 #define SizeFile                "size.txt"
 #define LOG_FILENAME            "log.txt"
 
@@ -65,6 +63,80 @@ namespace MonitoringComponents {
         }else {
             //std::cout << "File Open Failed" << std::endl;
         }
+    }
+
+    void ConfigurationReader::CreatConfigFiles(){
+        if (!SD.begin(SDCARD_SS_PIN)) {
+            while (1);
+        }
+        std::cout << "SD Card Initialized" << std::endl;
+        File file;
+        file = SD.open(AnalogFile,FILE_WRITE);
+        if (file) {
+            std::cout << AnalogFile << " Created!" << std::endl;
+            file.close();
+        }
+        file = SD.open(DigitalFile,FILE_WRITE);
+        if (file) {
+            std::cout << DigitalFile << " Created!" << std::endl;
+            file.close();
+        }
+        file = SD.open(ActionFile,FILE_WRITE);
+        if (file) {
+            std::cout << ActionFile << " Created!" << std::endl;
+            file.close();
+        }
+        file = SD.open(OutputFile,FILE_WRITE);
+        if (file) {
+            std::cout << OutputFile << " Created!" << std::endl;
+            file.close();
+        }
+        file = SD.open(NetConfigFile,FILE_WRITE);
+        if (file) {
+            std::cout << NetConfigFile << " Created!" << std::endl;
+            file.close();
+        }
+
+        file = SD.open(SizeFile, FILE_WRITE);
+        if (file) {
+            std::cout << SizeFile << " Created!" << std::endl;
+            file.close();
+        }
+
+        file = SD.open(LOG_FILENAME, FILE_WRITE);
+        if (file) {
+            std::cout << LOG_FILENAME << " Created!" << std::endl;
+            file.close();
+        }
+
+        std::cout << "Files should be created..." << std::endl;
+    }
+
+    char ConfigurationReader::nibbleTobyte(char c){
+        if ((c >= '0') && (c <= '9'))
+            return c - '0';
+        if ((c >= 'A') && (c <= 'F'))
+            return c + 10 - 'A';
+        if ((c >= 'a') && (c <= 'a'))
+            return c + 10 - 'a';
+        return -1;
+    }
+
+    char ConfigurationReader::ToHex(char c1, char c2){
+        if (ConfigurationReader::nibbleTobyte(c2) >= 0)
+            return ConfigurationReader::nibbleTobyte(c1) * 16 + ConfigurationReader::nibbleTobyte(c2);
+        return ConfigurationReader::nibbleTobyte(c1);
+    }
+
+    std::string ConfigurationReader::HexToString(char* data) {
+        std::string result = "";
+        for (int i = 0; ConfigurationReader::nibbleTobyte(data[i]) >= 0; i++)
+        {
+            result += ConfigurationReader::ToHex(data[i], data[i + 1]);
+            if (ConfigurationReader::nibbleTobyte(data[i + 1]) >= 0)
+                i++;
+        }
+        return result;
     }
 
     void ConfigurationReader::SetSize(int lineCount, int value) {
@@ -320,25 +392,35 @@ namespace MonitoringComponents {
         NetConfiguration netConfig;
         if (this->NetConfigSize > 0) {
             DynamicJsonDocument doc(this->NetConfigSize);
-            File file = SD.open(NetConfigFile,FILE_WRITE);
+            File file = SD.open(NetConfigFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
-                if (error) {
-                    std::cout << "Deserialize NetConfig Failed: " << std::endl;
-                    return netConfig;
-                } else {
+                //if (error) {
+                //    std::cout << "Deserialize NetConfig Failed: " << std::endl;
+                //    std::cout << error.c_str() << std::endl;
+                //    return netConfig;
+                //} else {
                     JsonObject root_0 = doc[0];
                     const char* IpAddress = root_0["Ip Address"]; // "172.20.5.56"
                     const char* DNS = root_0["DNS"]; // "172.20.3.5"
-                    JsonObject MacOct = root_0["MacOct"];
-                    int MacOct1 = MacOct["One"]; // 60
-                    int MacOct2 = MacOct["Two"]; // 52
-                    int MacOct3 = MacOct["Three"]; // 0
-                    int MacOct4 = MacOct["Four"]; // 60
-                    int MacOct5 = MacOct["Five"]; // 70
-                    int MacOct6 = MacOct["Six"]; // 93
+                    const char* Mac = root_0["Mac"]; // "6052D0607093"
+                    std::cout << "Mac Before: " << Mac << std::endl;
 
-                    const char* Gateway = root_0["Gateway"]; // "172.20.5.1"
+                    netConfig.mac[0]=  ConfigurationReader::ToHex(Mac[0], Mac[1]);
+                    netConfig.mac[1] = ConfigurationReader::ToHex(Mac[2], Mac[3]);
+                    netConfig.mac[2] = ConfigurationReader::ToHex(Mac[4], Mac[5]);
+                    netConfig.mac[3] = ConfigurationReader::ToHex(Mac[6], Mac[7]);
+                    netConfig.mac[4] = ConfigurationReader::ToHex(Mac[8], Mac[9]);
+                    netConfig.mac[5] = ConfigurationReader::ToHex(Mac[10], Mac[11]);
+                    //std::cout << "After: " << ConfigurationReader::HexToString((char*)netConfig.mac) << std::endl;
+                    std::cout << "After" << std::endl;
+                    for (int i = 0; i < 6; i++) {
+                        Serial.print(String(netConfig.mac[i],HEX));
+                    }
+                    std::cout << std::endl;
+
+
+                    const char* Gateway = root_0["Gateway"]; 
                     int InputRegsters = root_0["InputRegsters"]; // 121
                     int Coils = root_0["Coils"]; // 1000
 
@@ -348,21 +430,28 @@ namespace MonitoringComponents {
                     std::cout << "DNS: " << DNS << std::endl;
                     netConfig.gateway.fromString(Gateway);
                     std::cout << "Gateway: " << Gateway << std::endl;
-                    
-                    netConfig.mac[0] = (byte)String(MacOct1).toInt();
-                    netConfig.mac[1] = (byte)String(MacOct2).toInt();
-                    netConfig.mac[2] = (byte)String(MacOct3).toInt();
-                    netConfig.mac[3] = (byte)String(MacOct4).toInt();
-                    netConfig.mac[4] = (byte)String(MacOct5).toInt();
-                    netConfig.mac[5] = (byte)String(MacOct6).toInt();
-
                     netConfig.coils = Coils;
                     std::cout <<" Coils: " << Coils << std::endl;
                     netConfig.inputRegisters = InputRegsters;
-                    std::cout << "Registers: " << IpAddress << std::endl;
+                    std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
 
+                    // netConfig.mac[0] = (byte)String(MacOct1).toInt();
+                     //netConfig.mac[1] = (byte)String(MacOct2).toInt();
+                     //netConfig.mac[2] = (byte)String(MacOct3).toInt();
+                     //netConfig.mac[3] = (byte)String(MacOct4).toInt();
+                     //netConfig.mac[4] = (byte)String(MacOct5).toInt();
+                     //netConfig.mac[5] = (byte)String(MacOct6).toInt();
+
+                    //JsonObject root_0 = doc[0];
+                    //const char* root_0_Ip_Address = root_0["Ip Address"]; // "172.20.5.70"
+                    //const char* root_0_DNS = root_0["DNS"]; // "172.20.3.5"
+                    //const char* root_0_Mac = root_0["Mac"]; // "6052D0607093"
+                    //const char* root_0_Gateway = root_0["Gateway"]; // "172.20.5.1"
+                    //int root_0_InputRegsters = root_0["InputRegsters"]; // 121
+                    //int root_0_Coils = root_0["Coils"]; // 1000
+                    file.close();
                     return netConfig;
-                }
+                //}
             } else {
                 std::cout << "Error opening netconfig" << std::endl;
                 return netConfig;

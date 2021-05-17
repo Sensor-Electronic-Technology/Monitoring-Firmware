@@ -1,5 +1,5 @@
 #pragma once
-#include "ArduinoSTL.h"
+#include <ArduinoSTL.h>
 #include <ArduinoJson.h>
 #include <M2M_Logger.h>
 #include <SD.h>
@@ -22,8 +22,14 @@ namespace MonitoringComponents {
             return *this;
         };
         void GetFileSizes();
+        
         void SetSize(int lineCount, int value);
         void PrintSizes();
+
+        static void CreatConfigFiles();
+        static char nibbleTobyte(char c);
+        static char ToHex(char c1, char c2);
+        static std::string HexToString(char* data);
 
        std::vector<AnalogInConfiguration> DeserializeAnalogConfig();
        std::vector<OutputConfiguration> DeserializeOutputConfig();

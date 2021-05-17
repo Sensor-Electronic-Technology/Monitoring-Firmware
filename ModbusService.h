@@ -32,15 +32,14 @@ namespace MonitoringComponents {
 			//byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x93 };
 			auto instance = ModbusService::Instance();
 			Ethernet.init(5);   //CS pin for P1AM-ETH
-
 			Ethernet.setDnsServerIP(netConfig.dns);
-			Ethernet.setGatewayIP(netConfig.gateway);
-			//Ethernet.setMACAddress(netConfig.mac);
-			int success = Ethernet.begin(netConfig.mac, 1000, 1000);
+			//Ethernet.setGatewayIP(netConfig.gateway);
+			bool success = true;
+			IPAddress subnet(255, 255, 255, 0);
+			//Ethernet.begin(netConfig.mac,netConfig.ip,netConfig.dns,netConfig.gateway,subnet);
+			int success=Ethernet.begin(netConfig.mac, 1000, 1000);
 
 			//Ethernet.begin(netConfig.mac, netConfig.ip, netConfig.dns, netConfig.gateway);
-
-			//Ethernet.setMACAddress()
 			if (success) {
 				instance->ethServer.begin();
 				IPAddress address = Ethernet.localIP();
