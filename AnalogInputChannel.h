@@ -35,6 +35,7 @@ namespace MonitoringComponents {
 		AnalogAlert alert2;
 		AnalogAlert alert3;
 
+
 		float value;
 		bool triggered;
 		ChannelCallback _on_channel_trigger;

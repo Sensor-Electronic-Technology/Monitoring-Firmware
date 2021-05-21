@@ -20,6 +20,7 @@
 #include "MonitoringController.h"
 
 #define CREATEFILES 0
+#define DEBUG 0
 
 using namespace MonitoringComponents;
 
@@ -39,7 +40,9 @@ void setup(){
     while (1);
 #else
     Serial.begin(38400);
+#if DEBUG==1
     while (!Serial) { ; }
+#endif
     if (!SD.begin(SDCARD_SS_PIN)) {
         while (1);
     }
@@ -55,10 +58,6 @@ void setup(){
 }
 
 void loop(){
-    bool resetSwitch = digitalRead(SWITCH_BUILTIN);  
-    if (resetSwitch!=resetLatched) {
-        resetFunc();
-    }
     controller.loop();
     ModbusService::Poll();
 }

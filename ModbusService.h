@@ -34,7 +34,7 @@ namespace MonitoringComponents {
 			Ethernet.init(5);   //CS pin for P1AM-ETH
 			Ethernet.setDnsServerIP(netConfig.dns);
 			//Ethernet.setGatewayIP(netConfig.gateway);
-			bool success = true;
+			//bool success = true;
 			IPAddress subnet(255, 255, 255, 0);
 			//Ethernet.begin(netConfig.mac,netConfig.ip,netConfig.dns,netConfig.gateway,subnet);
 			int success=Ethernet.begin(netConfig.mac, 1000, 1000);
@@ -52,7 +52,7 @@ namespace MonitoringComponents {
 					instance->initialized = true;
 				}
 				instance->modbusServer.configureCoils(0, netConfig.coils);
-				instance->modbusServer.configureDiscreteInputs(0, netConfig.inputRegisters);
+				instance->modbusServer.configureInputRegisters(0, netConfig.inputRegisters);
 			} else {
 				instance->initialized = false;
 			}
@@ -81,7 +81,10 @@ namespace MonitoringComponents {
 		static void UpdateInputRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();
 			if (instance->initialized) {
-				instance->modbusServer.inputRegisterWrite(addr, value);
+				int success=instance->modbusServer.inputRegisterWrite(addr, value);
+				if (!success) {
+					std::cout << "Register " << addr << " Failed to update"<<std::endl;
+				}
 			}
 		}
 

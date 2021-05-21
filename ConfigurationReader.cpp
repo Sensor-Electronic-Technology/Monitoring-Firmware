@@ -434,21 +434,6 @@ namespace MonitoringComponents {
                     std::cout <<" Coils: " << Coils << std::endl;
                     netConfig.inputRegisters = InputRegsters;
                     std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
-
-                    // netConfig.mac[0] = (byte)String(MacOct1).toInt();
-                     //netConfig.mac[1] = (byte)String(MacOct2).toInt();
-                     //netConfig.mac[2] = (byte)String(MacOct3).toInt();
-                     //netConfig.mac[3] = (byte)String(MacOct4).toInt();
-                     //netConfig.mac[4] = (byte)String(MacOct5).toInt();
-                     //netConfig.mac[5] = (byte)String(MacOct6).toInt();
-
-                    //JsonObject root_0 = doc[0];
-                    //const char* root_0_Ip_Address = root_0["Ip Address"]; // "172.20.5.70"
-                    //const char* root_0_DNS = root_0["DNS"]; // "172.20.3.5"
-                    //const char* root_0_Mac = root_0["Mac"]; // "6052D0607093"
-                    //const char* root_0_Gateway = root_0["Gateway"]; // "172.20.5.1"
-                    //int root_0_InputRegsters = root_0["InputRegsters"]; // 121
-                    //int root_0_Coils = root_0["Coils"]; // 1000
                     file.close();
                     return netConfig;
                 //}
