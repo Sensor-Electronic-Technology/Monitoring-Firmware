@@ -10,8 +10,7 @@
 namespace MonitoringComponents {
 	class ModbusService {
 	public:
-		ModbusService() :ethServer(502) {
-		}
+		ModbusService() :ethServer(502) { }
 
 		static ModbusService* const Instance() {
 			if (instance == nullptr) {
@@ -25,21 +24,17 @@ namespace MonitoringComponents {
 		}
 
 		static void Initialize(NetConfiguration netConfig) {
-			//IPAddress ip(172, 20, 5, 178);
-			//IPAddress subnet(255, 255, 0, 0);
-			//IPAddress dns(172, 20, 3, 5);
-			//IPAddress gateway(172, 20, 5, 1);
-			//byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x93 };
-			auto instance = ModbusService::Instance();
-			Ethernet.init(5);   //CS pin for P1AM-ETH
-			Ethernet.setDnsServerIP(netConfig.dns);
-			//Ethernet.setGatewayIP(netConfig.gateway);
-			//bool success = true;
+			IPAddress dns(172, 20, 3, 5);
+			IPAddress gateway(172, 20, 5, 1);
+			byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x93 };
 			IPAddress subnet(255, 255, 255, 0);
-			//Ethernet.begin(netConfig.mac,netConfig.ip,netConfig.dns,netConfig.gateway,subnet);
-			int success=Ethernet.begin(netConfig.mac, 1000, 1000);
-
-			//Ethernet.begin(netConfig.mac, netConfig.ip, netConfig.dns, netConfig.gateway);
+			auto instance = ModbusService::Instance();
+			instance->config = netConfig;
+			Ethernet.init(5);   //CS pin for P1AM-ET
+			Ethernet.setDnsServerIP(dns);
+			Ethernet.setGatewayIP(gateway);
+			Ethernet.setSubnetMask(subnet);
+			int success = Ethernet.begin(macAddress);
 			if (success) {
 				instance->ethServer.begin();
 				IPAddress address = Ethernet.localIP();
@@ -102,17 +97,12 @@ namespace MonitoringComponents {
 			}
 
 		}
-
-		//static void ReadHoldingRegister(int addr);
-		//static void ReadInputRegister(int addr);
-		//static void ReadCoil(int addr);
-		//static void ReadDiscreteInput(int addr);
-
 	private:
 		static ModbusService* instance;
 		EthernetServer ethServer;
 		ModbusTCPServer modbusServer;
 		bool initialized = false;
+		NetConfiguration config;
 	};
 };
 

@@ -98,7 +98,6 @@ namespace MonitoringComponents {
 		std::vector<DiscreteOutputChannel*> outputChannels;
 
 		std::vector<Action*> actions;
-		//std::map<ActionType, Action*> actionMap;
 
 		std::map<int,Registrations*> actionTracking;
 		std::map<ActionType, int> systemActMap;
@@ -107,7 +106,6 @@ namespace MonitoringComponents {
 		ChannelCallback _on_channel_cbk;
 		ControllerState controllerState;
 		ControllerState nextState;
-		//Timer resetTimer;
 		Timer printTimer;
 		Timer checkStateTimer;
 		Timer resetTimer;

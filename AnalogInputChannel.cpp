@@ -3,8 +3,8 @@
 namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Initialize() {
-
 		float reading = this->inputPin.read();
+		reading = reading * this->configuration.slope + this->configuration.offset;
 		if (alert3.Check(reading) && alert3.enabled) {
 			ChannelMessage message;
 			message.actionId = alert3.actionId;
@@ -42,12 +42,10 @@ namespace MonitoringComponents {
 	}
 
 	void AnalogInputChannel::privateLoop() {
-		//float reading = this->inputPin.read();
-		//reading = reading * 1000;
-		//int output = (uint16_t)(reading * this->configuration.analogFactor);
-		float reading = 0;
-		float readings2 = this->inputPin.read();
-		ModbusService::UpdateInputRegister(this->configuration._register, readings2*1000);
+
+		float reading = this->inputPin.read();
+		reading = reading * this->configuration.slope + this->configuration.offset;
+		ModbusService::UpdateInputRegister(this->configuration._register, reading*this->configuration.analogFactor);
 		if (alert3.Check(reading) && alert3.enabled) {
 			if (alert2) {
 				alert2.activated = false;

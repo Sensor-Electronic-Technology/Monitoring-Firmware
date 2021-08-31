@@ -22,16 +22,19 @@ namespace MonitoringComponents {
 		}
 
 		for (int i = 0; i < actionConfig.size();i++) {
+
 			Action* action=new Action(actionConfig[i]);
+			
 			if (actionConfig[i].actionType != ActionType::Custom) {
 				this->systemActMap[actionConfig[i].actionType] = i;
 			}
+
 			if (actionConfig[i].addr1) {
 				auto outputChannel=std::find_if(outputChannels.begin(), outputChannels.end(), [&](DiscreteOutputChannel* output) {
 					return actionConfig[i].addr1 == output->Address();
 				});
 				if (outputChannel != outputChannels.end()) {
-					std::cout << "Creating ActionOutput 1: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
+					//std::cout << "Creating ActionOutput 1: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
 					ActionOutput* output = new ActionOutput((*outputChannel), actionConfig[i].onLevel1, actionConfig[i].offLevel1);
 					action->SetOutput(output, 1);
 				}
@@ -42,7 +45,7 @@ namespace MonitoringComponents {
 					return actionConfig[i].addr2 == output->Address();
 				});
 				if (outputChannel != outputChannels.end()) {
-					std::cout << "Creating ActionOutput 2: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
+					//std::cout << "Creating ActionOutput 2: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
 					ActionOutput* output = new ActionOutput((*outputChannel), actionConfig[i].onLevel2, actionConfig[i].offLevel2);
 					action->SetOutput(output, 2);
 				}
@@ -53,11 +56,12 @@ namespace MonitoringComponents {
 					return actionConfig[i].addr3 == output->Address();
 				});
 				if (outputChannel != outputChannels.end()) {
-					std::cout << "Creating ActionOutput 3: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
+					//std::cout << "Creating ActionOutput 3: " << (*outputChannel)->Address().channel << "," << (*outputChannel)->Address().slot << std::endl;
 					ActionOutput* output = new ActionOutput((*outputChannel), actionConfig[i].onLevel3, actionConfig[i].offLevel3);
 					action->SetOutput(output, 3);
 				}
 			}
+
 			this->actions.push_back(action);
 		}
 
@@ -74,8 +78,6 @@ namespace MonitoringComponents {
 			RegisterChild(channel);
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
-
-	
 	}
 
 	void MonitoringController::OnChannelCallback(ChannelCallback cbk) {
