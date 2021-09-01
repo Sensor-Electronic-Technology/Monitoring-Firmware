@@ -102,9 +102,31 @@ namespace MonitoringComponents {
 		this->Build();
 
 		this->printTimer.onInterval([&]() {
-			std::cout << "Latches: "<< std::endl;
+			cout << "Latches: "<< endl;
 			for (auto actionLatches : systemActionLatches) {
 				cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
+			}
+
+			switch(controllerState) {
+				case ControllerState::Alarming: {
+					cout << "ControllerState: " << "Alarming" << endl;
+					break;
+				}
+
+				case ControllerState::Maintenance:{
+					cout << "ControllerState: " << "Maintenance" << endl;
+					break;
+				}
+
+				case ControllerState::Warning:{
+					cout << "ControllerState: " << "Warning" << endl;
+					break;
+				}
+
+				case ControllerState::Okay:{
+					cout << "ControllerState: " << "Okay" << endl;
+					break;
+				}
 			}
 		}, 500);
 		RegisterChild(this->printTimer);

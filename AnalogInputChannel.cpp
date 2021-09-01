@@ -170,10 +170,5 @@ namespace MonitoringComponents {
 		this->Read();
 		ModbusService::UpdateInputRegister(this->configuration._register, this->value);
 		this->CheckProcessAlerts();
-/* 		if(this->configuration.connected) {
-
-		} else {
-			ModbusService::UpdateInputRegister(this->configuration._register, 0);
-		} */
 	}
 };
