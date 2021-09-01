@@ -61,16 +61,16 @@ namespace MonitoringComponents {
 					return this->alarmIndex;
 				}
 				case ActionType::Maintenance: {
-					return this->alarmIndex;
+					return this->maintenanceIndex;
 				}
 				case ActionType::Warning: {
-					return this->alarmIndex;
+					return this->warningIndex;
 				}
 				case ActionType::SoftWarn: {
-					return this->alarmIndex;
+					return this->softWarnIndex;
 				}
 				case ActionType::Okay: {
-					return this->alarmIndex;
+					return this->okayIndex;
 				}
 				default: {
 					return -1;

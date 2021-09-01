@@ -128,6 +128,11 @@ namespace MonitoringComponents {
 					break;
 				}
 			}
+
+			cout << "Action Registrations: " << endl;
+			for(auto registration : actionTracking) {
+				cout <<"Id: "<<registration.first <<" Instances: "<< registration.second->size() << endl;
+			}
 		}, 500);
 		RegisterChild(this->printTimer);
 		RegisterChild(this->checkStateTimer);

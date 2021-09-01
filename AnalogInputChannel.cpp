@@ -57,6 +57,7 @@ namespace MonitoringComponents {
 				message.actionId = alert2.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert2.actionType;
 				_on_channel_trigger(message);
 			}
 			if(alert1) {
@@ -65,6 +66,7 @@ namespace MonitoringComponents {
 				message.actionId = alert1.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert1.actionType;
 				_on_channel_trigger(message);
 			}
 			if(!alert3) {
@@ -83,6 +85,7 @@ namespace MonitoringComponents {
 				message.actionId = alert3.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert3.actionType;
 				_on_channel_trigger(message);
 			}
 			if(alert1) {
@@ -91,6 +94,7 @@ namespace MonitoringComponents {
 				message.actionId = alert1.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert1.actionType;
 				_on_channel_trigger(message);
 			}
 			if(!alert2) {
@@ -109,6 +113,7 @@ namespace MonitoringComponents {
 				message.actionId = alert3.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert3.actionType;
 				_on_channel_trigger(message);
 			}
 			if(alert2) {
@@ -117,6 +122,7 @@ namespace MonitoringComponents {
 				message.actionId = alert2.actionId;
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
+				message.type = alert2.actionType;
 				_on_channel_trigger(message);
 			}
 			if(!alert1) {

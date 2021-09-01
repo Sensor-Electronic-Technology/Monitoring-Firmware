@@ -27,9 +27,11 @@ namespace MonitoringComponents {
 			this->alert2 = configuration.alert2;
 			this->alert3 = configuration.alert3; 
 		}
+
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
 			this->value = 0;
 		}
+
 		void Initialize();
 		void CheckProcessAlerts();
 		void OnStateChange(ChannelCallback cbk);
