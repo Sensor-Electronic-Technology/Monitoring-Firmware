@@ -4,7 +4,7 @@ namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Initialize() {
 
-		this->updateTimer.onInterval([&]() { 
+/* 		this->updateTimer.onInterval([&]() { 
 				if(this->configuration.connected) {
 					ModbusService::UpdateInputRegister(this->configuration._register, this->value);
 					this->CheckProcessAlerts();
@@ -16,10 +16,9 @@ namespace MonitoringComponents {
 		this->readTimer.onInterval([&]() { 
 				this->Read();
 			}, READPERIOD);
-
-		float reading = this->inputPin.read();
-		reading = reading * this->configuration.slope + this->configuration.offset;
-		if (alert3.Check(reading) && alert3.enabled) {
+    	this->Read(); */
+     
+		if (alert3.Check(this->value) && alert3.enabled) {
 			ChannelMessage message;
 			message.actionId = alert3.actionId;
 			message.channelAction = ChannelAction::Trigger;
@@ -27,7 +26,7 @@ namespace MonitoringComponents {
 			message.type = alert3.actionType;
 			alert3.activated = true;
 			_on_channel_trigger(message);
-		}else if(alert2.Check(reading) && alert2.enabled) {
+		}else if(alert2.Check(this->value) && alert2.enabled) {
 			ChannelMessage message;
 			message.actionId = alert2.actionId;
 			message.channelAction = ChannelAction::Trigger;
@@ -35,7 +34,7 @@ namespace MonitoringComponents {
 			message.type = alert2.actionType;
 			alert2.activated = true;
 			_on_channel_trigger(message);
-		} else if (alert1.Check(reading) && alert1.enabled) {
+		} else if (alert1.Check(this->value) && alert1.enabled) {
 			ChannelMessage message;
 			message.actionId = alert1.actionId;
 			message.channelAction = ChannelAction::Trigger;
@@ -44,7 +43,6 @@ namespace MonitoringComponents {
 			alert1.activated = true;
 			_on_channel_trigger(message);
 		}
-		this->value = value;
 	}
 
 	void AnalogInputChannel::OnStateChange(ChannelCallback cbk) {
@@ -52,10 +50,7 @@ namespace MonitoringComponents {
 	}
 
 	void AnalogInputChannel::CheckProcessAlerts() {
-
-
-
-		if(alert3.Check(this->value) && alert3.enabled) {
+		if(alert3.Check(this->value)) {
 			if(alert2) {
 				alert2.activated = false;
 				ChannelMessage message;
@@ -81,7 +76,7 @@ namespace MonitoringComponents {
 				alert3.activated = true;
 				_on_channel_trigger(message);
 			}
-		} else if(this->value<alert3.setPoint && alert2.Check(this->value) && alert2.enabled) {
+		} else if(this->value<alert3.setPoint && alert2.Check(this->value)) {
 			if(alert3) {
 				alert3.activated = false;
 				ChannelMessage message;
@@ -107,7 +102,7 @@ namespace MonitoringComponents {
 				alert2.activated = true;
 				_on_channel_trigger(message);
 			}
-		} else if(this->value<alert2.setPoint && alert1.Check(this->value) && alert1.enabled) {
+		} else if(this->value<alert2.setPoint && alert1.Check(this->value)) {
 			if(alert3) {
 				alert3.activated = false;
 				ChannelMessage message;
@@ -168,10 +163,17 @@ namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Read() {
 		float reading = this->inputPin.read();
-		this->value+= ((reading * this->configuration.slope + this->configuration.offset)-this->value)*fWeight;
+		this->value+= ((reading * 62.5 -250)-this->value)*fWeight;
 	}
 	
 	void AnalogInputChannel::privateLoop() {
+		this->Read();
+		ModbusService::UpdateInputRegister(this->configuration._register, this->value);
+		this->CheckProcessAlerts();
+/* 		if(this->configuration.connected) {
 
+		} else {
+			ModbusService::UpdateInputRegister(this->configuration._register, 0);
+		} */
 	}
 };
