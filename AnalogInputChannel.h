@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MonitoringComponent.h"
+#include "Timer.h"
 #include "ModbusService.h"
 #include "P1AM.h"
 #include "Ref.h"
@@ -9,6 +10,10 @@
 #include "Configuration.h"
 #include "Data.h"
 #include "ChannelAlert.h"
+
+#define fWeight			.01f
+#define UPDATEPERIOD	100
+#define READPERIOD		50
 
 namespace MonitoringComponents {
 
@@ -24,8 +29,9 @@ namespace MonitoringComponents {
 		}
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {	}
 		void Initialize();
-		bool isTriggered();
+		void CheckProcessAlerts();
 		void OnStateChange(ChannelCallback cbk);
+		void Read();
 	private:
 		ModuleAnalogInput inputPin;
 		ModbusAddress modbusAddress;
@@ -34,6 +40,9 @@ namespace MonitoringComponents {
 		AnalogAlert alert1;
 		AnalogAlert alert2;
 		AnalogAlert alert3;
+
+		Timer updateTimer;
+		Timer readTimer;
 
 		float value;
 		bool triggered;

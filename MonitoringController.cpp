@@ -129,10 +129,9 @@ namespace MonitoringComponents {
 		}
 
 		ProcessStateChanges();
-
-		this->checkStateTimer.onInterval([&]() {
-			ProcessStateChanges();
-		}, 100);
+		//this->checkStateTimer.onInterval([&]() {
+		//	ProcessStateChanges();
+		//}, 100);
 	}
 
 	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {	
@@ -155,6 +154,9 @@ namespace MonitoringComponents {
 					registrations->push_back(message.channel);
 					if (message.type == ActionType::Custom) {
 						(*action)->Invoke();
+					} else {
+						this->systemActionLatches[message.type] = true;
+						this->ProcessStateChanges();
 					}
 				} else {
 					auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
@@ -164,10 +166,13 @@ namespace MonitoringComponents {
 						registrations->push_back(message.channel);
 						if (message.type == ActionType::Custom) {
 							(*action)->Invoke();
-						} 
-					}//else channel already triggered.  do not trigger again
+						} else {
+							this->systemActionLatches[message.type] = true;
+							this->ProcessStateChanges();
+						}
+					}
 				}
-				this->systemActionLatches[message.type] = true;
+				//this->systemActionLatches[message.type] = true;
 			} else if (message.channelAction == ChannelAction::Clear) {
 				auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
 						return address == message.channel;
@@ -177,6 +182,7 @@ namespace MonitoringComponents {
 						(*action)->Clear();
 					} else {
 						this->systemActionLatches[message.type] = false;
+						this->ProcessStateChanges();
 					}
 				}
 			}

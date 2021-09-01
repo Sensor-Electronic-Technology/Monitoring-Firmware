@@ -14,6 +14,15 @@ namespace MonitoringComponents {
 		ActionType type;
 		ChannelAddress channel;
 
+		ChannelMessage(ChannelAction cAction,int id,ActionType aType,ChannelAddress ch)
+			:channelAction(cAction),actionId(id),type(aType),channel(ch) { }
+
+		ChannelMessage() {
+			this->channelAction = ChannelAction::Clear;
+			this->actionId = -1;
+			this->type = ActionType::Okay;
+		}
+
 		ChannelMessage& operator=(const ChannelMessage& msg) {
 			this->channelAction = msg.channelAction;
 			this->actionId = msg.actionId;
