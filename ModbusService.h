@@ -68,33 +68,37 @@ namespace MonitoringComponents {
 
 		static void UpdateHoldingRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();
-			if (instance->initialized) {
-				instance->modbusServer.holdingRegisterWrite(addr, value);
-			}
+			instance->modbusServer.holdingRegisterWrite(addr, value);
+			//if (instance->initialized) {
+			//	instance->modbusServer.holdingRegisterWrite(addr, value);
+			//}
 		}
 
 		static void UpdateInputRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();
-			if (instance->initialized) {
-				int success=instance->modbusServer.inputRegisterWrite(addr, value);
-				if (!success) {
-					std::cout << "Register " << addr << " Failed to update"<<std::endl;
-				}
-			}
+			instance->modbusServer.inputRegisterWrite(addr, value);
+			//if (instance->initialized) {
+			//	int success=instance->modbusServer.inputRegisterWrite(addr, value);
+			//	if (!success) {
+			//		std::cout << "Register " << addr << " Failed to update"<<std::endl;
+			//	}
+			//}
 		}
 
 		static void UpdateCoil(int addr, bool value) {
 			auto instance = ModbusService::Instance();
-			if (instance->initialized) {
-				instance->modbusServer.coilWrite(addr, value);
-			}
+			instance->modbusServer.coilWrite(addr, value);
+			//if (instance->initialized) {
+			//	instance->modbusServer.coilWrite(addr, value);
+			//}
 		}
 
 		static void UpdateDiscreteInput(int addr, bool value) {
 			auto instance = ModbusService::Instance();
-			if (instance->initialized) {
-				instance->modbusServer.discreteInputWrite(addr, value);
-			}
+			instance->modbusServer.discreteInputWrite(addr, value);
+			//if (instance->initialized) {
+			//	instance->modbusServer.discreteInputWrite(addr, value);
+			//}
 
 		}
 	private:

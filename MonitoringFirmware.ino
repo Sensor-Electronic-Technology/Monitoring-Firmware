@@ -1,4 +1,3 @@
-
 #include <SPI.h>
 #include <Ethernet.h>
 #include <M2M_Logger.h>
@@ -39,7 +38,7 @@ void setup(){
     ConfigurationReader::CreatConfigFiles();
     while (1);
 #else
-    Serial.begin(38400);
+    Serial.begin(115200);
 #if DEBUG==1
     while (!Serial) { ; }
 #endif
