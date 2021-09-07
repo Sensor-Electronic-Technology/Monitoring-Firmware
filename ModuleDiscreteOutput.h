@@ -2,6 +2,7 @@
 #include <ArduinoSTL.h>
 #include "P1AM.h"
 #include "IO.h"
+#include "Global.h"
 
 
 namespace MonitoringComponents {

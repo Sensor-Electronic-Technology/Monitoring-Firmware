@@ -2,11 +2,16 @@
 
 namespace MonitoringComponents {
 	float ModuleAnalogInput::read() {
-		float counts= P1.readAnalog(this->_address.slot, this->_address.channel);
-		float val= CurrentMax * ((float)counts/Bit13Reg);
+		float val = 0;
+#if IO_DEBUG==1
+		this->value = 5;
+		val = 5;
+#else
+		float counts = P1.readAnalog(this->_address.slot, this->_address.channel);
+		 val= CurrentMax * ((float)counts / Bit13Reg);
 		this->value = val;
-		//int counts= P1.readAnalog(this->_address.slot, this->_address.channel);
-		//std::cout << "{" << this->_address.slot << "," << this->_address.channel <<"}="<<val<<std::endl;
+#endif
+
 		return val;
 	}
 

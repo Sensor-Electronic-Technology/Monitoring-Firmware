@@ -133,6 +133,8 @@ namespace MonitoringComponents {
 			for(auto registration : actionTracking) {
 				cout <<"Id: "<<registration.first <<" Instances: "<< registration.second->size() << endl;
 			}
+			//Serial.print("Free Memory");
+			//Serial.print(freeMemory());
 		}, 500);
 		RegisterChild(this->printTimer);
 		RegisterChild(this->checkStateTimer);
