@@ -8,6 +8,7 @@
 #include "ConfigurationReader.h"
 #include "Action.h"
 #include "ModbusService.h"
+#include "MonitoringLogger.h"
 
 
 namespace MonitoringComponents {
@@ -98,7 +99,6 @@ namespace MonitoringComponents {
 		std::vector<DiscreteOutputChannel*> outputChannels;
 
 		std::vector<Action*> actions;
-
 		std::map<int,Registrations*> actionTracking;
 		std::map<ActionType, int> systemActMap;
 		std::map<ActionType, bool> systemActionLatches;
@@ -107,8 +107,8 @@ namespace MonitoringComponents {
 		ControllerState controllerState;
 		ControllerState nextState;
 		Timer printTimer;
-		Timer checkStateTimer;
-		Timer resetTimer;
+		//Timer checkStateTimer;
+
 
 		void privateLoop();
 	};

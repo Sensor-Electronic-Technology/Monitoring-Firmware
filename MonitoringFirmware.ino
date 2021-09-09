@@ -23,8 +23,6 @@
 
 using namespace MonitoringComponents;
 
-//ConfigurationReader reader;
-//DiscreteInputModule discreteModule;
 MonitoringController controller;
 
 void(*resetFunc)(void) = 0;
@@ -43,14 +41,15 @@ void setup(){
     while (!Serial) { ; }
 #endif
     if (!SD.begin(SDCARD_SS_PIN)) {
-        while (1);
-    }
-    while (!P1.init()) { ; }
-    pinMode(SWITCH_BUILTIN, INPUT);
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
-    resetLatched = digitalRead(SWITCH_BUILTIN);
+        while(1) {
 
+            Serial.println(F("SD Card Initialize Failed!"));
+        }
+    }
+    while (!P1.init()) { 
+        Serial.println(F("Initializing Controller"));
+        delay(100);
+    }
     controller.Setup();
     controller.Initialize();
 #endif

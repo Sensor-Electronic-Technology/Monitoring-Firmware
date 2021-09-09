@@ -4,19 +4,23 @@ namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Initialize() {
 
-/* 		this->updateTimer.onInterval([&]() { 
-				if(this->configuration.connected) {
-					ModbusService::UpdateInputRegister(this->configuration._register, this->value);
-					this->CheckProcessAlerts();
-				} else {
-					ModbusService::UpdateInputRegister(this->configuration._register, 0);
-				}
+ 		this->updateTimer.onInterval([&]() { 
+			this->Read();
+			ModbusService::UpdateInputRegister(this->configuration._register, this->value);
+			this->CheckProcessAlerts();
+			//if(this->configuration.connected) {
+			//	ModbusService::UpdateInputRegister(this->configuration._register, this->value);
+			//	this->CheckProcessAlerts();
+			//} else {
+			//	ModbusService::UpdateInputRegister(this->configuration._register, 0);
+			//}
 			},UPDATEPERIOD);
+		RegisterChild(this->updateTimer);
 
-		this->readTimer.onInterval([&]() { 
-				this->Read();
-			}, READPERIOD);
-    	this->Read(); */
+		//this->readTimer.onInterval([&]() { 
+		//		this->Read();
+		//	}, READPERIOD);
+    	this->Read();
      
 		if (alert3.Check(this->value) && alert3.enabled) {
 			ChannelMessage message;
@@ -169,12 +173,14 @@ namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Read() {
 		float reading = this->inputPin.read();
-		this->value+= ((reading * 62.5 -250)-this->value)*fWeight;
+		//this->value+= ((reading * 62.5 -250)-this->value)*fWeight;
+
+		this->value = reading * this->configuration.slope + this->configuration.offset;
 	}
 	
 	void AnalogInputChannel::privateLoop() {
-		this->Read();
-		ModbusService::UpdateInputRegister(this->configuration._register, this->value);
-		this->CheckProcessAlerts();
+		//this->Read();
+		//ModbusService::UpdateInputRegister(this->configuration._register, this->value);
+		//this->CheckProcessAlerts();
 	}
 };

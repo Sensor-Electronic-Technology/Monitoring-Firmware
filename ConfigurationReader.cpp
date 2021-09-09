@@ -1,5 +1,6 @@
 #include "ConfigurationReader.h"
 
+
 #define AnalogFile              "analog.txt"
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
@@ -11,7 +12,7 @@
 
 namespace MonitoringComponents {
 
-    ConfigurationReader::ConfigurationReader(Logger* logger) {
+    ConfigurationReader::ConfigurationReader(MonitoringLogger* logger) {
         this->logger = logger;
         this->configLoaded = false;
         this->DigitalInSize = 0;
@@ -178,7 +179,9 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
-                    std::cout << "DeserializeAnalog Failed" << endl;
+                    std::cout << F("DeserializeAnalog Failed") << endl;
+                    file.close();
+                    doc.garbageCollect();
                     return analogChannels;
                 }else {
                     size_t size = doc.as<JsonArray>().size();
@@ -191,13 +194,17 @@ namespace MonitoringComponents {
                         address.slot = elem[F("Address")][F("Slot")];
 
                         int reg = elem[F("Register")];
-                        int zeroValue = elem[F("Slope")];
-                        int maxValue = elem[F("Offset")];
+                        float slope = elem[F("Slope")].as<float>();
+                        float offset = elem[F("Offset")].as<float>();
                         int analogFactor = elem[F("AnalogFactor")];
                         int bypassAlerts = elem[F("BypassAlerts")];
                         int connected = elem[F("Connected")];
 
                         AnalogInConfiguration config(input,address, reg, connected);
+                        config.slope = slope;
+                        config.offset = offset;
+                        config.bypassAlerts = bypassAlerts;
+                        config.analogFactor = analogFactor;
 
                         JsonObject A1 = elem[F("A1")];
                         alert1.setPoint = A1[F("Setpoint")];
@@ -230,9 +237,11 @@ namespace MonitoringComponents {
                         analogChannels.push_back(config);
                     }
                     file.close();
+                    doc.garbageCollect();
                     return analogChannels;
                 }
             }else {
+                cout << F("Failed to open AnalogConfig File") << endl;
                 return analogChannels;
             }
         }
@@ -247,7 +256,9 @@ namespace MonitoringComponents {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
                     //log error
-                    std::cout << "Deserialize Output Failed" << endl;
+                    std::cout << F("Deserialize Output Failed") << endl;
+                    file.close();
+                    doc.garbageCollect();
                     return outputChannels;
                 }
                 else {
@@ -264,9 +275,11 @@ namespace MonitoringComponents {
                         outputChannels.push_back(config);
                     }
                     file.close();
+                    doc.garbageCollect();
                     return outputChannels;
                 }
             }else {
+                cout << F("Failed to opend OutputConfig File") << endl;
                 return outputChannels;
             }
         }
@@ -280,14 +293,13 @@ namespace MonitoringComponents {
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
-                    std::cout << "Deserialize Digital Failed" << endl;
+                    std::cout << F("Deserialize Digital Failed") << endl;
+                    doc.garbageCollect();
                     return configurations;
                 }else {
                     size_t size = doc.as<JsonArray>().size();
                     for (JsonObject elem : doc.as<JsonArray>()) {
-                        
                         ChannelAddress address;
-
                         int input = elem[F("Input")];
                         address.channel = elem[F("Address")][F("Channel")];
                         address.slot = elem[F("Address")][F("Slot")];
@@ -310,9 +322,11 @@ namespace MonitoringComponents {
                         configurations.push_back(config);
                     }
                     file.close();
+                    doc.garbageCollect();
                     return configurations;
                 }
             }else {
+                cout << F("Failed to opend DigitalConfig file") << endl;
                 return configurations;
             }
         }
@@ -353,7 +367,8 @@ namespace MonitoringComponents {
         std::vector<ActionConfiguration> actions;
         DeserializationError error = deserializeJson(doc, file);
         if (error) {
-            std::cout << "Deserialize Action Failed" << std::endl;
+            std::cout << F("Deserialize Action Failed") << std::endl;
+            doc.garbageCollect();
             return actions;
         }
         for (JsonObject elem : doc.as<JsonArray>()) {
@@ -388,6 +403,7 @@ namespace MonitoringComponents {
             actions.push_back(config);
         }
         file.close();
+        doc.garbageCollect();
         return actions;
     }
 
@@ -398,53 +414,45 @@ namespace MonitoringComponents {
             File file = SD.open(NetConfigFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
-                //if (error) {
-                //    std::cout << "Deserialize NetConfig Failed: " << std::endl;
-                //    std::cout << error.c_str() << std::endl;
-                //    return netConfig;
-                //} else {
-                    JsonObject root_0 = doc[0];
-                    const char* IpAddress = root_0["Ip Address"]; // "172.20.5.56"
-                    const char* DNS = root_0["DNS"]; // "172.20.3.5"
-                    const char* Mac = root_0["Mac"]; // "6052D0607093"
-                    std::cout << "Mac Before: " << Mac << std::endl;
-
-                    netConfig.mac[0]=  ConfigurationReader::ToHex(Mac[0], Mac[1]);
-                    netConfig.mac[1] = ConfigurationReader::ToHex(Mac[2], Mac[3]);
-                    netConfig.mac[2] = ConfigurationReader::ToHex(Mac[4], Mac[5]);
-                    netConfig.mac[3] = ConfigurationReader::ToHex(Mac[6], Mac[7]);
-                    netConfig.mac[4] = ConfigurationReader::ToHex(Mac[8], Mac[9]);
-                    netConfig.mac[5] = ConfigurationReader::ToHex(Mac[10], Mac[11]);
-                    //std::cout << "After: " << ConfigurationReader::HexToString((char*)netConfig.mac) << std::endl;
-                    std::cout << "After" << std::endl;
-                    for (int i = 0; i < 6; i++) {
-                        Serial.print(String(netConfig.mac[i],HEX));
-                    }
-                    std::cout << std::endl;
-
-
-                    const char* Gateway = root_0["Gateway"]; 
-                    int InputRegsters = root_0["InputRegsters"]; // 121
-                    int Coils = root_0["Coils"]; // 1000
-
-                    netConfig.ip.fromString(IpAddress);
-                    std::cout << "IP: " << IpAddress << std::endl;
-                    netConfig.gateway.fromString(DNS);
-                    std::cout << "DNS: " << DNS << std::endl;
-                    netConfig.gateway.fromString(Gateway);
-                    std::cout << "Gateway: " << Gateway << std::endl;
-                    netConfig.coils = Coils;
-                    std::cout <<" Coils: " << Coils << std::endl;
-                    netConfig.inputRegisters = InputRegsters;
-                    std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
-                    file.close();
+                if(error) {
+                    cout << F("Error deserializing netconfig") << endl;
+                    doc.garbageCollect();
                     return netConfig;
-                //}
+                }
+                JsonObject root_0 = doc[0];
+                const char* IpAddress = root_0["Ip Address"]; // "172.20.5.56"
+                const char* DNS = root_0["DNS"]; // "172.20.3.5"
+                const char* Mac = root_0["Mac"]; // "6052D0607093"
+//TODO Add logging
+
+                netConfig.mac[0]=  ConfigurationReader::ToHex(Mac[0], Mac[1]);
+                netConfig.mac[1] = ConfigurationReader::ToHex(Mac[2], Mac[3]);
+                netConfig.mac[2] = ConfigurationReader::ToHex(Mac[4], Mac[5]);
+                netConfig.mac[3] = ConfigurationReader::ToHex(Mac[6], Mac[7]);
+                netConfig.mac[4] = ConfigurationReader::ToHex(Mac[8], Mac[9]);
+                netConfig.mac[5] = ConfigurationReader::ToHex(Mac[10], Mac[11]);
+
+                const char* Gateway = root_0["Gateway"]; 
+                int InputRegsters = root_0["InputRegsters"]; // 121
+                int Coils = root_0["Coils"]; // 1000
+
+                netConfig.ip.fromString(IpAddress);
+                std::cout << "IP: " << IpAddress << std::endl;
+                netConfig.gateway.fromString(DNS);
+                std::cout << "DNS: " << DNS << std::endl;
+                netConfig.gateway.fromString(Gateway);
+                std::cout << "Gateway: " << Gateway << std::endl;
+                netConfig.coils = Coils;
+                std::cout <<" Coils: " << Coils << std::endl;
+                netConfig.inputRegisters = InputRegsters;
+                std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
+                file.close();
+                doc.garbageCollect();
+                return netConfig;
             } else {
-                std::cout << "Error opening netconfig" << std::endl;
+                std::cout << F("Error opening netconfig") << std::endl;
                 return netConfig;
             }
-
         } else {
             return netConfig;
         }

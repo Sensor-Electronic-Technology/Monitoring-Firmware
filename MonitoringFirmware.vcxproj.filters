@@ -55,6 +55,12 @@
     <Filter Include="Header Files\MonitoringComponents\Actions">
       <UniqueIdentifier>{4a058aa8-b02d-4106-934a-d09fa394a6ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Utility">
+      <UniqueIdentifier>{219dc56d-0d82-40f0-8563-ba4fcfc7d0da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MonitoringComponents\Actions">
+      <UniqueIdentifier>{7633800d-bb74-452a-a8b2-7b053f59a58d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />
@@ -136,6 +142,12 @@
     <ClInclude Include="Global.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="MonitoringLogger.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionDispatcher.h">
+      <Filter>Header Files\MonitoringComponents\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogInputChannel.cpp">
@@ -170,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="ModbusService.cpp">
       <Filter>Source Files\MonitoringComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="MonitoringLogger.cpp">
+      <Filter>Source Files\MonitoringComponents\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionDispatcher.cpp">
+      <Filter>Source Files\MonitoringComponents\Actions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
