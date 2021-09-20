@@ -29,6 +29,7 @@ void(*resetFunc)(void) = 0;
 bool resetLatched;
 
 void setup(){
+    //MonitoringLogger::Start();
 #if CREATEFILES==1
     Serial.begin(38400);
     while (!Serial) { ; }
