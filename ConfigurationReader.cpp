@@ -12,19 +12,11 @@
 
 namespace MonitoringComponents {
 
-    ConfigurationReader::ConfigurationReader(MonitoringLogger* logger) {
-        this->logger = logger;
-        this->configLoaded = false;
-        this->DigitalInSize = 0;
-        this->OutputSize = 0;
-        this->AnalogInSize = 0;
-        this->ModuleSize = 0;
-        this->NetConfigSize = 0;
-    }
+
 
     ConfigurationReader::ConfigurationReader() {
         this->configLoaded = false;
-        this->logger = nullptr;
+
         this->DigitalInSize = 0;
         this->OutputSize = 0;
         this->AnalogInSize = 0;

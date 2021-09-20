@@ -174,7 +174,6 @@ namespace MonitoringComponents {
 	void AnalogInputChannel::Read() {
 		float reading = this->inputPin.read();
 		//this->value+= ((reading * 62.5 -250)-this->value)*fWeight;
-
 		this->value = reading * this->configuration.slope + this->configuration.offset;
 	}
 	

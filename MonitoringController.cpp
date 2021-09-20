@@ -23,7 +23,6 @@ namespace MonitoringComponents {
 		}
 
 		for (int i = 0; i < actionConfig.size();i++) {
-
 			Action* action=new Action(actionConfig[i]);
 			
 			if (actionConfig[i].actionType != ActionType::Custom) {
@@ -89,7 +88,8 @@ namespace MonitoringComponents {
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Okay, false));
 
 		for(auto action : this->actions) {
-			this->actionTracking.insert(std::pair<int, Registrations*>(action->Id(), new Registrations));
+			//this->actionTracking.insert(std::pair<int, Registrations*>(action->Id(), new Registrations));
+			this->tracking.insert(std::pair<int, int*>(action->Id(), new int(0)));
 		}
 
 		this->OnChannelCallback([&](ChannelMessage message) {
@@ -134,9 +134,8 @@ namespace MonitoringComponents {
 
 			//cout << "Action Registrations: " << endl;
 			MonitoringLogger::LogInfo(F("Action Registrations: "));
-			for(auto registration : actionTracking) {
-				//cout <<"Id: "<<registration.first <<" Instances: "<< registration.second->size() << endl;
-				MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, registration.second);
+			for(auto registration : tracking) {
+				MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
 			}
 		}, 1000);
 
@@ -145,11 +144,10 @@ namespace MonitoringComponents {
 			MonitoringLogger::LogInfo(F("ActionType: %u State: %u"), (int)actionLatches.first, actionLatches.second);
 		}
 
-		MonitoringLogger::LogInfo(F("ActionTracking: "));
-		for(auto tracking : this->actionTracking) {
-			MonitoringLogger::LogInfo(F("ActionId: %d  Empty?  %t"),tracking.first,tracking.second->empty());
+		MonitoringLogger::LogInfo(F("Action Registrations: "));
+		for(auto registration : tracking) {
+			MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
 		}
-		
 		
 		RegisterChild(this->printTimer);
 		//RegisterChild(this->checkStateTimer);
@@ -187,80 +185,36 @@ namespace MonitoringComponents {
 		}
 
 		int id = (*action)->Id();
-		Registrations* registrations = actionTracking[id];
-		bool isNew = false;
-		//if (registrations == nullptr) {
-		//	registrations = new Registrations;
-		//	actionTracking[id] = registrations;
-		//	isNew = true;
-		//}
+		int* actionCount = tracking[id];
 
-		if(registrations == nullptr) {
-			MonitoringLogger::LogError(F("ActionTracking does not contain registrations for ActionId: %d"),id);
-			return;
-		}
-
-		auto channel = find_if(registrations->end(), registrations->end(), [&](ChannelAddress address) { 
-			return address == message.channel;
-		});
-
-		if(channel==registrations->end()) {
-			switch(message.channelAction) {
-				case ChannelAction::Trigger:{
-					registrations->push_back(message.channel);
-					
-					break;
-				}
-				case ChannelAction::Clear:{
-					auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-							return address == message.channel;
-						}), registrations->end());
-					break;
-				}
-			}
-		}
-
-
-		if (message.channelAction == ChannelAction::Trigger) {
-			if (isNew) {
-				registrations->push_back(message.channel);
-				if (message.type == ActionType::Custom) {
+		switch(message.channelAction) {
+			case ChannelAction::Trigger: {
+				if(message.type == ActionType::Custom) {
 					(*action)->Invoke();
 				} else {
+					(*actionCount) += 1;
 					this->systemActionLatches[message.type] = true;
 					this->ProcessStateChanges();
 				}
-			} else {
-				auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-					return address == message.channel;
-				});
-				if (channel == registrations->end()) {
-					registrations->push_back(message.channel);
-					if (message.type == ActionType::Custom) {
-						(*action)->Invoke();
-					} else {
-						this->systemActionLatches[message.type] = true;
-						this->ProcessStateChanges();
-					}
-				}
+				break;
 			}
-		} else if (message.channelAction == ChannelAction::Clear) {
-			auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-					return address == message.channel;
-			}), registrations->end());
-
-			if (registrations->empty()) {	
-				if (message.type == ActionType::Custom) {
+			case ChannelAction::Clear:{
+				if(message.type == ActionType::Custom) {
 					(*action)->Clear();
 				} else {
 					this->systemActionLatches[message.type] = false;
 					this->ProcessStateChanges();
 				}
+				break;
 			}
 		}
 	}
 
 	void MonitoringController::InvokeSystemAction(ActionType actionType) {
+		auto action = find_if(this->actions.begin(), this->actions.end(), [&](Action* act) {
+			return actionType == act->GetActionType();
+		});
+
 		if (actionType != ActionType::Custom) {
 			int index = systemActMap[actionType];
 			Action* action = actions[index];
@@ -269,25 +223,31 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::ProcessStateChanges() {
+
+
 		if (systemActionLatches[ActionType::Maintenance]) {
 			if (this->controllerState != ControllerState::Maintenance) {
 				this->controllerState = ControllerState::Maintenance;
 				this->InvokeSystemAction(ActionType::Maintenance);
+				MonitoringLogger::LogInfo("State Changed to Maintenance");
 			}
 		} else if (systemActionLatches[ActionType::Alarm]) {
 			if (this->controllerState != ControllerState::Alarming) {
 				this->controllerState = ControllerState::Alarming;
 				this->InvokeSystemAction(ActionType::Alarm);
+				MonitoringLogger::LogInfo("State Changed to Alarm");
 			}
 		} else if (systemActionLatches[ActionType::Warning]) {
 			if (this->controllerState != ControllerState::Warning) {
 				this->controllerState = ControllerState::Warning;
 				this->InvokeSystemAction(ActionType::Warning);
+				MonitoringLogger::LogInfo("State Changed to Warning");
 			}
 		} else {
 			if (this->controllerState != ControllerState::Okay) {
 				this->controllerState = ControllerState::Okay;
 				this->InvokeSystemAction(ActionType::Okay);
+				MonitoringLogger::LogInfo("State changed to Okay");
 			}
 		}
 	}
@@ -299,42 +259,4 @@ namespace MonitoringComponents {
 	void MonitoringController::privateLoop() {
 
 	}
-
-
-	//if(message.channelAction == ChannelAction::Trigger) {
-	//	if(isNew) {
-	//		registrations->push_back(message.channel);
-	//		if(message.type == ActionType::Custom) {
-	//			(*action)->Invoke();
-	//		} else {
-	//			this->systemActionLatches[message.type] = true;
-	//			this->ProcessStateChanges();
-	//		}
-	//	} else {
-	//		auto channel = find_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-	//			return address == message.channel;
-	//			});
-	//		if(channel == registrations->end()) {
-	//			registrations->push_back(message.channel);
-	//			if(message.type == ActionType::Custom) {
-	//				(*action)->Invoke();
-	//			} else {
-	//				this->systemActionLatches[message.type] = true;
-	//				this->ProcessStateChanges();
-	//			}
-	//		}
-	//	}
-	//} else if(message.channelAction == ChannelAction::Clear) {
-	//	auto channel = registrations->erase(remove_if(registrations->begin(), registrations->end(), [&](ChannelAddress address) {
-	//		return address == message.channel;
-	//		}), registrations->end());
-	//	if(registrations->empty()) {
-	//		if(message.type == ActionType::Custom) {
-	//			(*action)->Clear();
-	//		} else {
-	//			this->systemActionLatches[message.type] = false;
-	//			this->ProcessStateChanges();
-	//		}
-	//	}
-	//}
 };

@@ -49,7 +49,6 @@ namespace MonitoringComponents {
 		Timer readTimer;
 
 		float value;
-		bool triggered;
 		ChannelCallback _on_channel_trigger;
 		void privateLoop();
 	};

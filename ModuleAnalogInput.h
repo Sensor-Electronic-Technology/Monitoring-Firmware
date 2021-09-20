@@ -3,6 +3,7 @@
 #include "P1AM.h"
 #include "IO.h"
 #include "Global.h"
+#include "MonitoringLogger.h"
 
 #define Bit13Reg			8191
 #define CurrentMax			20
@@ -13,7 +14,7 @@ namespace MonitoringComponents {
 		ModuleAnalogInput(ChannelAddress address):ModuleIOPin(address){
 			const char config[] = { 0x40, 0x07 };
 			#if IO_DEBUG==1
-				std::cout << "ModuleAnalogInput Configured" << std::endl;
+				MonitoringLogger::LogDebug(F("ModuleAnalogInput Configured"));
 			#else
 				P1.configureModule(config, this->_address.slot);
 			#endif

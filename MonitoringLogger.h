@@ -42,19 +42,19 @@ public:
 	template<class T,typename... Args>
 	static void LogInfo(T message, Args... args) {
 		auto instance = MonitoringLogger::Instance();
-		instance->log.info(message, args);
+		instance->log.info(message, args...);
 	}
 
 	template<class T, typename... Args>
 	static void LogError(T message, Args... args) {
 		auto instance = MonitoringLogger::Instance();
-		instance->log.error(message, args);
+		instance->log.error(message, args...);
 	}
 
 	template<class T, typename... Args>
 	static void LogDebug(T message, Args... args) {
 		auto instance = MonitoringLogger::Instance();
-		instance->log.debug(message, args);
+		instance->log.debug(message, args...);
 	}
 
 private:

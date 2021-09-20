@@ -16,7 +16,6 @@ namespace MonitoringComponents {
         bool Init();
         ConfigurationReader& operator=(const ConfigurationReader& rhs) {
             this->configFile = rhs.configFile;
-            this->logger = rhs.logger;
             this->configLoaded = rhs.configLoaded;
             return *this;
         };
@@ -45,7 +44,6 @@ namespace MonitoringComponents {
         long ActionSize;
         long NetConfigSize;
         File configFile;
-        MonitoringLogger* logger = nullptr;
         bool configLoaded = false;
     };
 };
