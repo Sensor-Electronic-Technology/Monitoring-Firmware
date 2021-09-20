@@ -11,16 +11,18 @@ namespace MonitoringComponents {
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Maintenance, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Okay, false));
 
-		for(auto action : this->actions) {
-			//this->actionTracking.insert(std::pair<int, Registrations*>(action->Id(), new Registrations));
-			this->tracking.insert(std::pair<int, int*>(action->Id(), new int(0)));
-		}
+
 
 		this->OnChannelCallback([&](ChannelMessage message) {
 				ProcessChannelMessage(message);
 			});
 
 		this->Build();
+
+		for(auto action : this->actions) {
+			//this->actionTracking.insert(std::pair<int, Registrations*>(action->Id(), new Registrations));
+			this->tracking.insert(std::pair<int, int*>(action->Id(), new int(0)));
+		}
 
 		this->printTimer.onInterval([&]() {
 			String buffer;
@@ -65,7 +67,7 @@ namespace MonitoringComponents {
 			for(auto registration : tracking) {
 				MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
 			}
-			}, 1000);
+		}, 1000);
 
 		MonitoringLogger::LogInfo(F("Latches"));
 		for(auto actionLatches : systemActionLatches) {
@@ -214,8 +216,13 @@ namespace MonitoringComponents {
 					(*action)->Clear();
 				} else {
 					(*actionCount) -= 1;
-					this->systemActionLatches[message.type] = false;
-					this->ProcessStateChanges();
+					if((*actionCount)==0) {
+						this->systemActionLatches[message.type] = false;
+						this->ProcessStateChanges();
+					} else if((*actionCount) < 0) {
+						(*actionCount) = 0;
+						MonitoringLogger::LogError(F("Action Id: %d is negative. Count: %d"),id,(*actionCount));
+					}
 				}
 				break;
 			}
