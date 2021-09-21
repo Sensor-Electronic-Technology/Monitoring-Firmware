@@ -5,13 +5,12 @@ namespace MonitoringComponents {
 
 	void MonitoringController::Setup() {
 		MonitoringLogger::Start(&Serial, LogLevel::Info);
+
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Alarm, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Warning, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::SoftWarn, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Maintenance, false));
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Okay, false));
-
-
 
 		this->OnChannelCallback([&](ChannelMessage message) {
 				ProcessChannelMessage(message);

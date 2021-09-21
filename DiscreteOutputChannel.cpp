@@ -9,7 +9,6 @@ namespace MonitoringComponents {
 	void DiscreteOutputChannel::Init(State initial) {
 		this->initialState = initial;
 		ChannelAddress addr = this->outputPin.Address();
-		std::cout << "Initializing Discrete InputPin: {" << addr.channel << "," << addr.slot << "} " << std::endl;
 		this->outputPin.Init(this->initialState);
 	}
 

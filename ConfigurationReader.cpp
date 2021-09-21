@@ -286,6 +286,7 @@ namespace MonitoringComponents {
                 DeserializationError error = deserializeJson(doc, file);
                 if (error) {
                     std::cout << F("Deserialize Digital Failed") << endl;
+                    file.close();
                     doc.garbageCollect();
                     return configurations;
                 }else {
@@ -331,6 +332,8 @@ namespace MonitoringComponents {
         if (file) {
             DeserializationError error = deserializeJson(doc, file);
             if (error) {
+                file.close();
+                doc.garbageCollect();
                 return modules;
             }
             else {
@@ -360,6 +363,7 @@ namespace MonitoringComponents {
         DeserializationError error = deserializeJson(doc, file);
         if (error) {
             std::cout << F("Deserialize Action Failed") << std::endl;
+            file.close();
             doc.garbageCollect();
             return actions;
         }
@@ -408,6 +412,7 @@ namespace MonitoringComponents {
                 DeserializationError error = deserializeJson(doc, file);
                 if(error) {
                     cout << F("Error deserializing netconfig") << endl;
+                    file.close();
                     doc.garbageCollect();
                     return netConfig;
                 }
@@ -443,6 +448,7 @@ namespace MonitoringComponents {
                 return netConfig;
             } else {
                 std::cout << F("Error opening netconfig") << std::endl;
+                doc.garbageCollect();
                 return netConfig;
             }
         } else {

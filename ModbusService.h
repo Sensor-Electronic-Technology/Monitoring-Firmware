@@ -48,6 +48,7 @@ namespace MonitoringComponents {
 				}
 				instance->modbusServer.configureCoils(0, netConfig.coils);
 				instance->modbusServer.configureInputRegisters(0, netConfig.inputRegisters);
+				//instance->modbusServer.configureHoldingRegisters(0,netConfig.)
 			} else {
 				instance->initialized = false;
 			}
@@ -69,38 +70,23 @@ namespace MonitoringComponents {
 		static void UpdateHoldingRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();
 			instance->modbusServer.holdingRegisterWrite(addr, value);
-			//if (instance->initialized) {
-			//	instance->modbusServer.holdingRegisterWrite(addr, value);
-			//}
 		}
 
 		static void UpdateInputRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();
 			instance->modbusServer.inputRegisterWrite(addr, value);
-			//if (instance->initialized) {
-			//	int success=instance->modbusServer.inputRegisterWrite(addr, value);
-			//	if (!success) {
-			//		std::cout << "Register " << addr << " Failed to update"<<std::endl;
-			//	}
-			//}
 		}
 
 		static void UpdateCoil(int addr, bool value) {
 			auto instance = ModbusService::Instance();
 			instance->modbusServer.coilWrite(addr, value);
-			//if (instance->initialized) {
-			//	instance->modbusServer.coilWrite(addr, value);
-			//}
 		}
 
 		static void UpdateDiscreteInput(int addr, bool value) {
 			auto instance = ModbusService::Instance();
 			instance->modbusServer.discreteInputWrite(addr, value);
-			//if (instance->initialized) {
-			//	instance->modbusServer.discreteInputWrite(addr, value);
-			//}
-
 		}
+
 	private:
 		static ModbusService* instance;
 		EthernetServer ethServer;

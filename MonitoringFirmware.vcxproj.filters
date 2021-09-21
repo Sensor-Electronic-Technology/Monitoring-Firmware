@@ -145,9 +145,6 @@
     <ClInclude Include="MonitoringLogger.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ActionDispatcher.h">
-      <Filter>Header Files\MonitoringComponents\Actions</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogInputChannel.cpp">
@@ -185,9 +182,6 @@
     </ClCompile>
     <ClCompile Include="MonitoringLogger.cpp">
       <Filter>Source Files\MonitoringComponents\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionDispatcher.cpp">
-      <Filter>Source Files\MonitoringComponents\Actions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

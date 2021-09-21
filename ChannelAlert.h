@@ -5,7 +5,6 @@
 
 namespace MonitoringComponents {
 
-
 	class ChannelAlert {
 	public:
 		int actionId;

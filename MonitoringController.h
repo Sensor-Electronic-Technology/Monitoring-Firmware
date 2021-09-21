@@ -22,8 +22,6 @@ namespace MonitoringComponents {
 		From
 	};
 
-
-
 	struct SystemActionIds {
 		int alarmIndex = 0;
 		int warningIndex = 0;
@@ -102,7 +100,6 @@ namespace MonitoringComponents {
 
 		std::vector<Action*> actions;
 		std::map<int, int*> tracking;
-		//std::map<int,Registrations*> actionTracking;
 		std::map<ActionType, int> systemActMap;
 		std::map<ActionType, bool> systemActionLatches;
 
@@ -110,7 +107,6 @@ namespace MonitoringComponents {
 		ControllerState controllerState;
 		ControllerState nextState;
 		Timer printTimer;
-		//Timer checkStateTimer;
 
 		void privateLoop();
 	};
