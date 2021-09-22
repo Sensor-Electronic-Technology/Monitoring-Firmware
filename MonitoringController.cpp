@@ -94,7 +94,7 @@ namespace MonitoringComponents {
 		auto actionConfig = reader.DeserializeActions();
 
 		auto netConfig = reader.DeserializeNetConfiguration();
-		MonitoringLogger::SetUpFileLogger();
+		MonitoringLogger::EnableFileLogger();
 		ModbusService::Initialize(netConfig);
 
 		for (auto output : outputConfig) {

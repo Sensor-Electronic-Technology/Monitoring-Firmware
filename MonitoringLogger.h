@@ -2,9 +2,19 @@
 #include <ArduinoSTL.h>
 #include <M2M_Logger.h>
 #include <SD.h>
+#include <avr/pgmspace.h>
 
 #define LOGFILE		"log.txt"
 
+
+const char header_0[] PROGMEM = "****************************************************";
+const char header_1[] PROGMEM = "****************************************************";
+const char header_2[] PROGMEM = "****************************************************";
+const char header_3[] PROGMEM = "****************************************************";
+const char header_4[] PROGMEM = "****************************************************";
+const char header_5[] PROGMEM = "****************************************************";
+const char header_6[] PROGMEM = "****************************************************";
+const char header_7[] PROGMEM = "****************************************************";
 
 class MonitoringLogger { 
 public:
@@ -22,16 +32,35 @@ public:
 		instance->log.begin(serialLog, logLevel);
 	}
 
-	static void SetUpFileLogger() {
+	static void EnableFileLogger() {
 		auto instance = MonitoringLogger::Instance();
-		instance->logFile = SD.open(LOGFILE, FILE_WRITE);
-		if(instance->logFile) {
-			instance->log.setFileLogger(&instance->logFile);
+		if(instance->logFile == nullptr) {
+			instance->logFile = &SD.open(LOGFILE, FILE_WRITE);
+			if(*instance->logFile) {
+				instance->log.setFileLogger(instance->logFile);
+				String buffer;
+				buffer+="**********************************************"
+				
+				instance->LogInfo(F("***********************************"));
+			}
+		}
+		instance->logFile = &SD.open(LOGFILE, FILE_WRITE);
+		if((*instance->logFile)) {
+			instance->log.setFileLogger(instance->logFile);
 			instance->log.info(F("Log file initialized"));
 			instance->fileInitialized = true;
 		} else {
 			instance->fileInitialized = false;
 		}
+	}
+
+	static void DisableFileLog() {
+		auto instance = MonitoringLogger::Instance();
+		if(instance->logFile!=nullptr) {
+			if(*instance->logFile) {
+				instance->logFile->close();
+			}
+		}//End logfile check
 	}
 
 	static void ChangeLogLevel(LogLevel logLevel) {
@@ -59,7 +88,7 @@ public:
 
 private:
 	Logger log;
-	File logFile;
+	File* logFile=nullptr;
 	bool fileInitialized = false;
 	static MonitoringLogger* instance;
 };
