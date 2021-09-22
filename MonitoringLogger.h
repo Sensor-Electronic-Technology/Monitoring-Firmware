@@ -4,17 +4,18 @@
 #include <SD.h>
 #include <avr/pgmspace.h>
 
-#define LOGFILE		"log.txt"
+#define LOGFILE			"log.txt"
+#define HEADERCOUNT		5
 
+const char header_0[] PROGMEM = "**********************************";
+const char header_1[] PROGMEM = "*****SETI Monitoring Box Log******";
+const char header_2[] PROGMEM = "**************EPI 1***************";
+const char header_3[] PROGMEM = "**********************************";
+const char header_4[] PROGMEM = "**********Starting Log************";
+const char header_5[] PROGMEM = "**********************************";
 
-const char header_0[] PROGMEM = "****************************************************";
-const char header_1[] PROGMEM = "****************************************************";
-const char header_2[] PROGMEM = "****************************************************";
-const char header_3[] PROGMEM = "****************************************************";
-const char header_4[] PROGMEM = "****************************************************";
-const char header_5[] PROGMEM = "****************************************************";
-const char header_6[] PROGMEM = "****************************************************";
-const char header_7[] PROGMEM = "****************************************************";
+const char* const header_table[] PROGMEM = { header_0,header_1,header_2,header_3,header_4,header_5 };
+
 
 class MonitoringLogger { 
 public:
@@ -38,10 +39,12 @@ public:
 			instance->logFile = &SD.open(LOGFILE, FILE_WRITE);
 			if(*instance->logFile) {
 				instance->log.setFileLogger(instance->logFile);
-				String buffer;
-				buffer+="**********************************************"
-				
-				instance->LogInfo(F("***********************************"));
+				instance->LogInfo(F("**********************************"));
+				instance->LogInfo(F("*****SETI Monitoring Box Log******"));
+				instance->LogInfo(F("**************EPI 1***************"));
+				instance->LogInfo(F("**********************************"));
+				instance->LogInfo(F("**********Starting Log************"));
+				instance->LogInfo(F(""));
 			}
 		}
 		instance->logFile = &SD.open(LOGFILE, FILE_WRITE);

@@ -26,7 +26,7 @@ namespace MonitoringComponents {
 		static void Initialize(NetConfiguration netConfig) {
 			IPAddress dns(172, 20, 3, 5);
 			IPAddress gateway(172, 20, 5, 1);
-			byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x93 };
+			byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x59 };
 			IPAddress subnet(255, 255, 255, 0);
 			auto instance = ModbusService::Instance();
 			instance->config = netConfig;
@@ -42,6 +42,7 @@ namespace MonitoringComponents {
 				std::cout << std::endl;
 				if (!instance->modbusServer.begin()) {
 					//log error
+					//itoa()
 					instance->initialized = false;
 				} else {
 					instance->initialized = true;
