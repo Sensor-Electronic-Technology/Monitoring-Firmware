@@ -32,8 +32,9 @@ namespace MonitoringComponents {
        std::vector<AnalogInConfiguration> DeserializeAnalogConfig();
        std::vector<OutputConfiguration> DeserializeOutputConfig();
        std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
-       std::vector<ModuleConfiguration> DeserializeModuleConfig();
+       std::vector<const char*> DeserializeModuleConfig();
        std::vector<ActionConfiguration> DeserializeActions();
+       std::vector<VirtualDigitalConfiguration> DeserializeVirtualConfig();
        NetConfiguration DeserializeNetConfiguration();
 
     private:
@@ -43,6 +44,7 @@ namespace MonitoringComponents {
         long OutputSize;
         long ActionSize;
         long NetConfigSize;
+        long VirtualSize;
         File configFile;
         bool configLoaded = false;
     };

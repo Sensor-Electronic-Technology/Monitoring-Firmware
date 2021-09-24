@@ -119,6 +119,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="DiscreteInputChannel.h" />
     <ClInclude Include="DiscreteOutputChannel.h" />
+    <ClInclude Include="DiscreteVirtualChannel.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="IO.h" />

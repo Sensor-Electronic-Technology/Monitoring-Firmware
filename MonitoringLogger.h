@@ -7,16 +7,6 @@
 #define LOGFILE			"log.txt"
 #define HEADERCOUNT		5
 
-const char header_0[] PROGMEM = "**********************************";
-const char header_1[] PROGMEM = "*****SETI Monitoring Box Log******";
-const char header_2[] PROGMEM = "**************EPI 1***************";
-const char header_3[] PROGMEM = "**********************************";
-const char header_4[] PROGMEM = "**********Starting Log************";
-const char header_5[] PROGMEM = "**********************************";
-
-const char* const header_table[] PROGMEM = { header_0,header_1,header_2,header_3,header_4,header_5 };
-
-
 class MonitoringLogger { 
 public:
 	MonitoringLogger() {  }
@@ -35,35 +25,20 @@ public:
 
 	static void EnableFileLogger() {
 		auto instance = MonitoringLogger::Instance();
-		if(instance->logFile == nullptr) {
-			instance->logFile = &SD.open(LOGFILE, FILE_WRITE);
-			if(*instance->logFile) {
-				instance->log.setFileLogger(instance->logFile);
-				instance->LogInfo(F("**********************************"));
-				instance->LogInfo(F("*****SETI Monitoring Box Log******"));
-				instance->LogInfo(F("**************EPI 1***************"));
-				instance->LogInfo(F("**********************************"));
-				instance->LogInfo(F("**********Starting Log************"));
-				instance->LogInfo(F(""));
-			}
-		}
-		instance->logFile = &SD.open(LOGFILE, FILE_WRITE);
-		if((*instance->logFile)) {
-			instance->log.setFileLogger(instance->logFile);
+		instance->logFile =SD.open(LOGFILE, FILE_WRITE);
+		if(instance->logFile) {
+			instance->log.setFileLogger(&instance->logFile);
 			instance->log.info(F("Log file initialized"));
 			instance->fileInitialized = true;
+			instance->LogInfo(F("**********************************"));
+			instance->LogInfo(F("*****SETI Monitoring Box Log******"));
+			instance->LogInfo(F("**************EPI 1***************"));
+			instance->LogInfo(F("**********************************"));
+			instance->LogInfo(F("**********Starting Log************"));
+			instance->LogInfo(F("**********************************"));
 		} else {
 			instance->fileInitialized = false;
 		}
-	}
-
-	static void DisableFileLog() {
-		auto instance = MonitoringLogger::Instance();
-		if(instance->logFile!=nullptr) {
-			if(*instance->logFile) {
-				instance->logFile->close();
-			}
-		}//End logfile check
 	}
 
 	static void ChangeLogLevel(LogLevel logLevel) {
@@ -91,7 +66,7 @@ public:
 
 private:
 	Logger log;
-	File* logFile=nullptr;
+	File logFile;
 	bool fileInitialized = false;
 	static MonitoringLogger* instance;
 };

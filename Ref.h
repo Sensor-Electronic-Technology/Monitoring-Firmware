@@ -5,9 +5,13 @@ namespace MonitoringComponents{
 	class Ref {
 	public:
 		Ref() : _ref(nullptr) {}
+		
 		Ref(T* ref) : _ref(ref) {}
+		
 		Ref(T& ref) : _ref(&ref) {}
+		
 		Ref(const Ref<T>& other) : _ref(other._ref) {}
+
 		Ref<T>& operator=(const Ref<T>& other) {
 			_ref = other._ref;
 			return *this;

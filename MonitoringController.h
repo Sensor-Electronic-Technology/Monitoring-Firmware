@@ -1,6 +1,7 @@
 #pragma once
 #include <ArduinoSTL.h>
 #include <map>
+#include <vector>
 #include <ArduinoModbus.h>
 #include <ArduinoRS485.h>
 #include "Timer.h"
@@ -92,11 +93,14 @@ namespace MonitoringComponents {
 		void ProcessChannelMessage(ChannelMessage channelMessage);
 		void ProcessStateChanges();
 		void InvokeSystemAction(ActionType actionType);
+		void Print();
+		bool CheckController();
 	private:
 		typedef std::vector<ChannelAddress> Registrations;
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
+		std::vector<const char*> modules;
 
 		std::vector<Action*> actions;
 		std::map<int, int*> tracking;

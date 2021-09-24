@@ -4,6 +4,7 @@
 namespace MonitoringComponents {
 
 	void MonitoringController::Setup() {
+
 		MonitoringLogger::Start(&Serial, LogLevel::Info);
 
 		this->systemActionLatches.insert(std::pair<ActionType, bool>(ActionType::Alarm, false));
@@ -24,48 +25,7 @@ namespace MonitoringComponents {
 		}
 
 		this->printTimer.onInterval([&]() {
-			String buffer;
-			MonitoringLogger::LogInfo(F("Latches"));
-			for(auto actionLatches : systemActionLatches) {
-				MonitoringLogger::LogInfo(F("ActionType: %u State: %u"), (int)actionLatches.first, actionLatches.second);
-				//cout << "ActionType: " << (int)actionLatches.first << " State: " << actionLatches.second << endl;
-			}
-
-			switch(controllerState) {
-			case ControllerState::Alarming:
-			{
-				//cout << "ControllerState: " << "Alarming" << endl;
-				MonitoringLogger::LogInfo(F("ControllerState: Alarming"));
-				break;
-			}
-
-			case ControllerState::Maintenance:
-			{
-				//cout << "ControllerState: " << "Maintenance" << endl;
-				MonitoringLogger::LogInfo(F("ControllerState: Maintenance"));
-				break;
-			}
-
-			case ControllerState::Warning:
-			{
-				//cout << "ControllerState: " << "Warning" << endl;
-				MonitoringLogger::LogInfo(F("ControllerState: Warning"));
-				break;
-			}
-
-			case ControllerState::Okay:
-			{
-				//cout << "ControllerState: " << "Okay" << endl;
-				MonitoringLogger::LogInfo(F("ControllerState: Okay"));
-				break;
-			}
-			}
-
-			//cout << "Action Registrations: " << endl;
-			MonitoringLogger::LogInfo(F("Action Registrations: "));
-			for(auto registration : tracking) {
-				MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
-			}
+			Print();
 		}, 1000);
 
 		MonitoringLogger::LogInfo(F("Latches"));
@@ -86,13 +46,11 @@ namespace MonitoringComponents {
 		ConfigurationReader reader;
 		reader.Init();
 		auto discreteConfig = reader.DeserializeDigitalConfig();
-		//discreteInputs = discreteConfig.size();
 		auto analogConfig = reader.DeserializeAnalogConfig();
-		//inputRegisters = analogConfig.size();
 		auto outputConfig = reader.DeserializeOutputConfig();
-		//inputs = outputConfig.size();
 		auto actionConfig = reader.DeserializeActions();
-
+		auto virtualConfig = reader.DeserializeVirtualConfig();
+		this->modules = reader.DeserializeModuleConfig();
 		auto netConfig = reader.DeserializeNetConfiguration();
 		MonitoringLogger::EnableFileLogger();
 		ModbusService::Initialize(netConfig);
@@ -151,6 +109,10 @@ namespace MonitoringComponents {
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
 
+		for (auto ch : virtualConfig) {
+			DiscreteVirtualChannel* channel=new Dis
+		}
+
 		MonitoringLogger::LogInfo(F("Creating Analog Channels"));
 		for (auto ch : analogConfig) {
 			AnalogInputChannel* channel = new AnalogInputChannel(ch);
@@ -158,10 +120,6 @@ namespace MonitoringComponents {
 			RegisterChild(channel);
 			channel->OnStateChange(this->_on_channel_cbk);
 		}
-	}
-
-	void MonitoringController::OnChannelCallback(ChannelCallback cbk) {
-		this->_on_channel_cbk = cbk;
 	}
 
 	void MonitoringController::Initialize() {
@@ -182,6 +140,10 @@ namespace MonitoringComponents {
 		}
 
 		ProcessStateChanges();
+	}
+
+	void MonitoringController::OnChannelCallback(ChannelCallback cbk) {
+		this->_on_channel_cbk = cbk;
 	}
 
 	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {
@@ -238,6 +200,47 @@ namespace MonitoringComponents {
 			Action* action = actions[index];
 			action->Invoke();
 		}
+	}
+
+	void MonitoringController::Print(){
+		String buffer;
+		MonitoringLogger::LogInfo(F("Latches"));
+		for (auto actionLatches : systemActionLatches) {
+			MonitoringLogger::LogInfo(F("ActionType: %u State: %u"), (int)actionLatches.first, actionLatches.second);
+		}
+
+		switch (controllerState) {
+			case ControllerState::Alarming:{
+				MonitoringLogger::LogInfo(F("ControllerState: Alarming"));
+				break;
+			}
+
+			case ControllerState::Maintenance:{
+				MonitoringLogger::LogInfo(F("ControllerState: Maintenance"));
+				break;
+			}
+
+			case ControllerState::Warning:{
+				MonitoringLogger::LogInfo(F("ControllerState: Warning"));
+				break;
+			}
+
+			case ControllerState::Okay:{
+				MonitoringLogger::LogInfo(F("ControllerState: Okay"));
+				break;
+			}
+		}
+
+		MonitoringLogger::LogInfo(F("Action Registrations: "));
+		for (auto registration : tracking) {
+			MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
+		}
+	}
+
+	bool MonitoringController::CheckController(){
+		int moduleCount=this->modules.size();
+		int baseErrors=P1.rollCall(&this->modules[0], moduleCount);
+		return baseErrors==0;
 	}
 
 	void MonitoringController::ProcessStateChanges() {

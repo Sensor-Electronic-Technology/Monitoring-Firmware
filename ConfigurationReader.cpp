@@ -4,6 +4,7 @@
 #define AnalogFile              "analog.txt"
 #define OutputFile              "output.txt"
 #define DigitalFile             "digital.txt"
+#define VirtualFile             "virtual.txt"
 #define ModuleFile              "module.txt"
 #define ActionFile              "actions.txt"
 #define NetConfigFile           "network.txt"
@@ -16,7 +17,6 @@ namespace MonitoringComponents {
 
     ConfigurationReader::ConfigurationReader() {
         this->configLoaded = false;
-
         this->DigitalInSize = 0;
         this->OutputSize = 0;
         this->AnalogInSize = 0;
@@ -28,8 +28,10 @@ namespace MonitoringComponents {
         std::cout << AnalogFile << " " << this->AnalogInSize << std::endl;
         std::cout << OutputFile << " " << this->OutputSize << std::endl;
         std::cout << DigitalFile << " " << this->DigitalInSize << std::endl;
+        std::cout << VirtualFile << " " << this->VirtualSize << std::endl;
         std::cout << ActionFile << " " << this->ActionSize << std::endl;
         std::cout << NetConfigFile << " " << this->NetConfigSize << std::endl;
+        std::cout << ModuleFile << " " << this->ModuleSize << std::endl;
     }
 
     void ConfigurationReader::GetFileSizes() {
@@ -45,7 +47,7 @@ namespace MonitoringComponents {
                     this->SetSize(lineCount, value.toInt());
                     lineCount++;
                     value = "";
-                    if (lineCount > 5) {
+                    if (lineCount > 6) {
                         break;
                     }
                 }else {
@@ -64,6 +66,7 @@ namespace MonitoringComponents {
         }
         std::cout << "SD Card Initialized" << std::endl;
         File file;
+
         file = SD.open(AnalogFile,FILE_WRITE);
         if (file) {
             std::cout << AnalogFile << " Created!" << std::endl;
@@ -74,20 +77,34 @@ namespace MonitoringComponents {
             std::cout << DigitalFile << " Created!" << std::endl;
             file.close();
         }
+
+        file = SD.open(VirtualFile, FILE_WRITE);
+        if (file) {
+            std::cout << VirtualFile << "Created!" << std::endl;
+            file.close();
+        }
+
         file = SD.open(ActionFile,FILE_WRITE);
         if (file) {
             std::cout << ActionFile << " Created!" << std::endl;
             file.close();
         }
+
         file = SD.open(OutputFile,FILE_WRITE);
         if (file) {
             std::cout << OutputFile << " Created!" << std::endl;
             file.close();
         }
+
         file = SD.open(NetConfigFile,FILE_WRITE);
         if (file) {
             std::cout << NetConfigFile << " Created!" << std::endl;
             file.close();
+        }
+
+        file = SD.open(ModuleFile, FILE_WRITE);
+        if (file) {
+            std::cout << ModuleFile << "Created!" << std::endl;
         }
 
         file = SD.open(SizeFile, FILE_WRITE);
@@ -153,6 +170,15 @@ namespace MonitoringComponents {
             case 4: {
                 this->NetConfigSize = value;
                 break;
+            }
+
+            case 5: {
+                this->VirtualSize = value;
+                break;
+            }
+
+            case 6:{
+                this->ModuleSize = value;
             }
         }
     }
@@ -278,9 +304,9 @@ namespace MonitoringComponents {
     }
 
     std::vector<DigitalInConfiguration> ConfigurationReader::DeserializeDigitalConfig() {
+        std::vector<DigitalInConfiguration>  configurations;
         if (this->DigitalInSize > 0) {
             DynamicJsonDocument doc(this->DigitalInSize);
-            std::vector<DigitalInConfiguration>  configurations;
             File file = SD.open(DigitalFile);
             if (file) {
                 DeserializationError error = deserializeJson(doc, file);
@@ -307,11 +333,11 @@ namespace MonitoringComponents {
                         alert.actionId = Alert[F("Action")];
                         alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
                         alert.bypass = Alert[F("Bypass")].as<bool>();
-                        alert.enabled = Alert[F("Enabled")].as<bool>();
-                        config.alert = alert;
+                        alert.enabled = Alert[F("Enabled")].as<bool>();   
                         if (alert.actionId == -1 || ((int)alert.actionType < 1 || (int)alert.actionType>6)) {
                             alert.enabled = false;
                         }
+                        config.alert = alert;
                         configurations.push_back(config);
                     }
                     file.close();
@@ -319,15 +345,65 @@ namespace MonitoringComponents {
                     return configurations;
                 }
             }else {
+                doc.garbageCollect();
                 cout << F("Failed to opend DigitalConfig file") << endl;
                 return configurations;
             }
+        } else {
+            return configurations;
         }
     }
 
-    std::vector<ModuleConfiguration> ConfigurationReader::DeserializeModuleConfig() {
+    std::vector<VirtualDigitalConfiguration> ConfigurationReader::DeserializeVirtualConfig() {
+        std::vector<VirtualDigitalConfiguration> configurations;
+        if (this->VirtualSize > 0) {
+            DynamicJsonDocument doc(this->VirtualSize);
+            File file = SD.open(VirtualFile);
+            if (file) {
+                DeserializationError error = deserializeJson(doc, file);
+                if (error) {
+                    std::cout << F("Deserialize Digital Failed") << endl;
+                    file.close();
+                    doc.garbageCollect();
+                    return configurations;
+                } else {
+                    size_t size = doc.as<JsonArray>().size();
+                    for (auto elem : doc.as<JsonArray>()) {
+                        VirtualDigitalConfiguration config;
+                        config.input = elem[F("Input")]; // 1, 2, 3, 4
+                        config._register = elem[F("Coil")]; // 40, 41, 42, 43
+                        config.enabled = elem[F("Connected")]; // 1, 0, 0, 0
+
+                        DigitalAlert alert;
+                        JsonObject Alert = elem[F("Alert")];
+                        alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
+                        alert.actionId = Alert[F("Action")];
+                        alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
+                        alert.bypass = Alert[F("Bypass")].as<bool>();
+                        alert.enabled = Alert[F("Enabled")].as<bool>();
+                        if (alert.actionId == -1 || ((int)alert.actionType < 1 || (int)alert.actionType>6)) {
+                            alert.enabled = false;
+                        }
+                        config.alert = alert;
+                        configurations.push_back(config);
+                    }
+                    file.close();
+                    doc.garbageCollect();
+                    return configurations;
+                }
+            } else {
+                doc.garbageCollect();
+                return configurations;
+            }
+        } else {
+            std::cout << "Error: VirtualDiscreteInput File size is 0, failed to reas configuration" << endl;
+            return configurations;
+        }
+    }
+
+    std::vector<const char*> ConfigurationReader::DeserializeModuleConfig() {
         DynamicJsonDocument doc(this->ModuleSize);
-        std::vector<ModuleConfiguration> modules;
+        std::vector<const char*> modules;
         File file = SD.open(ModuleFile);
         if (file) {
             DeserializationError error = deserializeJson(doc, file);
@@ -338,18 +414,13 @@ namespace MonitoringComponents {
             }
             else {
                 int size = doc.as<JsonArray>().size();
-                for (JsonObject elem : doc.as<JsonArray>()) {
-                    ModuleConfiguration config;
-                    config.moduleName = (Module)elem[F("Module")];
-                    config.slot = elem[F("Slot")];
-                    config.channelCount = elem[F("ChannelCount")];
-                    config.channelMapEnd = elem[F("ChannelMap Stop")];
-                    config.moduleType = (ModuleType)elem[F("Type")];
-                    modules.push_back(config);
+                for (auto elem : doc.as<JsonArray>()) {
+                    const char* mod = doc[F("Module")];
+                    modules.push_back(mod);
                 }
                 file.close();
+                doc.garbageCollect();
                 return modules;
-                
             }
         }else {
             return modules;
@@ -417,32 +488,20 @@ namespace MonitoringComponents {
                     return netConfig;
                 }
                 JsonObject root_0 = doc[0];
-                const char* IpAddress = root_0["Ip Address"]; // "172.20.5.56"
-                const char* DNS = root_0["DNS"]; // "172.20.3.5"
-                const char* Mac = root_0["Mac"]; // "6052D0607093"
-//TODO Add logging
-
+                const char* DNS = root_0[F("DNS")];
+                const char* Mac = root_0[F("Mac")]; 
+                const char* Gateway = root_0[F("Gateway")];
+                netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
+                netConfig .coils= root_0[F("Coils")].as<int>(); 
+                netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
+                netConfig.gateway.fromString(DNS);
+                netConfig.gateway.fromString(Gateway);
                 netConfig.mac[0]=  ConfigurationReader::ToHex(Mac[0], Mac[1]);
                 netConfig.mac[1] = ConfigurationReader::ToHex(Mac[2], Mac[3]);
                 netConfig.mac[2] = ConfigurationReader::ToHex(Mac[4], Mac[5]);
                 netConfig.mac[3] = ConfigurationReader::ToHex(Mac[6], Mac[7]);
                 netConfig.mac[4] = ConfigurationReader::ToHex(Mac[8], Mac[9]);
                 netConfig.mac[5] = ConfigurationReader::ToHex(Mac[10], Mac[11]);
-
-                const char* Gateway = root_0["Gateway"]; 
-                int InputRegsters = root_0["InputRegsters"]; // 121
-                int Coils = root_0["Coils"]; // 1000
-
-                netConfig.ip.fromString(IpAddress);
-                std::cout << "IP: " << IpAddress << std::endl;
-                netConfig.gateway.fromString(DNS);
-                std::cout << "DNS: " << DNS << std::endl;
-                netConfig.gateway.fromString(Gateway);
-                std::cout << "Gateway: " << Gateway << std::endl;
-                netConfig.coils = Coils;
-                std::cout <<" Coils: " << Coils << std::endl;
-                netConfig.inputRegisters = InputRegsters;
-                std::cout << "Registers: " << netConfig.inputRegisters << std::endl;
                 file.close();
                 doc.garbageCollect();
                 return netConfig;
@@ -452,6 +511,7 @@ namespace MonitoringComponents {
                 return netConfig;
             }
         } else {
+            std::cout << F("Error: NetConfig file size=0, failed to open") << std::endl;
             return netConfig;
         }
     }

@@ -61,6 +61,36 @@ namespace MonitoringComponents {
         DigitalAlert alert;
     };
 
+    class VirtualDigitalConfiguration {
+    public:
+        VirtualDigitalConfiguration():_register(0),enabled(false){ }
+
+        VirtualDigitalConfiguration(int in,int reg,bool en):input(in), _register(reg), enabled(en) { }
+
+        VirtualDigitalConfiguration(const VirtualDigitalConfiguration& config) {
+            this->input = config.input;
+            this->_register = config._register;
+            this->enabled = config.enabled;
+            this->alert = config.alert;
+            this->triggerOn = config.triggerOn;
+        }
+
+        const VirtualDigitalConfiguration& operator=(const VirtualDigitalConfiguration& rhs) {
+            this->input = rhs.input;
+            this->_register = rhs._register;
+            this->enabled = rhs.enabled;
+            this->alert = rhs.alert;
+            this->triggerOn = rhs.triggerOn;
+            return *this;
+        }
+
+        int input;
+        int _register;
+        bool enabled;
+        DigitalAlert alert;
+        TriggerOn triggerOn;
+    };
+
     class AnalogInConfiguration :public Configuration {
     public:
         AnalogInConfiguration():Configuration(){}
@@ -186,8 +216,8 @@ namespace MonitoringComponents {
     class NetConfiguration {
     public:
         int inputRegisters;
+        int discreteInputs;
         int coils;
-        IPAddress ip;
         byte mac[6];
         IPAddress dns;
         IPAddress gateway;
@@ -195,7 +225,7 @@ namespace MonitoringComponents {
         const NetConfiguration& operator=(const NetConfiguration& rhs) {
             this->inputRegisters = rhs.inputRegisters;
             this->coils = rhs.coils;
-            this->ip = rhs.ip;
+            this->discreteInputs = rhs.discreteInputs;
             std::copy(rhs.mac, rhs.mac + 6, this->mac);
             this->dns = rhs.dns;
             this->gateway = rhs.gateway;
