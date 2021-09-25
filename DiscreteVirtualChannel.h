@@ -16,10 +16,25 @@ namespace MonitoringComponents {
 			_on_state_change([](ChannelMessage) {}) {
 			this->triggerOn = config.triggerOn;
 			this->enabled = config.enabled;
+			this->alert = this->configuration.alert;
 		}
 
 		DiscreteVirtualChannel():MonitoringComponent(nullptr), _on_state_change([](ChannelMessage){	}) {	};
 
+		void Initialize() {
+			bool state = this->isTriggered();
+			if (state) {
+				ChannelMessage message;
+				message.actionId = this->alert.actionId;
+				message.channel = ChannelAddress();
+				message.type = this->alert.actionType;
+				message.channelAction = ChannelAction::Trigger;
+
+				this->alert.activated = true;
+				this->_on_state_change(message);
+			}
+			this->triggered = state;
+		}
 
 		bool isTriggered() {
 			if (this->enabled) {
@@ -47,14 +62,29 @@ namespace MonitoringComponents {
 		VirtualDigitalConfiguration configuration;
 		TriggerOn triggerOn;
 		ModbusAddress modbusAddress;
+		DigitalAlert alert;
 		bool triggered;
 		bool enabled;
 		ChannelCallback _on_state_change;
 		
-		void privateloop() {
+		void privateLoop() {
 			bool state = this->isTriggered();
 			if (state != this->triggered) {
-
+				if (this->alert.enabled) {
+					ChannelMessage  message;
+					message.actionId = this->alert.actionId;
+					message.channel = ChannelAddress();
+					message.type = this->alert.actionType;
+					if (state) {
+						message.channelAction = ChannelAction::Trigger;
+						this->alert.activated = true;
+					}else {
+						message.channelAction = ChannelAction::Clear;
+						this->alert.activated = false;
+					}
+					this->_on_state_change(message);
+				}
+				this->triggered = state;
 			}
 		}
 	};

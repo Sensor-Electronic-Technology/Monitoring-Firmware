@@ -4,6 +4,10 @@
 #include <vector>
 #include <ArduinoModbus.h>
 #include <ArduinoRS485.h>
+#include "AnalogInputChannel.h"
+#include "DiscreteOutputChannel.h"
+#include "DiscreteInputChannel.h"
+#include "DiscreteVirtualChannel.h"
 #include "Timer.h"
 #include "Configuration.h"
 #include "ConfigurationReader.h"
@@ -87,6 +91,7 @@ namespace MonitoringComponents {
 		void Setup();
 		void Run();
 		void Initialize();
+		bool CheckController();
 	private:
 		void Build();
 		void OnChannelCallback(ChannelCallback cbk);
@@ -96,10 +101,10 @@ namespace MonitoringComponents {
 		void Print();
 		bool CheckController();
 	private:
-		typedef std::vector<ChannelAddress> Registrations;
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;
 		std::vector<DiscreteOutputChannel*> outputChannels;
+		std::vector<DiscreteVirtualChannel*> virtualInputs;
 		std::vector<const char*> modules;
 
 		std::vector<Action*> actions;

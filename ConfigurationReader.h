@@ -3,9 +3,8 @@
 #include <ArduinoJson.h>
 #include <M2M_Logger.h>
 #include <SD.h>
-#include "AnalogInputChannel.h"
-#include "DiscreteOutputChannel.h"
-#include "DiscreteInputChannel.h"
+
+
 
 namespace MonitoringComponents {
 

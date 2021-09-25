@@ -42,14 +42,18 @@ void setup(){
 #endif
     if (!SD.begin(SDCARD_SS_PIN)) {
         while(1) {
-
             Serial.println(F("SD Card Initialize Failed!"));
+            delay(500);
         }
     }
     while (!P1.init()) { 
         Serial.println(F("Initializing Controller"));
         delay(100);
     }
+    //Need to initialize file log before here the disable file logging before deserializations
+    //if (!controller.CheckController()) {
+    //    
+    //}
     controller.Setup();
     controller.Initialize();
 #endif

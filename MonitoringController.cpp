@@ -20,7 +20,6 @@ namespace MonitoringComponents {
 		this->Build();
 
 		for(auto action : this->actions) {
-			//this->actionTracking.insert(std::pair<int, Registrations*>(action->Id(), new Registrations));
 			this->tracking.insert(std::pair<int, int*>(action->Id(), new int(0)));
 		}
 
@@ -52,16 +51,21 @@ namespace MonitoringComponents {
 		auto virtualConfig = reader.DeserializeVirtualConfig();
 		this->modules = reader.DeserializeModuleConfig();
 		auto netConfig = reader.DeserializeNetConfiguration();
+
 		MonitoringLogger::EnableFileLogger();
+
 		ModbusService::Initialize(netConfig);
 
+		//Outputs needed for building actions
 		for (auto output : outputConfig) {
 			DiscreteOutputChannel* channel = new DiscreteOutputChannel(output);
 			this->outputChannels.push_back(channel);
 		}
 
 		MonitoringLogger::LogInfo(F("Creating Actions"));
+
 		for (int i = 0; i < actionConfig.size();i++) {
+
 			Action* action=new Action(actionConfig[i]);
 			
 			if (actionConfig[i].actionType != ActionType::Custom) {
@@ -110,7 +114,10 @@ namespace MonitoringComponents {
 		}
 
 		for (auto ch : virtualConfig) {
-			DiscreteVirtualChannel* channel=new Dis
+			DiscreteVirtualChannel* channel = new DiscreteVirtualChannel(ch);
+			this->virtualInputs.push_back(channel);
+			RegisterChild(channel);
+			channel->OnStateChange(this->_on_channel_cbk);
 		}
 
 		MonitoringLogger::LogInfo(F("Creating Analog Channels"));
@@ -123,6 +130,7 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::Initialize() {
+
 		for (auto output : outputChannels) {
 			output->SetOutput(State::Low);
 		}
@@ -133,6 +141,10 @@ namespace MonitoringComponents {
 
 		for (auto dinput : discreteInputs) {
 			dinput->Initialize();
+		}
+
+		for (auto vInput : virtualInputs) {
+			vInput->Initialize();
 		}
 
 		for (auto ainput : analogInputs) {
@@ -275,7 +287,5 @@ namespace MonitoringComponents {
 		this->loop();
 	}
 
-	void MonitoringController::privateLoop() {
-
-	}
+	void MonitoringController::privateLoop() {	}
 };

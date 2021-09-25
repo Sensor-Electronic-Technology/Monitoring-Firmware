@@ -5,6 +5,17 @@ namespace MonitoringComponents {
 	struct ChannelAddress {
 		int slot;
 		int channel;
+
+		ChannelAddress() {
+			this->slot = 0;
+			this->channel = 0;
+		}
+
+		ChannelAddress(int slot, int channel) {
+			this->slot = slot;
+			this->channel = channel;
+		}
+
 		~ChannelAddress(){}
 
 		ChannelAddress& operator=(const ChannelAddress& rhs) {
