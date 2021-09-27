@@ -11,12 +11,12 @@ namespace MonitoringComponents {
 	class DiscreteOutputChannel :public MonitoringComponent {
 	public:
 
-		DiscreteOutputChannel():MonitoringComponent(){}
+		DiscreteOutputChannel():MonitoringComponent(){	}
 
 		DiscreteOutputChannel(OutputConfiguration configuration, Ref<MonitoringComponent> parent = nullptr)
 			:MonitoringComponent(parent), configuration(configuration),
 			outputPin(configuration.address),
-			modbusAddress({configuration._register,RegisterType::Input }) {
+			modbusAddress({configuration._register,RegisterType::Input}) {
 			this->initialState = this->configuration.startState;
 		}
 

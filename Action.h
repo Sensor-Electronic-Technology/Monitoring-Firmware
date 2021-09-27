@@ -55,7 +55,7 @@ namespace MonitoringComponents {
 			if (this->output3 != nullptr) {
 				this->output3->Reset();
 			}
-			ModbusService::UpdateDiscreteInput(this->address.address, true);
+			ModbusService::UpdateDiscreteInput(this->address.address, false);
 		}
 
 		void SetOutput(ActionOutput* output, int outputNumber) {
