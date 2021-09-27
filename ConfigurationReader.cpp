@@ -492,7 +492,7 @@ namespace MonitoringComponents {
                 const char* Mac = root_0[F("Mac")]; 
                 const char* Gateway = root_0[F("Gateway")];
                 netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
-                netConfig .coils= root_0[F("Coils")].as<int>(); 
+                netConfig.coils= root_0[F("Coils")].as<int>(); 
                 netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
                 netConfig.gateway.fromString(DNS);
                 netConfig.gateway.fromString(Gateway);

@@ -222,6 +222,14 @@ namespace MonitoringComponents {
         IPAddress dns;
         IPAddress gateway;
 
+        //void Print() {
+        //    String buffer;
+        //    buffer = "Input Registers: " + String(this->inputRegisters)+"\n";
+        //    buffer += "Discrete Inputs: " + String(this->discreteInputs) + "\n";
+        //    buffer += "Coils: " + String(this->coils) + "\n";
+        //    Serial.print(buffer);
+        //}
+
         const NetConfiguration& operator=(const NetConfiguration& rhs) {
             this->inputRegisters = rhs.inputRegisters;
             this->coils = rhs.coils;
