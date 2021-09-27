@@ -12,7 +12,8 @@ namespace MonitoringComponents {
 		this->outputPin.Init(this->initialState);
 	}
 
-	void DiscreteOutputChannel::SetOutput(State state) {		
+	void DiscreteOutputChannel::SetOutput(State state) {	
+		ModbusService::UpdateDiscreteInput(this->configuration._register, (bool)state);
 		this->outputPin.setOutput(state);
 	}
 

@@ -58,9 +58,6 @@
     <Filter Include="Source Files\MonitoringComponents\Utility">
       <UniqueIdentifier>{219dc56d-0d82-40f0-8563-ba4fcfc7d0da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\MonitoringComponents\Actions">
-      <UniqueIdentifier>{7633800d-bb74-452a-a8b2-7b053f59a58d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MonitoringFirmware.ino" />

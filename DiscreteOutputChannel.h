@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MonitoringComponent.h"
+#include "ModbusService.h"
 #include "P1AM.h"
 #include "Ref.h"
 #include "ModuleDiscreteOutput.h"

@@ -48,7 +48,6 @@ namespace MonitoringComponents {
 					message.channelAction = ChannelAction::Clear;
 					this->alert.activated = false;
 				}
-				//this->alert.activated = true;
 				this->_on_state_change(message);
 			}
 			this->triggered = state;

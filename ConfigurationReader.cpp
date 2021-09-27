@@ -297,7 +297,7 @@ namespace MonitoringComponents {
                     return outputChannels;
                 }
             }else {
-                cout << F("Failed to opend OutputConfig File") << endl;
+                std::cout << F("Failed to opend OutputConfig File") << std::endl;
                 return outputChannels;
             }
         }

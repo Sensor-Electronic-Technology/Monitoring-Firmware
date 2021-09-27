@@ -99,7 +99,6 @@ namespace MonitoringComponents {
 		void ProcessStateChanges();
 		void InvokeSystemAction(ActionType actionType);
 		void Print();
-		bool CheckController();
 	private:
 		std::vector<DiscreteInputChannel*> discreteInputs;
 		std::vector<AnalogInputChannel*> analogInputs;

@@ -1,5 +1,7 @@
 #pragma once
 #include <ArduinoSTL.h>
+#include "MonitoringComponent.h"
+#include "ModbusService.h"
 #include "Data.h"
 #include "ActionOutput.h"
 
@@ -38,6 +40,7 @@ namespace MonitoringComponents {
 			if (this->output3 != nullptr) {
 				this->output3->TriggerOutput();
 			}
+			ModbusService::UpdateInputRegister(this->address.address, true);
 		}
 
 		void Clear() {
@@ -52,6 +55,7 @@ namespace MonitoringComponents {
 			if (this->output3 != nullptr) {
 				this->output3->Reset();
 			}
+			ModbusService::UpdateInputRegister(this->address.address, true);
 		}
 
 		void SetOutput(ActionOutput* output, int outputNumber) {
