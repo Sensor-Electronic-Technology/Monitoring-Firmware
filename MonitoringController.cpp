@@ -191,6 +191,7 @@ namespace MonitoringComponents {
 					(*actionCount) -= 1;
 					if((*actionCount)==0) {
 						this->systemActionLatches[message.type] = false;
+						(*action)->Clear();
 						this->ProcessStateChanges();
 					} else if((*actionCount) < 0) {
 						(*actionCount) = 0;
