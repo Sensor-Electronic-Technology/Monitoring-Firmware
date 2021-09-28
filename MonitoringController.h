@@ -98,6 +98,7 @@ namespace MonitoringComponents {
 		void ProcessChannelMessage(ChannelMessage channelMessage);
 		void ProcessStateChanges();
 		void InvokeSystemAction(ActionType actionType);
+		void ClearSystemAction(ActionType actionType);
 		void Print();
 	private:
 		std::vector<DiscreteInputChannel*> discreteInputs;

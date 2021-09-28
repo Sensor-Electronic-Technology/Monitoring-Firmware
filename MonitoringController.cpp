@@ -159,24 +159,28 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::ProcessChannelMessage(ChannelMessage message) {
+		Action* action;
+		if (message.type != ActionType::Custom) {
+			action = this->actions[systemActMap[message.type]];
+		}else {
+			auto act = find_if(actions.begin(), actions.end(), [&](Action* act) {
+				return message.actionId == act->Id();
+			});
 
-		auto action = find_if(actions.begin(), actions.end(), [&](Action* act) {
-			return message.actionId == act->Id();
-		});
-
-		if(action == actions.end()) {
-			MonitoringLogger::LogError(F("Invalid ActionId: %d  From Channel(Slot,Channel): (%d,%d)"),
-				message.actionId,message.channel.slot,message.channel.channel);
-			return;
+			if (act == actions.end()) {
+				MonitoringLogger::LogError(F("Invalid ActionId: %d  From Channel(Slot,Channel): (%d,%d)"),
+					message.actionId, message.channel.slot, message.channel.channel);
+				return;
+			}
+			action = (*act);
 		}
-
-		int id = (*action)->Id();
+		int id = action->Id();
 		int* actionCount = tracking[id];
 
 		switch(message.channelAction) {
 			case ChannelAction::Trigger: {
 				if(message.type == ActionType::Custom) {
-					(*action)->Invoke();
+					action->Invoke();
 				} else {
 					(*actionCount) += 1;
 					this->systemActionLatches[message.type] = true;
@@ -186,12 +190,12 @@ namespace MonitoringComponents {
 			}
 			case ChannelAction::Clear:{
 				if(message.type == ActionType::Custom) {
-					(*action)->Clear();
+					action->Clear();
 				} else {
 					(*actionCount) -= 1;
 					if((*actionCount)==0) {
 						this->systemActionLatches[message.type] = false;
-						(*action)->Clear();
+						action->Clear();
 						this->ProcessStateChanges();
 					} else if((*actionCount) < 0) {
 						(*actionCount) = 0;
@@ -204,9 +208,9 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::InvokeSystemAction(ActionType actionType) {
-		auto action = find_if(this->actions.begin(), this->actions.end(), [&](Action* act) {
-			return actionType == act->GetActionType();
-		});
+		//auto action = find_if(this->actions.begin(), this->actions.end(), [&](Action* act) {
+		//	return actionType == act->GetActionType();
+		//});
 
 		if (actionType != ActionType::Custom) {
 			int index = systemActMap[actionType];
@@ -215,8 +219,14 @@ namespace MonitoringComponents {
 		}
 	}
 
+	void MonitoringController::ClearSystemAction(ActionType actionType) {
+		auto action = this->actions[this->systemActMap[actionType]];
+		action->Clear();
+	}
+
 	void MonitoringController::Print(){
 		String buffer;
+
 		MonitoringLogger::LogInfo(F("Latches"));
 		for (auto actionLatches : systemActionLatches) {
 			MonitoringLogger::LogInfo(F("ActionType: %u State: %u"), (int)actionLatches.first, actionLatches.second);
@@ -260,19 +270,23 @@ namespace MonitoringComponents {
 		if (systemActionLatches[ActionType::Maintenance]) {
 			if (this->controllerState != ControllerState::Maintenance) {
 				this->controllerState = ControllerState::Maintenance;
+				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Maintenance);
 				MonitoringLogger::LogInfo("State Changed to Maintenance");
 			}
 		} else if (systemActionLatches[ActionType::Alarm]) {
 			if (this->controllerState != ControllerState::Alarming) {
 				this->controllerState = ControllerState::Alarming;
+				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Alarm);
 				MonitoringLogger::LogInfo("State Changed to Alarm");
 			}
 		} else if (systemActionLatches[ActionType::Warning]) {
 			if (this->controllerState != ControllerState::Warning) {
 				this->controllerState = ControllerState::Warning;
+				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Warning);
+
 				MonitoringLogger::LogInfo("State Changed to Warning");
 			}
 		} else {
