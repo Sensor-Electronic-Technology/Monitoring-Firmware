@@ -4,8 +4,10 @@
 #include <Ethernet.h>
 #include <ArduinoRS485.h>
 #include <ArduinoModbus.h>
+#include "MonitoringLogger.h"
 #include "Configuration.h"
 #include "Data.h"
+
 
 namespace MonitoringComponents {
 	class ModbusService {
@@ -24,10 +26,6 @@ namespace MonitoringComponents {
 		}
 
 		static void Initialize(NetConfiguration netConfig) {
-			//IPAddress dns(172, 20, 3, 5);
-			//IPAddress gateway(172, 20, 5, 1);
-
-			//byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x59 };
 			IPAddress subnet(255, 255, 255, 0);		
 			auto instance = ModbusService::Instance();
 			instance->config = netConfig;
@@ -37,26 +35,29 @@ namespace MonitoringComponents {
 			Ethernet.setSubnetMask(subnet);
 			if (Ethernet.hardwareStatus() == EthernetHardwareStatus::EthernetNoHardware || Ethernet.linkStatus() == EthernetLinkStatus::LinkOFF) {
 				instance->initialized = false;
-				std::cout << "Ethernet hardware or Ethernet Link not available" << std::endl;
+				MonitoringLogger::LogError(F("Ethernet hardware or Ethernet Link not available"));
 				return;
 			}
 			if (Ethernet.begin(instance->config.mac,10000UL,4000UL)) {
+				
 				instance->ethServer.begin();
-				IPAddress address = Ethernet.localIP();
-				address.printTo(Serial);
-				std::cout << std::endl;
+				
+				IPAddress address = Ethernet.localIP();	
 				if (instance->modbusServer.begin()) {
 					instance->initialized = true;
 					instance->modbusServer.configureCoils(0, instance->config.coils);
 					instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
 					instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
+					MonitoringLogger::LogInfo(F("Modbus Initialized with IP Address %s.%s.%s.%s"), address[0], address[1], address[2], address[3]);
 				} else {
 					instance->initialized = false;
-					std::cout << "ModbusServer Failed To Initialize" << std::endl;
+					MonitoringLogger::LogError(F("ModbusServer Failed To Initialize"));
 				}
+
+				
 			} else {
 				instance->initialized = false;
-				std::cout << "Ethernet failed to initialize" << std::endl;
+				MonitoringLogger::LogError(F("Ethernet failed to initialize"));
 			}
 		}
 

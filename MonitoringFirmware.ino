@@ -24,6 +24,7 @@
 using namespace MonitoringComponents;
 
 MonitoringController controller;
+//SdFat sd;
 
 void(*resetFunc)(void) = 0;
 bool resetLatched;
@@ -50,10 +51,7 @@ void setup(){
         Serial.println(F("Initializing Controller"));
         delay(100);
     }
-    //Need to initialize file log before here the disable file logging before deserializations
-    //if (!controller.CheckController()) {
-    //    
-    //}
+
     controller.Setup();
     controller.Initialize();
 #endif

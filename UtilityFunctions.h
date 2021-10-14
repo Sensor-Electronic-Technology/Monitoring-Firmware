@@ -1,6 +1,5 @@
 #pragma once
 #include <P1AM.h>
-#include <SD.h>
 #include <ArduinoSTL.h>
 
 byte nibble2c(char c) {

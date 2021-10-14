@@ -6,6 +6,7 @@
 
 #define LOGFILE			"log.txt"
 #define HEADERCOUNT		5
+#define MAXSIZE			2000000000UL
 
 class MonitoringLogger { 
 public:
@@ -25,6 +26,7 @@ public:
 
 	static void EnableFileLogger() {
 		auto instance = MonitoringLogger::Instance();
+
 		instance->logFile =SD.open(LOGFILE, FILE_WRITE);
 		if(instance->logFile) {
 			instance->log.setFileLogger(&instance->logFile);

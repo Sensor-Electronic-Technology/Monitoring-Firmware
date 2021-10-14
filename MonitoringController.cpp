@@ -23,10 +23,6 @@ namespace MonitoringComponents {
 			this->tracking.insert(std::pair<int, int*>(action->Id(), new int(0)));
 		}
 
-		this->printTimer.onInterval([&]() {
-			Print();
-		}, 1000);
-
 		MonitoringLogger::LogInfo(F("Latches"));
 		for(auto actionLatches : systemActionLatches) {
 			MonitoringLogger::LogInfo(F("ActionType: %u State: %u"), (int)actionLatches.first, actionLatches.second);
@@ -36,9 +32,6 @@ namespace MonitoringComponents {
 		for(auto registration : tracking) {
 			MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
 		}
-
-		//RegisterChild(this->printTimer);
-		//RegisterChild(this->checkStateTimer);
 	}
 	
 	void MonitoringController::Build() {
@@ -195,7 +188,6 @@ namespace MonitoringComponents {
 					(*actionCount) -= 1;
 					if((*actionCount)==0) {
 						this->systemActionLatches[message.type] = false;
-						//action->Clear();
 						this->ProcessStateChanges();
 					} else if((*actionCount) < 0) {
 						(*actionCount) = 0;
@@ -279,7 +271,6 @@ namespace MonitoringComponents {
 			if (this->controllerState != ControllerState::Warning) {
 				this->controllerState = ControllerState::Warning;
 				this->InvokeSystemAction(ActionType::Warning);
-
 				MonitoringLogger::LogInfo("State Changed to Warning");
 			}
 		} else {
