@@ -37,7 +37,7 @@ namespace MonitoringComponents {
 			MonitoringLogger::LogInfo(F("Id: %u Instances: %u"), registration.first, (*registration.second));
 		}
 
-		RegisterChild(this->printTimer);
+		//RegisterChild(this->printTimer);
 		//RegisterChild(this->checkStateTimer);
 	}
 	
@@ -195,7 +195,7 @@ namespace MonitoringComponents {
 					(*actionCount) -= 1;
 					if((*actionCount)==0) {
 						this->systemActionLatches[message.type] = false;
-						action->Clear();
+						//action->Clear();
 						this->ProcessStateChanges();
 					} else if((*actionCount) < 0) {
 						(*actionCount) = 0;
@@ -208,10 +208,6 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::InvokeSystemAction(ActionType actionType) {
-		//auto action = find_if(this->actions.begin(), this->actions.end(), [&](Action* act) {
-		//	return actionType == act->GetActionType();
-		//});
-
 		if (actionType != ActionType::Custom) {
 			int index = systemActMap[actionType];
 			Action* action = actions[index];
@@ -270,21 +266,18 @@ namespace MonitoringComponents {
 		if (systemActionLatches[ActionType::Maintenance]) {
 			if (this->controllerState != ControllerState::Maintenance) {
 				this->controllerState = ControllerState::Maintenance;
-				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Maintenance);
 				MonitoringLogger::LogInfo("State Changed to Maintenance");
 			}
 		} else if (systemActionLatches[ActionType::Alarm]) {
 			if (this->controllerState != ControllerState::Alarming) {
 				this->controllerState = ControllerState::Alarming;
-				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Alarm);
 				MonitoringLogger::LogInfo("State Changed to Alarm");
 			}
 		} else if (systemActionLatches[ActionType::Warning]) {
 			if (this->controllerState != ControllerState::Warning) {
 				this->controllerState = ControllerState::Warning;
-				this->ClearSystemAction(ActionType::Okay);
 				this->InvokeSystemAction(ActionType::Warning);
 
 				MonitoringLogger::LogInfo("State Changed to Warning");
