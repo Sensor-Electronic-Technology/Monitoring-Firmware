@@ -488,12 +488,14 @@ namespace MonitoringComponents {
                     return netConfig;
                 }
                 JsonObject root_0 = doc[0];
+                const char* IP=root_0[F("IP")];
                 const char* DNS = root_0[F("DNS")];
                 const char* Mac = root_0[F("Mac")]; 
                 const char* Gateway = root_0[F("Gateway")];
                 netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
                 netConfig.coils= root_0[F("Coils")].as<int>(); 
                 netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
+                netConfig.ip.fromString(IP);
                 netConfig.gateway.fromString(DNS);
                 netConfig.gateway.fromString(Gateway);
                 netConfig.mac[0]=  ConfigurationReader::ToHex(Mac[0], Mac[1]);

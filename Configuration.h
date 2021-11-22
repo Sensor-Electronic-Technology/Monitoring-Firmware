@@ -221,6 +221,7 @@ namespace MonitoringComponents {
         byte mac[6];
         IPAddress dns;
         IPAddress gateway;
+        IPAddress ip;
 
         //void Print() {
         //    String buffer;
@@ -234,6 +235,7 @@ namespace MonitoringComponents {
             this->inputRegisters = rhs.inputRegisters;
             this->coils = rhs.coils;
             this->discreteInputs = rhs.discreteInputs;
+            this->ip=rhs.ip;
             std::copy(rhs.mac, rhs.mac + 6, this->mac);
             this->dns = rhs.dns;
             this->gateway = rhs.gateway;

@@ -30,7 +30,3 @@ String hex2str(char* data){
     return result;
 }
 
-void CreateConfigFiles() {
-
-}
-
