@@ -39,29 +39,27 @@ namespace MonitoringComponents {
 				MonitoringLogger::LogError(F("Ethernet hardware or Ethernet Link not available"));
 				return;
 			} */
-			//Ethernet.begin(instance->config.mac,10000UL,4000UL)
-/* 			if (Ethernet.begin(instance->config.mac,instance->config.ip,10000UL,4000UL)) { */
-
-			Ethernet.begin(instance->config.mac,instance->config.ip,10000UL,4000UL);				
-			instance->ethServer.begin();
-				
-			IPAddress address = Ethernet.localIP();	
-			if (instance->modbusServer.begin()) {
-				instance->initialized = true;
-				instance->modbusServer.configureCoils(0, instance->config.coils);
-				instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
-				instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
-				MonitoringLogger::LogInfo(F("Modbus Initialized with IP Address %s.%s.%s.%s"), address[0], address[1], address[2], address[3]);
-			} else {
-				instance->initialized = false;
-				MonitoringLogger::LogError(F("ModbusServer Failed To Initialize"));
-			}
+			//
+ 			if (Ethernet.begin(instance->config.mac,10000UL,4000UL)) { 
+				//Ethernet.begin(instance->config.mac,instance->config.ip,10000UL,4000UL);				
+				instance->ethServer.begin();			
+				IPAddress address = Ethernet.localIP();	
+				if (instance->modbusServer.begin()) {
+					instance->initialized = true;
+					instance->modbusServer.configureCoils(0, instance->config.coils);
+					instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
+					instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
+					MonitoringLogger::LogInfo(F("Modbus Initialized with IP Address %s.%s.%s.%s"), address[0], address[1], address[2], address[3]);
+				} else {
+					instance->initialized = false;
+					MonitoringLogger::LogError(F("ModbusServer Failed To Initialize"));
+				}
 
 				
-/* 			} else {
+ 			} else {
 				instance->initialized = false;
 				MonitoringLogger::LogError(F("Ethernet failed to initialize"));
-			} */
+			} 
 		}
 
 		static void Poll() {
