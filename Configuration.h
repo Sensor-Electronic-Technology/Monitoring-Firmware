@@ -56,7 +56,7 @@ namespace MonitoringComponents {
             }
             return *this;
         }
-
+        int alertModAddr;
         TriggerOn triggerOn;
         DigitalAlert alert;
     };
@@ -114,6 +114,7 @@ namespace MonitoringComponents {
         float slope;
         float offset;
         int analogFactor;
+        int alertModAddr;
         AnalogAlert alert1;
         AnalogAlert alert2;
         AnalogAlert alert3;
@@ -222,14 +223,6 @@ namespace MonitoringComponents {
         IPAddress dns;
         IPAddress gateway;
         IPAddress ip;
-
-        //void Print() {
-        //    String buffer;
-        //    buffer = "Input Registers: " + String(this->inputRegisters)+"\n";
-        //    buffer += "Discrete Inputs: " + String(this->discreteInputs) + "\n";
-        //    buffer += "Coils: " + String(this->coils) + "\n";
-        //    Serial.print(buffer);
-        //}
 
         const NetConfiguration& operator=(const NetConfiguration& rhs) {
             this->inputRegisters = rhs.inputRegisters;

@@ -12,9 +12,6 @@
 #define LOG_FILENAME            "log.txt"
 
 namespace MonitoringComponents {
-
-
-
     ConfigurationReader::ConfigurationReader() {
         this->configLoaded = false;
         this->DigitalInSize = 0;
@@ -212,6 +209,7 @@ namespace MonitoringComponents {
                         address.slot = elem[F("Address")][F("Slot")];
 
                         int reg = elem[F("Register")];
+                        int alertReg=elem[F("AlertRegister")];
                         float slope = elem[F("Slope")].as<float>();
                         float offset = elem[F("Offset")].as<float>();
                         int analogFactor = elem[F("AnalogFactor")];
@@ -223,6 +221,7 @@ namespace MonitoringComponents {
                         config.offset = offset;
                         config.bypassAlerts = bypassAlerts;
                         config.analogFactor = analogFactor;
+                        config.alertModAddr=alertReg;
 
                         JsonObject A1 = elem[F("A1")];
                         alert1.setPoint = A1[F("Setpoint")];
@@ -323,9 +322,11 @@ namespace MonitoringComponents {
                         address.channel = elem[F("Address")][F("Channel")];
                         address.slot = elem[F("Address")][F("Slot")];
                         int reg = elem[F("Coil")];
+                        int alertReg=elem[F("AlertRegister")];
                         int connected = elem[F("Connected")];
 
                         DigitalInConfiguration config(input,address,reg,connected);
+                        config.alertModAddr=alertReg;
 
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];

@@ -23,6 +23,7 @@ namespace MonitoringComponents {
 			:MonitoringComponent(parent), configuration(configuration), _on_channel_trigger([](ChannelMessage){}),
 			modbusAddress({configuration._register,RegisterType::Input}) { 
 			inputPin = ModuleAnalogInput(configuration.address);
+			this->alertModbusAddress=configuration.alertModAddr;
 			this->alert1 = configuration.alert1;
 			this->alert2 = configuration.alert2;
 			this->alert3 = configuration.alert3; 
@@ -39,6 +40,7 @@ namespace MonitoringComponents {
 	private:
 		ModuleAnalogInput inputPin;
 		ModbusAddress modbusAddress;
+		int alertModbusAddress;
 		AnalogInConfiguration configuration;
 
 		AnalogAlert alert1;

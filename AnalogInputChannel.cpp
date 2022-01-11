@@ -80,6 +80,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert3.actionType;
 				alert3.activated = true;
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert3.actionType));
 				_on_channel_trigger(message);
 			}
 		} else if(this->value<alert3.setPoint && alert2.Check(this->value)) {
@@ -108,6 +109,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert2.actionType;
 				alert2.activated = true;
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert2.actionType));
 				_on_channel_trigger(message);
 			}
 		} else if(this->value<alert2.setPoint && alert1.Check(this->value)) {
@@ -136,6 +138,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert1.actionType;
 				alert1.activated = true;
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert1.actionType));
 				_on_channel_trigger(message);
 			}
 		} else {
@@ -146,6 +149,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert1.actionType;
 				alert1.activated = false;
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(ActionType::Okay));
 				_on_channel_trigger(message);
 			}
 
@@ -156,6 +160,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert2.actionType;
 				alert2.activated = false;
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(ActionType::Okay));
 				_on_channel_trigger(message);
 			}
 
@@ -165,7 +170,8 @@ namespace MonitoringComponents {
 				message.channelAction = ChannelAction::Clear;
 				message.channel = inputPin.Address();
 				message.type = alert3.actionType;
-				alert3.activated = false;
+				alert3.activated = false;				
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(ActionType::Okay));
 				_on_channel_trigger(message);
 			}
 		}

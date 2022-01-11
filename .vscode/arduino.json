@@ -1,5 +1,5 @@
 {
     "board": "P1AM-100:samd:P1AM-100_native",
     "sketch": "MonitoringFirmware.ino",
-    "port": "COM3"
+    "port": "COM5"
 }

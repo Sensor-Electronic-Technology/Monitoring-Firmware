@@ -41,12 +41,15 @@ namespace MonitoringComponents {
 				message.actionId = this->alert.actionId;
 				message.channel = this->inputPin.Address();
 				message.type = this->alert.actionType;
+
 				if (state) {
 					message.channelAction = ChannelAction::Trigger;
 					this->alert.activated = true;
+					ModbusService::UpdateInputRegister(this->alertModbusAddres,int(this->alert.actionType));
 				} else {
 					message.channelAction = ChannelAction::Clear;
 					this->alert.activated = false;
+					ModbusService::UpdateInputRegister(this->alertModbusAddres,int(ActionType::Okay));
 				}
 				this->_on_state_change(message);
 			}
