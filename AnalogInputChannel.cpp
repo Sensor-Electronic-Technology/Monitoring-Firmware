@@ -28,7 +28,6 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert3.actionType;
 				alert3.activated = true;
-				
 				_on_channel_trigger(message);
 			}else if(alert2.Check(this->value) && alert2.enabled) {
 				ChannelMessage message;
