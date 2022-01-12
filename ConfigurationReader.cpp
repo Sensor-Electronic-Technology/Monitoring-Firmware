@@ -137,8 +137,7 @@ namespace MonitoringComponents {
 
     std::string ConfigurationReader::HexToString(char* data) {
         std::string result = "";
-        for (int i = 0; ConfigurationReader::nibbleTobyte(data[i]) >= 0; i++)
-        {
+        for (int i = 0; ConfigurationReader::nibbleTobyte(data[i]) >= 0; i++){
             result += ConfigurationReader::ToHex(data[i], data[i + 1]);
             if (ConfigurationReader::nibbleTobyte(data[i + 1]) >= 0)
                 i++;

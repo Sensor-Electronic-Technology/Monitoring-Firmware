@@ -42,7 +42,8 @@ namespace MonitoringComponents {
 			//
  			if (Ethernet.begin(instance->config.mac,10000UL,4000UL)) { 
 				//Ethernet.begin(instance->config.mac,instance->config.ip,10000UL,4000UL);				
-				instance->ethServer.begin();			
+				instance->ethServer.begin();
+		
 				IPAddress address = Ethernet.localIP();	
 				//MonitoringLogger::LogInfo(
 				if (instance->modbusServer.begin()) {
@@ -50,6 +51,9 @@ namespace MonitoringComponents {
 					instance->modbusServer.configureCoils(0, instance->config.coils);
 					instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
 					instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
+					for(int i=0;i<instance->config.inputRegisters;i++){
+						instance->modbusServer.inputRegisterWrite(i,uint16_t(0));
+					}
 					MonitoringLogger::LogInfo(F("Modbus Initialized with IP Address %d.%d.%d.%d"), address[0], address[1], address[2], address[3]);
 					MonitoringLogger::LogInfo(F("Mac Address %s.%s.%s.%s"), String(instance->config.mac[0]).c_str(),String(instance->config.mac[1]).c_str(), String(instance->config.mac[2]).c_str(), String(instance->config.mac[3]).c_str());
 				} else {

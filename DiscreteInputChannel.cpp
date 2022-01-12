@@ -8,19 +8,27 @@ namespace MonitoringComponents {
 		return false;
 	}
 
-	void DiscreteInputChannel::Initialize() {
+	void DiscreteInputChannel::Initialize() {	
 		bool state = this->isTriggered();
-		if (state) {
-			ChannelMessage msg;
-			msg.actionId = this->alert.actionId;
-			msg.channel = this->inputPin.Address();
-			msg.type = this->alert.actionType;
-			msg.channelAction = ChannelAction::Trigger;
-
-			this->alert.activated = true;
-			this->_on_state_change(msg);
+		ModbusService::UpdateDiscreteInput(this->modbusAddress.address,state);
+		if(this->configuration.connected){
+			if (state) {
+				ChannelMessage msg;
+				msg.actionId = this->alert.actionId;
+				msg.channel = this->inputPin.Address();
+				msg.type = this->alert.actionType;
+				msg.channelAction = ChannelAction::Trigger;
+				ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(this->alert.actionType));
+				this->alert.activated = true;
+				this->_on_state_change(msg);
+			}else{
+				ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(ActionType::Okay));
+			}
+		}else{
+			ModbusService::UpdateDiscreteInput(this->modbusAddress.address,uint16_t(0));
+			ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(0));
 		}
-		//}
+
 		this->triggered = state;
 	}
 
@@ -41,7 +49,6 @@ namespace MonitoringComponents {
 				message.actionId = this->alert.actionId;
 				message.channel = this->inputPin.Address();
 				message.type = this->alert.actionType;
-
 				if (state) {
 					message.channelAction = ChannelAction::Trigger;
 					this->alert.activated = true;

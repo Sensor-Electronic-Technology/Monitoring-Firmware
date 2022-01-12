@@ -5,47 +5,48 @@ namespace MonitoringComponents {
 	void AnalogInputChannel::Initialize() {
 
  		this->updateTimer.onInterval([&]() { 
-			this->Read();
-			ModbusService::UpdateInputRegister(this->configuration._register, this->value);
-			this->CheckProcessAlerts();
-			//if(this->configuration.connected) {
-			//	ModbusService::UpdateInputRegister(this->configuration._register, this->value);
-			//	this->CheckProcessAlerts();
-			//} else {
-			//	ModbusService::UpdateInputRegister(this->configuration._register, 0);
-			//}
+				if(this->configuration.connected){
+					this->Read();
+					ModbusService::UpdateInputRegister(this->configuration._register, this->value);
+					this->CheckProcessAlerts();
+				}else{
+					ModbusService::UpdateInputRegister(this->modbusAddress.address,uint16_t(0));
+					ModbusService::UpdateInputRegister(this->alertModbusAddress,uint16_t(0));
+				}
 			},UPDATEPERIOD);
 		RegisterChild(this->updateTimer);
-
-		//this->readTimer.onInterval([&]() { 
-		//		this->Read();
-		//	}, READPERIOD);
     	this->Read();
      
-		if (alert3.Check(this->value) && alert3.enabled) {
-			ChannelMessage message;
-			message.actionId = alert3.actionId;
-			message.channelAction = ChannelAction::Trigger;
-			message.channel = inputPin.Address();
-			message.type = alert3.actionType;
-			alert3.activated = true;
-			_on_channel_trigger(message);
-		}else if(alert2.Check(this->value) && alert2.enabled) {
-			ChannelMessage message;
-			message.actionId = alert2.actionId;
-			message.channelAction = ChannelAction::Trigger;
-			message.channel = inputPin.Address();
-			message.type = alert2.actionType;
-			alert2.activated = true;
-			_on_channel_trigger(message);
-		} else if (alert1.Check(this->value) && alert1.enabled) {
-			ChannelMessage message;
-			message.actionId = alert1.actionId;
-			message.channelAction = ChannelAction::Trigger;
-			message.channel = inputPin.Address();
-			message.type = alert1.actionType;
-			alert1.activated = true;
-			_on_channel_trigger(message);
+
+		if(!this->configuration.connected){
+			ModbusService::UpdateInputRegister(this->alertModbusAddress,uint16_t(0));
+		}else{
+			if (alert3.Check(this->value) && alert3.enabled) {
+				ChannelMessage message;
+				message.actionId = alert3.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert3.actionType;
+				alert3.activated = true;
+				
+				_on_channel_trigger(message);
+			}else if(alert2.Check(this->value) && alert2.enabled) {
+				ChannelMessage message;
+				message.actionId = alert2.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert2.actionType;
+				alert2.activated = true;
+				_on_channel_trigger(message);
+			} else if (alert1.Check(this->value) && alert1.enabled) {
+				ChannelMessage message;
+				message.actionId = alert1.actionId;
+				message.channelAction = ChannelAction::Trigger;
+				message.channel = inputPin.Address();
+				message.type = alert1.actionType;
+				alert1.activated = true;
+				_on_channel_trigger(message);
+			}
 		}
 	}
 
@@ -80,7 +81,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert3.actionType;
 				alert3.activated = true;
-				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert3.actionType));
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,uint16_t(alert3.actionType));
 				_on_channel_trigger(message);
 			}
 		} else if(this->value<alert3.setPoint && alert2.Check(this->value)) {
@@ -109,7 +110,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert2.actionType;
 				alert2.activated = true;
-				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert2.actionType));
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,uint16_t(alert2.actionType));
 				_on_channel_trigger(message);
 			}
 		} else if(this->value<alert2.setPoint && alert1.Check(this->value)) {
@@ -138,7 +139,7 @@ namespace MonitoringComponents {
 				message.channel = inputPin.Address();
 				message.type = alert1.actionType;
 				alert1.activated = true;
-				ModbusService::UpdateInputRegister(this->alertModbusAddress,int(alert1.actionType));
+				ModbusService::UpdateInputRegister(this->alertModbusAddress,uint16_t(alert1.actionType));
 				_on_channel_trigger(message);
 			}
 		} else {
