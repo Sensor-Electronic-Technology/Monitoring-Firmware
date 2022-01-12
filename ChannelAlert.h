@@ -29,7 +29,6 @@ namespace MonitoringComponents {
 		operator bool() {
 			return this->activated;
 		}
-
 	};
 
 	class AnalogAlert :public ChannelAlert {
