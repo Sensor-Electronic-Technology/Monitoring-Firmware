@@ -28,7 +28,6 @@ namespace MonitoringComponents {
 			ModbusService::UpdateDiscreteInput(this->modbusAddress.address,uint16_t(0));
 			ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(0));
 		}
-
 		this->triggered = state;
 	}
 
