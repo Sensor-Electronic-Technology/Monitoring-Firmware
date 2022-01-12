@@ -19,6 +19,7 @@ namespace MonitoringComponents {
 				msg.type = this->alert.actionType;
 				msg.channelAction = ChannelAction::Trigger;
 				ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(this->alert.actionType));
+				cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Alert: "<<int(this->alert.actionType)<<endl;
 				this->alert.activated = true;
 				this->_on_state_change(msg);
 			}else{
@@ -52,10 +53,12 @@ namespace MonitoringComponents {
 					message.channelAction = ChannelAction::Trigger;
 					this->alert.activated = true;
 					ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(this->alert.actionType));
+					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(this->alert.actionType)<<endl;
 				} else {
 					message.channelAction = ChannelAction::Clear;
 					this->alert.activated = false;
 					ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(ActionType::Okay));
+					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(ActionType::Okay)<<endl;
 				}
 				this->_on_state_change(message);
 			}

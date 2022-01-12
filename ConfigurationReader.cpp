@@ -326,6 +326,7 @@ namespace MonitoringComponents {
 
                         DigitalInConfiguration config(input,address,reg,connected);
                         config.alertModAddr=alertReg;
+                        //cout<<"AlertReg: "<<config.alertModAddr<<endl;
 
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];

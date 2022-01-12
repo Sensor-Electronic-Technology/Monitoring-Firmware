@@ -44,6 +44,7 @@ namespace MonitoringComponents {
         DigitalInConfiguration(int channel,ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) {  }
 
         DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
+            this->alertModAddr=other.alertModAddr;
             this->triggerOn = other.triggerOn;
             this->alert = other.alert;
         }
@@ -51,6 +52,7 @@ namespace MonitoringComponents {
         const DigitalInConfiguration& operator=(const DigitalInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
+                this->alertModAddr=rhs.alertModAddr;
                 this->triggerOn = rhs.triggerOn;
                 this->alert = rhs.alert;
             }
@@ -96,10 +98,27 @@ namespace MonitoringComponents {
         AnalogInConfiguration():Configuration(){}
         
         AnalogInConfiguration(int channel, ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) { }
+
+        AnalogInConfiguration(const AnalogInConfiguration& other):Configuration(other){
+            this->slope=other.slope;
+            this->offset=other.offset;
+            this->analogFactor=other.analogFactor;
+            this->alertModAddr=other.alertModAddr;
+            this->alert1=other.alert1;
+            this->alert2=other.alert2;
+            this->alert3=other.alert3;
+        }
+
+/*                 DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
+            this->alertModAddr=other.alertModAddr;
+            this->triggerOn = other.triggerOn;
+            this->alert = other.alert;
+        } */
         
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
+                this->alertModAddr=rhs.alertModAddr;
                 this->slope = rhs.slope;
                 this->offset = rhs.offset;
                 this->analogFactor = rhs.analogFactor;
