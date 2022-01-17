@@ -42,7 +42,7 @@ namespace MonitoringComponents {
 		auto outputConfig = reader.DeserializeOutputConfig();
 		auto actionConfig = reader.DeserializeActions();
 		auto virtualConfig = reader.DeserializeVirtualConfig();
-		this->modules = reader.DeserializeModuleConfig();
+		//this->modules = reader.DeserializeModuleConfig();
 		auto netConfig = reader.DeserializeNetConfiguration();
 		this->controllerRegister.address=netConfig.controllerRegister;
 		this->controllerRegister.type=RegisterType::Holding;
