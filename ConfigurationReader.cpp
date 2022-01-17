@@ -490,6 +490,7 @@ namespace MonitoringComponents {
                 const char* IP=root_0[F("IP")];
                 const char* DNS = root_0[F("DNS")];
                 const char* Mac = root_0[F("Mac")]; 
+                std::cout<<"Raw MAC: "<<Mac<<std::endl;
                 const char* Gateway = root_0[F("Gateway")];
                 netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
                 netConfig.coils= root_0[F("Coils")].as<int>(); 

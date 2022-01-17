@@ -83,7 +83,7 @@ namespace MonitoringComponents {
 
 		static void Update(ModbusAddress address,uint16_t value){
 			auto instance=ModbusService::Instance();
-			cout<<"Register: "<<address.address<<" Type: "<<int(address.type)<<endl;
+			//MonitoringLogger::LogInfo(F("Register: %d Type: %d"),address.address,int(address.type));
 			switch(address.type){
 				case RegisterType::Coil:{
 					instance->modbusServer.coilWrite(address.address,bool(value));

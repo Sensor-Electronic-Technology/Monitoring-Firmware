@@ -5,6 +5,7 @@
 #include <Ethernet.h>
 #include "Ref.h"
 
+
 namespace MonitoringComponents {
 
     class Configuration {
@@ -252,7 +253,7 @@ namespace MonitoringComponents {
         }
 
         void Print(){
-            cout<<" Input: "<<this->inputRegisters<<" Holding: "<<this->holdingRegisters<<" Coils: "<<this->coils<<" Controller: "<<this->controllerRegister<<endl;
+            std::cout<<" Input: "<<this->inputRegisters<<" Holding: "<<this->holdingRegisters<<" Coils: "<<this->coils<<" Controller: "<<this->controllerRegister<<std::endl;
         }
     };
 
