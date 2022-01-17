@@ -51,6 +51,7 @@ namespace MonitoringComponents {
 					instance->modbusServer.configureCoils(0, instance->config.coils);
 					instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
 					instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
+					instance->modbusServer.configureHoldingRegisters(0,instance->config.holdingRegisters);
 					for(int i=0;i<instance->config.inputRegisters;i++){
 						instance->modbusServer.inputRegisterWrite(i,uint16_t(0));
 					}
