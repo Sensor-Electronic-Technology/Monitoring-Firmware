@@ -495,7 +495,7 @@ namespace MonitoringComponents {
                 netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
                 netConfig.coils= root_0[F("Coils")].as<int>(); 
                 netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
-                netConfig.holdingRegisters=root_0[F("HoldingRegisters")].as<int>();
+                netConfig.holdingRegisters=root_0[F("HoldingRegister")].as<int>();
                 netConfig.controllerRegister=root_0[F("ControllerRegister")].as<int>();
                 netConfig.ip.fromString(IP);
                 netConfig.gateway.fromString(DNS);
