@@ -24,7 +24,6 @@ namespace MonitoringComponents {
 			modbusAddress({configuration._register,RegisterType::Input}),
 			alertModAddress({configuration.alertModAddr,RegisterType::Holding}) { 
 			inputPin = ModuleAnalogInput(configuration.address);
-
 			this->alert1 = configuration.alert1;
 			this->alert2 = configuration.alert2;
 			this->alert3 = configuration.alert3; 

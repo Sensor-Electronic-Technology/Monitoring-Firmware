@@ -505,6 +505,7 @@ namespace MonitoringComponents {
                 netConfig.mac[3] = ConfigurationReader::ToHex(Mac[6], Mac[7]);
                 netConfig.mac[4] = ConfigurationReader::ToHex(Mac[8], Mac[9]);
                 netConfig.mac[5] = ConfigurationReader::ToHex(Mac[10], Mac[11]);
+                
                 file.close();
                 doc.garbageCollect();
                 return netConfig;

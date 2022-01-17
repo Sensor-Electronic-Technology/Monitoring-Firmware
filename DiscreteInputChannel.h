@@ -14,7 +14,8 @@ namespace MonitoringComponents {
 	class DiscreteInputChannel :public MonitoringComponent {
 	public:
 
-		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), configuration(configuration),
+		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), 
+			configuration(configuration),
 			modbusAddress({ configuration._register,RegisterType::DiscreteInput }),
 			alertModAddress({configuration.alertModAddr,RegisterType::Holding}), 
 			_on_state_change([](ChannelMessage) {}) {

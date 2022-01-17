@@ -250,6 +250,10 @@ namespace MonitoringComponents {
             this->dns = rhs.dns;
             this->gateway = rhs.gateway;
         }
+
+        void Print(){
+            cout<<" Input: "<<this->inputRegisters<<" Holding: "<<this->holdingRegisters<<" Coils: "<<this->coils<<" Controller: "<<this->controllerRegister<<endl;
+        }
     };
 
 };

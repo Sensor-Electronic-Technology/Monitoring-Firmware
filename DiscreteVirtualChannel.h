@@ -12,7 +12,8 @@ namespace MonitoringComponents {
 	public:
 
 		DiscreteVirtualChannel(VirtualDigitalConfiguration config, Ref<MonitoringComponent> parent = nullptr)
-			:MonitoringComponent(parent), configuration(config), modbusAddress({ config._register,RegisterType::Coil }),
+			:MonitoringComponent(parent), configuration(config), 
+			modbusAddress({ config._register,RegisterType::Coil }),
 			_on_state_change([](ChannelMessage) {}) {
 			this->triggerOn = config.triggerOn;
 			this->enabled = config.enabled;
