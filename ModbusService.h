@@ -48,13 +48,15 @@ namespace MonitoringComponents {
 				//MonitoringLogger::LogInfo(
 				if (instance->modbusServer.begin()) {
 					instance->initialized = true;
-					instance->modbusServer.configureCoils(0, instance->config.coils);
-					instance->modbusServer.configureInputRegisters(0, instance->config.inputRegisters);
-					instance->modbusServer.configureDiscreteInputs(0, instance->config.discreteInputs);
-					instance->modbusServer.configureHoldingRegisters(0,instance->config.holdingRegisters);
+					int status[4]={0,0,0,0};
+					status[0]=instance->modbusServer.configureCoils(0x00, instance->config.coils);
+					status[1]=instance->modbusServer.configureInputRegisters(0x00, instance->config.inputRegisters);
+					status[2]=instance->modbusServer.configureDiscreteInputs(0x00, instance->config.discreteInputs);
+					status[3]=instance->modbusServer.configureHoldingRegisters(0x00,instance->config.holdingRegisters);
 					for(int i=0;i<instance->config.inputRegisters;i++){
 						instance->modbusServer.inputRegisterWrite(i,uint16_t(0));
 					}
+					MonitoringLogger::LogInfo(F("Coils: %d InputReg: %d "),status[0],status[1],status[2],status[3]);
 					MonitoringLogger::LogInfo(F("Modbus Initialized with IP Address %d.%d.%d.%d"), address[0], address[1], address[2], address[3]);
 					MonitoringLogger::LogInfo(F("Mac Address %s.%s.%s.%s"), String(instance->config.mac[0]).c_str(),String(instance->config.mac[1]).c_str(), String(instance->config.mac[2]).c_str(), String(instance->config.mac[3]).c_str());
 				} else {
