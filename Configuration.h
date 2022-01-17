@@ -109,12 +109,6 @@ namespace MonitoringComponents {
             this->alert3=other.alert3;
         }
 
-/*                 DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
-            this->alertModAddr=other.alertModAddr;
-            this->triggerOn = other.triggerOn;
-            this->alert = other.alert;
-        } */
-        
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
@@ -161,15 +155,15 @@ namespace MonitoringComponents {
 
     class ModuleConfiguration {
     public:
-        Module moduleName;
+        const char* moduleName;
         ModuleType moduleType;
         int slot;
         int channelCount;
         int channelMapEnd;
+        ModbusAddress modbusRegister;
 
         const ModuleConfiguration& operator=(const ModuleConfiguration& rhs) {
             if (this != &rhs) {
-                //Configuration::operator=(rhs);
                 this->moduleName = rhs.moduleName;
                 this->moduleType = rhs.moduleType;
                 this->slot = rhs.slot;
@@ -181,7 +175,7 @@ namespace MonitoringComponents {
 
         String ToString() {
             String output = "";
-            output += "Module: " + String((int)this->moduleName);
+            output += "Module: " + String(this->moduleName);
             output += "Type: " + String((int)this->moduleType);
             output += "Slot: " + String(this->slot);
             output += "ChannelCount: " + String(this->channelCount);
@@ -236,8 +230,10 @@ namespace MonitoringComponents {
     class NetConfiguration {
     public:
         int inputRegisters;
+        int holdingRegisters;
         int discreteInputs;
         int coils;
+        int controllerRegister;
         byte mac[6];
         IPAddress dns;
         IPAddress gateway;
@@ -245,6 +241,8 @@ namespace MonitoringComponents {
 
         const NetConfiguration& operator=(const NetConfiguration& rhs) {
             this->inputRegisters = rhs.inputRegisters;
+            this->holdingRegisters=rhs.holdingRegisters;
+            this->controllerRegister=rhs.controllerRegister;
             this->coils = rhs.coils;
             this->discreteInputs = rhs.discreteInputs;
             this->ip=rhs.ip;
@@ -253,5 +251,6 @@ namespace MonitoringComponents {
             this->gateway = rhs.gateway;
         }
     };
+
 };
 

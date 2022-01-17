@@ -10,10 +10,11 @@ namespace MonitoringComponents {
 	public:
 		Action() {	}
 
-		Action(ActionConfiguration configuration):address(configuration.modbusAddress) {
+		Action(ActionConfiguration configuration) {
 			this->actionId = configuration.actionId;
 			this->actionType = configuration.actionType;
 			this->initialState = configuration.startState;
+			this->address = configuration.modbusAddress;
 			this->output1 = nullptr;
 			this->output2 = nullptr;
 			this->output3 = nullptr;
@@ -39,7 +40,7 @@ namespace MonitoringComponents {
 			if (this->output3 != nullptr) {
 				this->output3->TriggerOutput();
 			}
-			ModbusService::Update(this->address, true);
+			ModbusService::UpdateDiscreteInput(this->address.address, true);
 		}
 
 		void Clear() {
@@ -54,7 +55,7 @@ namespace MonitoringComponents {
 			if (this->output3 != nullptr) {
 				this->output3->Reset();
 			}
-			ModbusService::Update(this->address, false);
+			ModbusService::UpdateDiscreteInput(this->address.address, false);
 		}
 
 		void SetOutput(ActionOutput* output, int outputNumber) {

@@ -115,8 +115,8 @@ namespace MonitoringComponents {
 		ChannelCallback _on_channel_cbk;
 		ControllerState controllerState;
 		ControllerState nextState;
+		ModbusAddress controllerRegister;
 		Timer printTimer;
-
 		void privateLoop();
 	};
 };

@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "c:\\Users\\aelmendo\\Documents\\Arduino\\MonitoringFirmware\\MonitoringFirmware\\MonitoringFirmware.ino"
 #include <SPI.h>
 #include <Ethernet.h>
 #include <M2M_Logger.h>
@@ -58,6 +60,7 @@ void setup(){
 }
 
 void loop(){
-    controller.Run();
+    controller.loop();
     ModbusService::Poll();
 }
+

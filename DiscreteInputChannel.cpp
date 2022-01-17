@@ -10,7 +10,7 @@ namespace MonitoringComponents {
 
 	void DiscreteInputChannel::Initialize() {	
 		bool state = this->isTriggered();
-		ModbusService::UpdateDiscreteInput(this->modbusAddress.address,state);
+		ModbusService::Update(this->modbusAddress,state);
 		if(this->configuration.connected){
 			if (state) {
 				ChannelMessage msg;
@@ -18,16 +18,16 @@ namespace MonitoringComponents {
 				msg.channel = this->inputPin.Address();
 				msg.type = this->alert.actionType;
 				msg.channelAction = ChannelAction::Trigger;
-				ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(this->alert.actionType));
+				ModbusService::Update(this->alertModAddress,uint16_t(this->alert.actionType));
 				cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Alert: "<<int(this->alert.actionType)<<endl;
 				this->alert.activated = true;
 				this->_on_state_change(msg);
 			}else{
-				ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(ActionType::Okay));
+				ModbusService::Update(this->alertModAddress,uint16_t(ActionType::Okay));
 			}
 		}else{
-			ModbusService::UpdateDiscreteInput(this->modbusAddress.address,uint16_t(0));
-			ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(0));
+			ModbusService::Update(this->modbusAddress,uint16_t(0));
+			ModbusService::Update(this->alertModAddress,uint16_t(0));
 		}
 		this->triggered = state;
 	}
@@ -42,7 +42,7 @@ namespace MonitoringComponents {
 
 	void DiscreteInputChannel::privateLoop() {
 		bool state = this->isTriggered();
-		ModbusService::UpdateDiscreteInput(this->modbusAddress.address,state);
+		ModbusService::Update(this->modbusAddress,state);
 		if (state!= this->triggered) {
 			if (this->alert.enabled) {
 				ChannelMessage message;
@@ -52,12 +52,12 @@ namespace MonitoringComponents {
 				if (state) {
 					message.channelAction = ChannelAction::Trigger;
 					this->alert.activated = true;
-					ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(this->alert.actionType));
+					ModbusService::Update(this->alertModAddress,uint16_t(this->alert.actionType));
 					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(this->alert.actionType)<<endl;
 				} else {
 					message.channelAction = ChannelAction::Clear;
 					this->alert.activated = false;
-					ModbusService::UpdateInputRegister(this->alertModbusAddres,uint16_t(ActionType::Okay));
+					ModbusService::Update(this->alertModAddress,uint16_t(ActionType::Okay));
 					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(ActionType::Okay)<<endl;
 				}
 				this->_on_state_change(message);

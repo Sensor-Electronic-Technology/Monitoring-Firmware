@@ -44,6 +44,8 @@ namespace MonitoringComponents {
 		auto virtualConfig = reader.DeserializeVirtualConfig();
 		this->modules = reader.DeserializeModuleConfig();
 		auto netConfig = reader.DeserializeNetConfiguration();
+		this->controllerRegister.address=netConfig.controllerRegister;
+		this->controllerRegister.type=RegisterType::Holding;
 
 		MonitoringLogger::EnableFileLogger();
 
@@ -123,7 +125,6 @@ namespace MonitoringComponents {
 	}
 
 	void MonitoringController::Initialize() {
-
 		for (auto output : outputChannels) {
 			output->SetOutput(State::Low);
 		}
@@ -143,7 +144,8 @@ namespace MonitoringComponents {
 		for (auto ainput : analogInputs) {
 			ainput->Initialize();
 		}
-
+		P1.configWD(10000,TOGGLE);
+		P1.startWD();
 		ProcessStateChanges();
 	}
 
@@ -280,10 +282,12 @@ namespace MonitoringComponents {
 				MonitoringLogger::LogInfo("State changed to Okay");
 			}
 		}
+		ModbusService::Update(this->controllerRegister,uint16_t(this->controllerState));
 	}
 
 	void MonitoringController::Run() {
 		this->loop();
+		P1.petWD();
 	}
 
 	void MonitoringController::privateLoop() {	}

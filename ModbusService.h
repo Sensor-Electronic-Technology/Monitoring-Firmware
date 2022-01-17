@@ -60,8 +60,6 @@ namespace MonitoringComponents {
 					instance->initialized = false;
 					MonitoringLogger::LogError(F("ModbusServer Failed To Initialize"));
 				}
-
-				
  			} else {
 				instance->initialized = false;
 				MonitoringLogger::LogError(F("Ethernet failed to initialize"));
@@ -81,6 +79,29 @@ namespace MonitoringComponents {
 				Ethernet.maintain();
 			}
 		}
+
+		static void Update(ModbusAddress address,uint16_t value){
+			auto instance=ModbusService::Instance();
+			switch(address.type){
+				case RegisterType::Coil:{
+					instance->modbusServer.coilWrite(address.address,value);
+					return;
+				}
+				case RegisterType::DiscreteInput:{
+					instance->modbusServer.discreteInputWrite(address.address,value);
+					return;
+				}
+				case RegisterType::Holding:{
+					instance->modbusServer.holdingRegisterWrite(address.address,value);
+					return;
+				}
+				case RegisterType::Input:{
+					instance->modbusServer.inputRegisterWrite(address.address,value);
+					return;
+				}
+			}	
+		}
+
 
 		static void UpdateHoldingRegister(int addr, uint16_t value) {
 			auto instance = ModbusService::Instance();

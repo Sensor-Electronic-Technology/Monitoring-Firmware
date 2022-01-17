@@ -320,14 +320,12 @@ namespace MonitoringComponents {
                         int input = elem[F("Input")];
                         address.channel = elem[F("Address")][F("Channel")];
                         address.slot = elem[F("Address")][F("Slot")];
-                        int reg = elem[F("Coil")];
+                        int reg = elem[F("Register")];
                         int alertReg=elem[F("AlertRegister")];
                         int connected = elem[F("Connected")];
 
                         DigitalInConfiguration config(input,address,reg,connected);
                         config.alertModAddr=alertReg;
-                        //cout<<"AlertReg: "<<config.alertModAddr<<endl;
-
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
@@ -466,7 +464,7 @@ namespace MonitoringComponents {
 
             config.startState= (elem[F("Start State")].as<bool>()==true)? State::High:State::Low;
             config.type = (OutputType)elem[F("OutputType")];
-            config.modbusAddress.address = elem[F("ModbusRegister")];
+            config.modbusAddress.address = elem[F("Register")];
             config.modbusAddress.type = RegisterType::DiscreteInput;
             actions.push_back(config);
         }
@@ -496,6 +494,8 @@ namespace MonitoringComponents {
                 netConfig.inputRegisters = root_0[F("InputRegsters")].as<int>();
                 netConfig.coils= root_0[F("Coils")].as<int>(); 
                 netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
+                netConfig.holdingRegisters=root_0[F("HoldingRegisters")].as<int>();
+                netConfig.controllerRegister=root_0[F("ControllerRegister")].as<int>();
                 netConfig.ip.fromString(IP);
                 netConfig.gateway.fromString(DNS);
                 netConfig.gateway.fromString(Gateway);
