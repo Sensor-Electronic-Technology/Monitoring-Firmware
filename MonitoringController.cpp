@@ -144,7 +144,7 @@ namespace MonitoringComponents {
 		for (auto ainput : analogInputs) {
 			ainput->Initialize();
 		}
-		P1.configWD(10000,TOGGLE);
+		P1.configWD(20000,TOGGLE);
 		P1.startWD();
 		ProcessStateChanges();
 	}
@@ -287,7 +287,6 @@ namespace MonitoringComponents {
 
 	void MonitoringController::Run() {
 		this->loop();
-		P1.petWD();
 	}
 
 	void MonitoringController::privateLoop() {	}
