@@ -287,6 +287,7 @@ namespace MonitoringComponents {
 
 	void MonitoringController::Run() {
 		this->loop();
+		//P1.petWD();
 	}
 
 	void MonitoringController::privateLoop() {	}
