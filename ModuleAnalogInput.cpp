@@ -2,7 +2,7 @@
 
 namespace MonitoringComponents {
 	float ModuleAnalogInput::read() {
-		float val = 0;
+		float val = 0.00;
 #if IO_DEBUG==1
 		this->value = 20;
 		val = 20;
