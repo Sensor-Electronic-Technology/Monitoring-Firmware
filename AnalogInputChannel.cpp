@@ -7,7 +7,7 @@ namespace MonitoringComponents {
  		this->updateTimer.onInterval([&]() { 
 				if(this->configuration.connected){
 					this->Read();
-					ModbusService::Update(this->modbusAddress, this->value*100);
+					ModbusService::Update(this->modbusAddress, this->value*10);
 					this->CheckProcessAlerts();
 				}else{
 					ModbusService::Update(this->modbusAddress,uint16_t(0));
