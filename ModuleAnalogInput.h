@@ -6,7 +6,7 @@
 #include "MonitoringLogger.h"
 
 #define Bit13Reg			8191
-#define CurrentMax			20
+#define CurrentMax			20.0f
 
 namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
