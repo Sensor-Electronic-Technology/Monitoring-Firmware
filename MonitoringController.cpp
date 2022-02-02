@@ -44,8 +44,7 @@ namespace MonitoringComponents {
 		auto virtualConfig = reader.DeserializeVirtualConfig();
 		//this->modules = reader.DeserializeModuleConfig();
 		auto netConfig = reader.DeserializeNetConfiguration();
-		this->controllerRegister.address=netConfig.controllerRegister;
-		this->controllerRegister.type=RegisterType::Holding;
+		this->controllerRegister=netConfig.modbusAddress;
 
 		MonitoringLogger::EnableFileLogger();
 
