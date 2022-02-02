@@ -44,15 +44,32 @@ namespace MonitoringComponents {
 	};
 
 	enum class RegisterType {
-		Holding,
-		Coil,
-		DiscreteInput,
-		Input
+		Holding=1,
+		Coil=2,
+		DiscreteInput=3,
+		Input=4
 	};
 
 	struct ModbusAddress {
+	public:
 		int address;
 		RegisterType type;
+
+		ModbusAddress(){
+			this->address=0;
+			this->type=RegisterType::DiscreteInput;
+		}
+
+		ModbusAddress(const ModbusAddress& other){
+			this->address=other.address;
+			this->type=other.type;
+		}
+
+		ModbusAddress& operator=(const ModbusAddress& rhs){
+			this->address=rhs.address;
+			this->type=rhs.type;
+			return *this;
+		}
 	};
 
 	enum class ChannelAction {

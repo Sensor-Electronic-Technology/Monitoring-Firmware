@@ -12,17 +12,18 @@ namespace MonitoringComponents {
     public:
         int channel;
         ChannelAddress address;
-        int _register;
+        ModbusAddress _modbusAddress;
         bool connected;
 
-        Configuration() :channel(0), address({ 0, 0}), _register(0), connected(false) {   }
+        Configuration() :channel(0), address({ 0, 0}), connected(false) {   }
 
-        Configuration(int channel,ChannelAddress address, int reg, bool connected)
-            :channel(channel), address(address), _register(reg), connected(connected) {   }
+        Configuration(int channel,ChannelAddress address, ModbusAddress modbusAddress, bool connected)
+            :channel(channel), address(address), _modbusAddress(modbusAddress), connected(connected) {   }
 
         Configuration(const Configuration& other) {
             this->channel = other.channel;
-            this->_register = other._register;
+            this->address=other.address;
+            this->_modbusAddress=other._modbusAddress;
             this->connected = other.connected;
             this->address = other.address;
             this->channel = other.channel;
@@ -30,7 +31,8 @@ namespace MonitoringComponents {
 
         const Configuration& operator=(const Configuration& rhs) {
             this->channel = rhs.channel;
-            this->_register = rhs._register;
+            this->address=rhs.address;
+            this->_modbusAddress=rhs._modbusAddress;
             this->connected = rhs.connected;
             this->address = rhs.address;
             this->channel = rhs.channel;
@@ -42,10 +44,13 @@ namespace MonitoringComponents {
     public:
         DigitalInConfiguration():Configuration(){  }
 
-        DigitalInConfiguration(int channel,ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) {  }
+        DigitalInConfiguration(int channel,ChannelAddress addr,ModbusAddress inAddress,ModbusAddress aAddress, bool connected) 
+        :Configuration(channel,addr, inAddress, connected) {  
+            this->alertAddress=aAddress;
+        }
 
         DigitalInConfiguration(const DigitalInConfiguration& other):Configuration(other) {
-            this->alertModAddr=other.alertModAddr;
+            this->alertAddress=other.alertAddress;
             this->triggerOn = other.triggerOn;
             this->alert = other.alert;
         }
@@ -53,26 +58,28 @@ namespace MonitoringComponents {
         const DigitalInConfiguration& operator=(const DigitalInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
-                this->alertModAddr=rhs.alertModAddr;
+                this->alertAddress=rhs.alertAddress;
                 this->triggerOn = rhs.triggerOn;
                 this->alert = rhs.alert;
             }
             return *this;
         }
-        int alertModAddr;
+        ModbusAddress alertAddress;
         TriggerOn triggerOn;
         DigitalAlert alert;
     };
 
     class VirtualDigitalConfiguration {
     public:
-        VirtualDigitalConfiguration():_register(0),enabled(false){ }
+        VirtualDigitalConfiguration():enabled(false){ }
 
-        VirtualDigitalConfiguration(int in,int reg,bool en):input(in), _register(reg), enabled(en) { }
+        VirtualDigitalConfiguration(int in,ModbusAddress inAddress,ModbusAddress aAddress,bool en)
+            :input(in), modbusAddress(inAddress),alertAddress(aAddress), enabled(en) { }
 
         VirtualDigitalConfiguration(const VirtualDigitalConfiguration& config) {
             this->input = config.input;
-            this->_register = config._register;
+            this->modbusAddress=config.modbusAddress;
+            this->alertAddress=config.alertAddress;
             this->enabled = config.enabled;
             this->alert = config.alert;
             this->triggerOn = config.triggerOn;
@@ -80,7 +87,8 @@ namespace MonitoringComponents {
 
         const VirtualDigitalConfiguration& operator=(const VirtualDigitalConfiguration& rhs) {
             this->input = rhs.input;
-            this->_register = rhs._register;
+            this->modbusAddress=rhs.modbusAddress;
+            this->alertAddress=rhs.alertAddress;
             this->enabled = rhs.enabled;
             this->alert = rhs.alert;
             this->triggerOn = rhs.triggerOn;
@@ -88,7 +96,8 @@ namespace MonitoringComponents {
         }
 
         int input;
-        int _register;
+        ModbusAddress modbusAddress;
+        ModbusAddress alertAddress;
         bool enabled;
         DigitalAlert alert;
         TriggerOn triggerOn;
@@ -98,13 +107,14 @@ namespace MonitoringComponents {
     public:
         AnalogInConfiguration():Configuration(){}
         
-        AnalogInConfiguration(int channel, ChannelAddress addr, int reg, bool connected) :Configuration(channel,addr, reg, connected) { }
+        AnalogInConfiguration(int channel, ChannelAddress addr, ModbusAddress inAddress,ModbusAddress aAddress, bool connected) 
+        : Configuration(channel,addr, inAddress, connected),alertAddress(aAddress) { }
 
         AnalogInConfiguration(const AnalogInConfiguration& other):Configuration(other){
             this->slope=other.slope;
             this->offset=other.offset;
             this->analogFactor=other.analogFactor;
-            this->alertModAddr=other.alertModAddr;
+            this->alertAddress=other.alertAddress;
             this->alert1=other.alert1;
             this->alert2=other.alert2;
             this->alert3=other.alert3;
@@ -113,7 +123,7 @@ namespace MonitoringComponents {
         AnalogInConfiguration& operator=(const AnalogInConfiguration& rhs) {
             if (this != &rhs) {
                 Configuration::operator=(rhs);
-                this->alertModAddr=rhs.alertModAddr;
+                this->alertAddress=rhs.alertAddress;
                 this->slope = rhs.slope;
                 this->offset = rhs.offset;
                 this->analogFactor = rhs.analogFactor;
@@ -128,7 +138,8 @@ namespace MonitoringComponents {
         float slope;
         float offset;
         int analogFactor;
-        int alertModAddr;
+        ModbusAddress channelAddress;
+        ModbusAddress alertAddress;
         AnalogAlert alert1;
         AnalogAlert alert2;
         AnalogAlert alert3;
@@ -139,7 +150,8 @@ namespace MonitoringComponents {
     public:
         OutputConfiguration() :Configuration() {}
 
-        OutputConfiguration(int channel,ChannelAddress addr, int reg, State startState,bool connected) :Configuration(channel,addr, reg, connected),startState(startState) { }
+        OutputConfiguration(int channel,ChannelAddress addr, ModbusAddress inAddress, State startState,bool connected) 
+        :Configuration(channel,addr,inAddress, connected),startState(startState) { }
 
         const OutputConfiguration& operator=(const OutputConfiguration& rhs) {
             if (this != &rhs) {
@@ -149,7 +161,6 @@ namespace MonitoringComponents {
             }
             return *this;
         }
-
         State startState;
         TriggerOn triggerOn;
     };
@@ -234,7 +245,7 @@ namespace MonitoringComponents {
         int holdingRegisters;
         int discreteInputs;
         int coils;
-        int controllerRegister;
+        ModbusAddress modbusAddress;
         byte mac[6];
         IPAddress dns;
         IPAddress gateway;
@@ -243,17 +254,13 @@ namespace MonitoringComponents {
         const NetConfiguration& operator=(const NetConfiguration& rhs) {
             this->inputRegisters = rhs.inputRegisters;
             this->holdingRegisters=rhs.holdingRegisters;
-            this->controllerRegister=rhs.controllerRegister;
+            this->modbusAddress=rhs.modbusAddress;
             this->coils = rhs.coils;
             this->discreteInputs = rhs.discreteInputs;
             this->ip=rhs.ip;
             std::copy(rhs.mac, rhs.mac + 6, this->mac);
             this->dns = rhs.dns;
             this->gateway = rhs.gateway;
-        }
-
-        void Print(){
-            std::cout<<" Input: "<<this->inputRegisters<<" Holding: "<<this->holdingRegisters<<" Coils: "<<this->coils<<" Controller: "<<this->controllerRegister<<std::endl;
         }
     };
 

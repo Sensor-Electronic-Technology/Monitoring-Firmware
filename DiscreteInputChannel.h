@@ -16,12 +16,12 @@ namespace MonitoringComponents {
 
 		DiscreteInputChannel(DigitalInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) :MonitoringComponent(parent), 
 			configuration(configuration),
-			modbusAddress({ configuration._register,RegisterType::DiscreteInput }),
-			alertModAddress({configuration.alertModAddr,RegisterType::Holding}), 
-			_on_state_change([](ChannelMessage) {}) {
+			modbusAddress(configuration._modbusAddress),
+			alertModAddress(configuration.alertAddress), 
+			_on_state_change([](ChannelMessage) {}),
+			triggerOn(configuration.triggerOn),
+			alert(configuration.alert) {
 			this->inputPin = ModuleDiscreteInput(configuration.address);
-			this->triggerOn = this->configuration.alert.triggerOn;
-			this->alert = this->configuration.alert;
 			this->alert.activated = false;
 			this->triggered = false;
 		}

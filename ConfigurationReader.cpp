@@ -207,20 +207,26 @@ namespace MonitoringComponents {
                         address.channel = elem[F("Address")][F("Channel")];
                         address.slot = elem[F("Address")][F("Slot")];
 
+                        ModbusAddress modbusAddress;
+                        modbusAddress.address=elem[F("MRI")][F("Register")].as<int>();
+                        modbusAddress.type=(RegisterType)elem[F("MRI")][F("Type")].as<int>();
+
+                        ModbusAddress alertAddress;
+                        alertAddress.address=elem[F("MRA")][F("Register")].as<int>();
+                        alertAddress.type=(RegisterType)elem[F("MRA")][F("Type")].as<int>();
+
                         int reg = elem[F("Register")];
-                        int alertReg=elem[F("AlertRegister")];
                         float slope = elem[F("Slope")].as<float>();
                         float offset = elem[F("Offset")].as<float>();
                         int analogFactor = elem[F("AnalogFactor")];
                         int bypassAlerts = elem[F("BypassAlerts")];
                         int connected = elem[F("Connected")];
 
-                        AnalogInConfiguration config(input,address, reg, connected);
+                        AnalogInConfiguration config(input,address, modbusAddress,alertAddress, connected);
                         config.slope = slope;
                         config.offset = offset;
                         config.bypassAlerts = bypassAlerts;
                         config.analogFactor = analogFactor;
-                        config.alertModAddr=alertReg;
 
                         JsonObject A1 = elem[F("A1")];
                         alert1.setPoint = A1[F("Setpoint")];
@@ -284,10 +290,12 @@ namespace MonitoringComponents {
                         ChannelAddress address;
                         address.channel = elem[F("Addr")][F("Channel")]; 
                         address.slot = elem[F("Addr")][F("Module Slot")]; 
-                        int reg = elem[F("Register")]; 
+                        ModbusAddress modbusAddress;
+                        modbusAddress.address=elem[F("MRI")][F("Register")].as<int>(); 
+                        modbusAddress.type=(RegisterType)elem[F("MRI")][F("Type")].as<int>(); 
                         int connected = elem[F("Connected")];
                         State startState = (elem[F("Start State")].as<bool>() == true) ? State::High : State::Low;
-                        OutputConfiguration config(channel,address,reg,startState,connected);
+                        OutputConfiguration config(channel,address,modbusAddress,startState,connected);
                         outputChannels.push_back(config);
                     }
                     file.close();
@@ -320,12 +328,16 @@ namespace MonitoringComponents {
                         int input = elem[F("Input")];
                         address.channel = elem[F("Address")][F("Channel")];
                         address.slot = elem[F("Address")][F("Slot")];
-                        int reg = elem[F("Register")];
-                        int alertReg=elem[F("AlertRegister")];
                         int connected = elem[F("Connected")];
+                        ModbusAddress modbusAddress;
+                        modbusAddress.address=elem[F("MRI")][F("Register")].as<int>();
+                        modbusAddress.type=(RegisterType)elem[F("MRI")][F("Type")].as<int>();
 
-                        DigitalInConfiguration config(input,address,reg,connected);
-                        config.alertModAddr=alertReg;
+                        ModbusAddress alertAddress;
+                        alertAddress.address=elem[F("MRA")][F("Register")].as<int>();
+                        alertAddress.type=(RegisterType)elem[F("MRA")][F("Type")].as<int>();
+
+                        DigitalInConfiguration config(input,address,modbusAddress,alertAddress,connected);
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
@@ -368,10 +380,18 @@ namespace MonitoringComponents {
                 } else {
                     size_t size = doc.as<JsonArray>().size();
                     for (auto elem : doc.as<JsonArray>()) {
-                        VirtualDigitalConfiguration config;
-                        config.input = elem[F("Input")]; // 1, 2, 3, 4
-                        config._register = elem[F("Coil")]; // 40, 41, 42, 43
-                        config.enabled = elem[F("Connected")]; // 1, 0, 0, 0
+                        int input = elem[F("Input")]; 
+                        bool enabled = elem[F("Connected")]; 
+
+                        ModbusAddress modbusAddress;
+                        modbusAddress.address=elem[F("MRI")][F("Register")].as<int>();
+                        modbusAddress.type=(RegisterType)elem[F("MRI")][F("Type")].as<int>();
+
+                        ModbusAddress alertAddress;
+                        alertAddress.address=elem[F("MRA")][F("Register")].as<int>();
+                        alertAddress.type=(RegisterType)elem[F("MRA")][F("Type")].as<int>();
+
+                        VirtualDigitalConfiguration config(input,modbusAddress,alertAddress,enabled); 
 
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];
@@ -495,7 +515,10 @@ namespace MonitoringComponents {
                 netConfig.coils= root_0[F("Coils")].as<int>(); 
                 netConfig.discreteInputs = root_0[F("DiscreteInputs")].as<int>();
                 netConfig.holdingRegisters=root_0[F("HoldingRegister")].as<int>();
-                netConfig.controllerRegister=root_0[F("ControllerRegister")].as<int>();
+                ModbusAddress modbusAddress;
+                modbusAddress.address=root_0[F("Register")];
+                modbusAddress.type=(RegisterType)root_0[F("Type")].as<int>();
+                netConfig.modbusAddress=modbusAddress;
                 netConfig.ip.fromString(IP);
                 netConfig.gateway.fromString(DNS);
                 netConfig.gateway.fromString(Gateway);

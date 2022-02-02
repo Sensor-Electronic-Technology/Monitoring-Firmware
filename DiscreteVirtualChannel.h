@@ -11,13 +11,16 @@ namespace MonitoringComponents {
 	class DiscreteVirtualChannel : public MonitoringComponent {
 	public:
 
-		DiscreteVirtualChannel(VirtualDigitalConfiguration config, Ref<MonitoringComponent> parent = nullptr)
-			:MonitoringComponent(parent), configuration(config), 
-			modbusAddress({ config._register,RegisterType::Coil }),
-			_on_state_change([](ChannelMessage) {}) {
-			this->triggerOn = config.triggerOn;
-			this->enabled = config.enabled;
-			this->alert = this->configuration.alert;
+		DiscreteVirtualChannel(VirtualDigitalConfiguration config, Ref<MonitoringComponent> parent = nullptr):MonitoringComponent(parent), 
+			configuration(config), 
+			modbusAddress(config.modbusAddress),
+			alertAddress(config.alertAddress),
+			triggerOn(config.triggerOn),
+			enabled(config.enabled),
+			_on_state_change([](ChannelMessage) {}),
+			alert(config.alert) {
+				this->alert.activated=false;
+				this->triggered=false;
 		}
 
 		DiscreteVirtualChannel():MonitoringComponent(nullptr), _on_state_change([](ChannelMessage){	}) {	};
@@ -30,9 +33,11 @@ namespace MonitoringComponents {
 				message.channel = ChannelAddress();
 				message.type = this->alert.actionType;
 				message.channelAction = ChannelAction::Trigger;
-
+				ModbusService::Update(this->alertAddress,uint16_t(this->alert.actionType));
 				this->alert.activated = true;
 				this->_on_state_change(message);
+			}else{
+				ModbusService::Update(this->alertAddress,uint16_t(ActionType::Okay));
 			}
 			this->triggered = state;
 		}
@@ -63,6 +68,7 @@ namespace MonitoringComponents {
 		VirtualDigitalConfiguration configuration;
 		TriggerOn triggerOn;
 		ModbusAddress modbusAddress;
+		ModbusAddress alertAddress;
 		DigitalAlert alert;
 		bool triggered;
 		bool enabled;
@@ -79,9 +85,11 @@ namespace MonitoringComponents {
 					if (state) {
 						message.channelAction = ChannelAction::Trigger;
 						this->alert.activated = true;
+						ModbusService::Update(this->alertAddress,uint16_t(this->alert.actionType));
 					}else {
 						message.channelAction = ChannelAction::Clear;
 						this->alert.activated = false;
+						ModbusService::Update(this->alertAddress,uint16_t(ActionType::Okay));
 					}
 					this->_on_state_change(message);
 				}

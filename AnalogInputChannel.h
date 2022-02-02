@@ -20,13 +20,15 @@ namespace MonitoringComponents {
 	class AnalogInputChannel :public MonitoringComponent {
 	public:
 		AnalogInputChannel(AnalogInConfiguration configuration, Ref<MonitoringComponent> parent = nullptr) 
-			:MonitoringComponent(parent), configuration(configuration), _on_channel_trigger([](ChannelMessage){}),
-			modbusAddress({configuration._register,RegisterType::Input}),
-			alertModAddress({configuration.alertModAddr,RegisterType::Holding}) { 
+			:MonitoringComponent(parent), configuration(configuration),
+			 _on_channel_trigger([](ChannelMessage){}),
+			modbusAddress(configuration._modbusAddress),
+			alertModAddress(configuration.alertAddress),
+			alert1(configuration.alert1),
+			alert2(configuration.alert2),
+			alert3(configuration.alert3),
+			value(0.00f) { 
 			inputPin = ModuleAnalogInput(configuration.address);
-			this->alert1 = configuration.alert1;
-			this->alert2 = configuration.alert2;
-			this->alert3 = configuration.alert3; 
 		}
 
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
@@ -49,7 +51,6 @@ namespace MonitoringComponents {
 
 		Timer updateTimer;
 		Timer readTimer;
-
 		float value;
 		ChannelCallback _on_channel_trigger;
 		void privateLoop();
