@@ -11,7 +11,7 @@
 namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
 	public:
-		ModuleAnalogInput(ChannelAddress address):ModuleIOPin(address){
+		ModuleAnalogInput(ChannelAddress address):ModuleIOPin(address),value(0.00f){
 			const char config[] = { 0x40, 0x07 };
 			#if IO_DEBUG==1
 				MonitoringLogger::LogDebug(F("ModuleAnalogInput Configured"));
@@ -20,7 +20,7 @@ namespace MonitoringComponents {
 			#endif
 		}
 
-		ModuleAnalogInput(int slot, int channel) :ModuleIOPin(slot, channel), value(0.00){}
+		ModuleAnalogInput(int slot, int channel) :ModuleIOPin(slot, channel), value(0.00f){}
 		ModuleAnalogInput() :ModuleIOPin(0, 0),value(0.00) {}
 		float read();
 		float getValue();

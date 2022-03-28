@@ -3,6 +3,8 @@
 #include "Configuration.h"
 #include "Data.h"
 
+#define  AlertDeviation 2
+
 namespace MonitoringComponents {
 
 	class ChannelAlert {
@@ -37,7 +39,7 @@ namespace MonitoringComponents {
 		float setPointFactor;
 
 		bool Check(float value) {
-			return (value+2) >= this->setPoint;
+			return value >= (this->setPoint-AlertDeviation);
 		}
 
 		AnalogAlert& operator=(const AnalogAlert& rhs) {

@@ -33,7 +33,7 @@ namespace MonitoringComponents {
 		}
 
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
-			this->value = 0;
+			this->value = 0.00f;
 			this->analogFactor=10;
 		}
 

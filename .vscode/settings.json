@@ -2,6 +2,7 @@
     "files.associations": {
         "*.tcc": "cpp",
         "bitset": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "serstream": "cpp"
     }
 }

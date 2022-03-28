@@ -2,8 +2,11 @@
 
 namespace MonitoringComponents {
 	bool DiscreteInputChannel::isTriggered() {
-		if(this->connected) return (this->triggerOn==TriggerOn::Low) ? false:true;
-		return (this->triggerOn==TriggerOn::Low) ? this->inputPin.isLow():this->inputPin.isHigh();
+		if(this->connected){
+			return (this->triggerOn==TriggerOn::Low) ? this->inputPin.isLow():this->inputPin.isHigh();
+		}
+		return false;
+
 	}
 
 	void DiscreteInputChannel::Initialize() {	

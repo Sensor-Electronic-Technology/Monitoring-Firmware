@@ -16,8 +16,6 @@ namespace MonitoringComponents {
 			},UPDATEPERIOD);
 		RegisterChild(this->updateTimer);
     	this->Read();
-     
-
 		if(!this->configuration.connected){
 			ModbusService::Update(this->modbusAddress,uint16_t(0));
 			ModbusService::Update(this->alertModAddress,uint16_t(0));
@@ -184,7 +182,7 @@ namespace MonitoringComponents {
 		if(reading>=4.00f){
 			this->value += ((reading * this->configuration.slope + this->configuration.offset)-this->value)*fWeight;
 		}else{
-			this->value += ((4 * this->configuration.slope + this->configuration.offset)-this->value)*fWeight;
+			this->value += ((4.00f * this->configuration.slope + this->configuration.offset)-this->value)*fWeight;
 		}				
 	}
 	
