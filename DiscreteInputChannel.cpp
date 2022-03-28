@@ -2,16 +2,14 @@
 
 namespace MonitoringComponents {
 	bool DiscreteInputChannel::isTriggered() {
-		if (this->configuration.connected) {		
-			return (this->triggerOn == TriggerOn::Low) ? this->inputPin.isLow() : this->inputPin.isHigh();
-		}
-		return false;
+		if(this->connected) return (this->triggerOn==TriggerOn::Low) ? false:true;
+		return (this->triggerOn==TriggerOn::Low) ? this->inputPin.isLow():this->inputPin.isHigh();
 	}
 
 	void DiscreteInputChannel::Initialize() {	
 		bool state = this->isTriggered();
 		ModbusService::Update(this->modbusAddress,state);
-		if(this->configuration.connected){
+		if(this->connected && this->alert.enabled){
 			if (state) {
 				ChannelMessage msg;
 				msg.actionId = this->alert.actionId;
@@ -53,12 +51,10 @@ namespace MonitoringComponents {
 					message.channelAction = ChannelAction::Trigger;
 					this->alert.activated = true;
 					ModbusService::Update(this->alertModAddress,uint16_t(this->alert.actionType));
-					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(this->alert.actionType)<<endl;
 				} else {
 					message.channelAction = ChannelAction::Clear;
 					this->alert.activated = false;
 					ModbusService::Update(this->alertModAddress,uint16_t(ActionType::Okay));
-					//cout<<"Alert Mod Updated: Channel: "<<this->inputPin.Address().channel<<" Register: "<<this->alertModbusAddres<<" Alert: "<<int(ActionType::Okay)<<endl;
 				}
 				this->_on_state_change(message);
 			}

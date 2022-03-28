@@ -20,14 +20,13 @@ namespace MonitoringComponents {
 			alertModAddress(configuration.alertAddress), 
 			_on_state_change([](ChannelMessage) {}),
 			triggerOn(configuration.triggerOn),
-			alert(configuration.alert) {
+			alert(configuration.alert),
+			connected(configuration.connected) {
 			this->inputPin = ModuleDiscreteInput(configuration.address);
 			this->alert.activated = false;
 			this->triggered = false;
 		}
-
 		DiscreteInputChannel() :MonitoringComponent(nullptr),_on_state_change([](ChannelMessage){ }) {	}
-
 		void Initialize();
 		bool isTriggered();
 		int Channel();
@@ -39,6 +38,7 @@ namespace MonitoringComponents {
 		TriggerOn triggerOn;
 		bool triggered;
 		DigitalAlert alert;
+		bool connected; 
 		DigitalInConfiguration configuration;
 		ChannelCallback	_on_state_change;
 		void privateLoop();

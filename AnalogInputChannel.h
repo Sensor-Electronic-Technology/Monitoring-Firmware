@@ -27,12 +27,14 @@ namespace MonitoringComponents {
 			alert1(configuration.alert1),
 			alert2(configuration.alert2),
 			alert3(configuration.alert3),
+			analogFactor(configuration.analogFactor),
 			value(0.00f) { 
 			inputPin = ModuleAnalogInput(configuration.address);
 		}
 
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
 			this->value = 0;
+			this->analogFactor=10;
 		}
 
 		void Initialize();
@@ -44,6 +46,7 @@ namespace MonitoringComponents {
 		ModbusAddress modbusAddress;
 		ModbusAddress alertModAddress;
 		AnalogInConfiguration configuration;
+		uint16_t analogFactor;
 
 		AnalogAlert alert1;
 		AnalogAlert alert2;

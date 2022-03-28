@@ -43,21 +43,21 @@ namespace MonitoringComponents {
 		}
 
 		bool isTriggered() {
-			if (this->enabled) {
-				bool value = ModbusService::ReadCoil(this->modbusAddress.address);
-				switch (this->triggerOn) {
-					case TriggerOn::High: {
-						return value;
-					}
-					case TriggerOn::Low: {
-						return !value;
-					}
-					default: {
-						return false; 
-					}
+			if(!this->enabled) return (this->triggerOn==TriggerOn::Low) ? true:false;
+			bool value = ModbusService::ReadCoil(this->modbusAddress.address);
+			return (this->triggerOn==TriggerOn::Low) ? !value:value;
+/* 			switch (this->triggerOn) {
+				case TriggerOn::High: {
+					return value;
 				}
-			}
-			return false;
+				case TriggerOn::Low: {
+					return !value;
+				}
+				default: {
+					return false; 
+				}
+			} */
+
 		}
 
 		void OnStateChange(ChannelCallback cbk) {
