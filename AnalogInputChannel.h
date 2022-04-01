@@ -27,20 +27,18 @@ namespace MonitoringComponents {
 			alert1(configuration.alert1),
 			alert2(configuration.alert2),
 			alert3(configuration.alert3),
-			analogFactor(configuration.analogFactor),
-			value(0.00f) { 
+			analogFactor(configuration.analogFactor) { 
 			inputPin = ModuleAnalogInput(configuration.address);
 		}
 
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
-			this->value = 0.00f;
 			this->analogFactor=10;
 		}
 
 		void Initialize();
-		void CheckProcessAlerts();
+		void CheckProcessAlerts(float value);
 		void OnStateChange(ChannelCallback cbk);
-		void Read();
+		float Read();
 	private:
 		ModuleAnalogInput inputPin;
 		ModbusAddress modbusAddress;
@@ -54,7 +52,6 @@ namespace MonitoringComponents {
 
 		Timer updateTimer;
 		Timer readTimer;
-		float value;
 		ChannelCallback _on_channel_trigger;
 		void privateLoop();
 	};

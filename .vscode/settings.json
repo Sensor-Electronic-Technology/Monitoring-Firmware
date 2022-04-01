@@ -3,6 +3,8 @@
         "*.tcc": "cpp",
         "bitset": "cpp",
         "string": "cpp",
-        "serstream": "cpp"
+        "serstream": "cpp",
+        "iterator": "cpp",
+        "list": "cpp"
     }
 }

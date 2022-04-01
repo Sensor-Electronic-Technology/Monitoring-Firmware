@@ -120,7 +120,6 @@ namespace MonitoringComponents {
 			if (instance->initialized) {
 				instance->modbusServer.inputRegisterWrite(addr, value);
 			}
-			
 		}
 
 		static void UpdateCoil(int addr, bool value) {
