@@ -222,16 +222,7 @@ namespace MonitoringComponents {
                         int analogFactor = elem[F("AnalogFactor")];
                         int bypassAlerts = elem[F("BypassAlerts")];
                         int connected = elem[F("Connected")];
-
-                        if(analogFactor!=10)
-                            analogFactor=10;
-
-                        if(slope!=62.5f)
-                            slope=65.5f;
-                            
-                        if(offset!=250)
-                            slope=250;
-
+                        
                         AnalogInConfiguration config(input,address, modbusAddress,alertAddress, connected);
                         config.slope = slope;
                         config.offset = offset;

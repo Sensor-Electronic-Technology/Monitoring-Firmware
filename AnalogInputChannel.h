@@ -35,9 +35,9 @@ namespace MonitoringComponents {
 		}
 
 		void Initialize();
-		void CheckProcessAlerts(float value);
+		void CheckProcessAlerts();
 		void OnStateChange(ChannelCallback cbk);
-		float Read();
+		void Read();
 	private:
 		ModuleAnalogInput inputPin;
 		ModbusAddress modbusAddress;
@@ -51,6 +51,8 @@ namespace MonitoringComponents {
 
 		Timer updateTimer;
 		Timer readTimer;
+		float sensorValue=0.00f;
+		float currentValue=0.00f;
 		ChannelCallback _on_channel_trigger;
 		void privateLoop();
 	};

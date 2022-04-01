@@ -1,6 +1,6 @@
 {
     "board": "P1AM-100:samd:P1AM-100_native",
     "sketch": "MonitoringFirmware.ino",
-    "port": "COM4",
+    "port": "COM3",
     "output": "../build"
 }

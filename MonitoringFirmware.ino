@@ -19,7 +19,7 @@
 #include "MonitoringController.h"
 
 #define CREATEFILES 0
-#define DEBUG 1
+#define DEBUG 0
 
 using namespace MonitoringComponents;
 

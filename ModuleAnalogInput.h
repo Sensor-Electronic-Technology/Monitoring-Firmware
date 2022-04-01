@@ -7,6 +7,7 @@
 
 #define Bit13Reg			8191
 #define CurrentMax			20.0f
+#define fWeight				.1
 
 namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
@@ -23,5 +24,7 @@ namespace MonitoringComponents {
 		ModuleAnalogInput(int slot, int channel) :ModuleIOPin(slot, channel){}
 		ModuleAnalogInput() :ModuleIOPin(0, 0) {}
 		float read();
+	private:
+		float currentValue=0.00f;
 	};
 };

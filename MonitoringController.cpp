@@ -116,6 +116,7 @@ namespace MonitoringComponents {
 
 		MonitoringLogger::LogInfo(F("Creating Analog Channels"));
 		for (auto ch : analogConfig) {
+			// std::cout<<"A"<<ch._modbusAddress.address<<": ("<<ch.slope<<","<<ch.offset<<","<<ch.analogFactor<<")"<<std::endl;
 			AnalogInputChannel* channel = new AnalogInputChannel(ch);
 			this->analogInputs.push_back(channel);
 			RegisterChild(channel);
