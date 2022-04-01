@@ -186,6 +186,7 @@ namespace MonitoringComponents {
 		}*/		
 		float value=0.00f;
 		float reading=this->inputPin.read();
+		std::cout<<"A"<<this->modbusAddress.address<<": "<<reading<<std::endl;
 		value=reading*this->configuration.slope+this->configuration.offset;	
 		return value;
 	}

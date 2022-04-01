@@ -12,8 +12,7 @@
 #include "ChannelAlert.h"
 
 #define fWeight			.1f
-#define UPDATEPERIOD	50
-#define READPERIOD		50
+#define UPDATEPERIOD	100
 
 namespace MonitoringComponents {
 
