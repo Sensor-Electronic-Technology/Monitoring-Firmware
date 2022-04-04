@@ -13,6 +13,8 @@
 
 #define fWeight			.1f
 #define UPDATEPERIOD	100
+#define MinCurrent		4.00f
+#define MaxCurrent		20.00F
 
 namespace MonitoringComponents {
 
@@ -28,6 +30,8 @@ namespace MonitoringComponents {
 			alert3(configuration.alert3),
 			analogFactor(configuration.analogFactor) { 
 			inputPin = ModuleAnalogInput(configuration.address);
+			this->maxSensor=MaxCurrent*configuration.slope+configuration.offset;
+			this->minSensor=MinCurrent*configuration.slope+configuration.offset;
 		}
 
 		AnalogInputChannel() :_on_channel_trigger([](ChannelMessage) {}) {
@@ -44,6 +48,8 @@ namespace MonitoringComponents {
 		ModbusAddress alertModAddress;
 		AnalogInConfiguration configuration;
 		uint16_t analogFactor;
+		float maxSensor=0.00f;
+		float minSensor=0.00f;
 
 		AnalogAlert alert1;
 		AnalogAlert alert2;

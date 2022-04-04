@@ -7,7 +7,7 @@ namespace MonitoringComponents {
  		this->updateTimer.onInterval([&]() { 
 				if(this->configuration.connected){
 					this->Read();
-					ModbusService::Update(this->modbusAddress, this->currentValue*this->analogFactor);
+					ModbusService::Update(this->modbusAddress, this->sensorValue*this->analogFactor);
 					this->CheckProcessAlerts();
 				}else{
 					ModbusService::Update(this->modbusAddress,uint16_t(0));
@@ -186,11 +186,9 @@ namespace MonitoringComponents {
 	
 	void AnalogInputChannel::Read() {
 		this->currentValue = this->inputPin.read();		
-		if(this->currentValue>=4.00f){
-			this->sensorValue += ((this->currentValue * this->configuration.slope + this->configuration.offset)-this->sensorValue)*fWeight;
-		}else{
-			this->sensorValue += ((4.00f * this->configuration.slope + this->configuration.offset)-this->sensorValue)*fWeight;
-		}
+		float calc=this->currentValue*this->configuration.slope+this->configuration.offset;
+		calc=constrain(calc,this->minSensor,this->maxSensor);
+		this->sensorValue += (calc-this->sensorValue)*fWeight;
 	}
 	
 	void AnalogInputChannel::privateLoop() {

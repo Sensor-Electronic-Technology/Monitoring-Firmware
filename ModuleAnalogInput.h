@@ -7,7 +7,8 @@
 
 #define Bit13Reg			8191
 #define CurrentMax			20.0f
-#define fWeight				.1
+#define CurrentMin			4.00f
+#define fWeight				.1f
 
 namespace MonitoringComponents {
 	class ModuleAnalogInput :public ModuleIOPin {
