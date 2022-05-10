@@ -34,18 +34,18 @@ namespace MonitoringComponents {
 			Ethernet.setGatewayIP(instance->config.gateway);
 			Ethernet.setSubnetMask(subnet);
 
-/* 			if (Ethernet.hardwareStatus() == EthernetHardwareStatus::EthernetNoHardware || Ethernet.linkStatus() == EthernetLinkStatus::LinkOFF) {
+ 			/*if (Ethernet.hardwareStatus() == EthernetHardwareStatus::EthernetNoHardware || Ethernet.linkStatus() == EthernetLinkStatus::LinkOFF) {
 				instance->initialized = false;
 				MonitoringLogger::LogError(F("Ethernet hardware or Ethernet Link not available"));
 				return;
 			} */
 			//
+			//byte macAddress[6] = { 0x60, 0x52, 0xD0, 0x06, 0x70, 0x7E }; 
  			if (Ethernet.begin(instance->config.mac,10000UL,4000UL)) { 
+				 //Ethernet.begin(macAddress)
 				//Ethernet.begin(instance->config.mac,instance->config.ip,10000UL,4000UL);				
 				instance->ethServer.begin();
-		
 				IPAddress address = Ethernet.localIP();	
-				//MonitoringLogger::LogInfo(
 				if (instance->modbusServer.begin()) {
 					instance->initialized = true;
 					int status[4]={0,0,0,0};
