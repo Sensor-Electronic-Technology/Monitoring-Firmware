@@ -157,6 +157,7 @@ namespace MonitoringComponents {
 		Action* action;
 		if (message.type != ActionType::Custom) {
 			action = this->actions[systemActMap[message.type]];
+			MonitoringLogger::LogInfo(F("Action: %d Channel: %d,%d"),action->Id(),message.channel.slot,message.channel.channel);
 		}else {
 			auto act = find_if(actions.begin(), actions.end(), [&](Action* act) {
 				return message.actionId == act->Id();

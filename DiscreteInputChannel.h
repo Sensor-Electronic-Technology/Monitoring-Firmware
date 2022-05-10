@@ -7,6 +7,7 @@
 #include "Callbacks.h"
 #include "MonitoringComponent.h"
 #include "Configuration.h"
+#include "Timer.h"
 
 
 
@@ -39,6 +40,7 @@ namespace MonitoringComponents {
 		bool triggered;
 		DigitalAlert alert;
 		bool connected; 
+		//Timer printTimer;
 		DigitalInConfiguration configuration;
 		ChannelCallback	_on_state_change;
 		void privateLoop();

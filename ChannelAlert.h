@@ -39,7 +39,7 @@ namespace MonitoringComponents {
 		float setPointFactor;
 
 		bool Check(float value) {
-			return value >= (this->setPoint-AlertDeviation);
+			return value >= (this->setPoint-(this->setPoint*0.002f));
 		}
 
 		AnalogAlert& operator=(const AnalogAlert& rhs) {

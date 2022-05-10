@@ -8,18 +8,19 @@ namespace MonitoringComponents {
 				if(this->configuration.connected){
 					this->Read();
 					ModbusService::Update(this->modbusAddress, this->sensorValue*this->analogFactor);
+					
 					this->CheckProcessAlerts();
 				}else{
 					ModbusService::Update(this->modbusAddress,uint16_t(0));
 					ModbusService::Update(this->alertModAddress,uint16_t(0));
 				}
 			},UPDATEPERIOD);
-		// this->readTimer.onInterval([&](){
-		// 	std::cout<<"A"<<this->modbusAddress.address<<": ("<<this->currentValue<<","<<this->sensorValue<<")"<<std::endl;
+/* 		 this->readTimer.onInterval([&](){
+		 	std::cout<<"A"<<this->modbusAddress.address<<": ("<<this->currentValue<<","<<this->sensorValue<<")"<<std::endl;
 
-		// },1000);
+		 },1000); */
 		RegisterChild(this->updateTimer);
-		// RegisterChild(this->readTimer);
+		//RegisterChild(this->readTimer);
 		for(int i=0;i<100;i++){
     		this->Read();
 		}

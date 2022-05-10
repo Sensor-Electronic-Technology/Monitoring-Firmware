@@ -10,6 +10,21 @@ namespace MonitoringComponents {
 	}
 
 	void DiscreteInputChannel::Initialize() {	
+/* 		this->printTimer.onInterval([&](){
+			switch(this->configuration.triggerOn){
+				case TriggerOn::High:
+					std::cout<<"D"<<this->modbusAddress.address<<" TriggerOn: "<<"High"<<" IsTriggered: "<<this->isTriggered()<<std::endl;
+					break;
+				case TriggerOn::Low:
+					std::cout<<"D"<<this->modbusAddress.address<<" TriggerOn: "<<"Low"<<" IsTriggered: "<<this->isTriggered()<<std::endl;
+					break;
+				default:
+					std::cout<<"D"<<this->modbusAddress.address<<" TriggerOn: "<<"Error"<<" IsTriggered: "<<this->isTriggered()<<std::endl;
+					break;
+			}
+		 	
+		 },1000);
+	    RegisterChild(this->printTimer); */
 		bool state = this->isTriggered();
 		ModbusService::Update(this->modbusAddress,state);
 		if(this->connected && this->alert.enabled){

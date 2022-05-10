@@ -342,6 +342,7 @@ namespace MonitoringComponents {
                         DigitalAlert alert;
                         JsonObject Alert = elem[F("Alert")];
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
+                        config.triggerOn=alert.triggerOn;
                         alert.actionId = Alert[F("Action")];
                         alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
                         alert.bypass = Alert[F("Bypass")].as<bool>();
