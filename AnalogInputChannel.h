@@ -47,7 +47,7 @@ namespace MonitoringComponents {
 		ModbusAddress modbusAddress;
 		ModbusAddress alertModAddress;
 		AnalogInConfiguration configuration;
-		uint16_t analogFactor;
+		int16_t analogFactor;
 		float maxSensor=0.00f;
 		float minSensor=0.00f;
 

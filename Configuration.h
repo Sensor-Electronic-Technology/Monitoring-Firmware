@@ -137,7 +137,7 @@ namespace MonitoringComponents {
 
         float slope;
         float offset;
-        int analogFactor;
+        int16_t analogFactor;
         ModbusAddress channelAddress;
         ModbusAddress alertAddress;
         AnalogAlert alert1;
