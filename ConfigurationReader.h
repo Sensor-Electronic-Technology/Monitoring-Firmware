@@ -9,8 +9,6 @@
 #include "DiscreteVirtualChannel.h"
 #include "Configuration.h"
 
-
-
 namespace MonitoringComponents {
 
     class ConfigurationReader {
@@ -36,7 +34,6 @@ namespace MonitoringComponents {
        std::vector<AnalogInConfiguration> DeserializeAnalogConfig();
        std::vector<OutputConfiguration> DeserializeOutputConfig();
        std::vector<DigitalInConfiguration> DeserializeDigitalConfig();
-       std::vector<const char*> DeserializeModuleConfig();
        std::vector<ActionConfiguration> DeserializeActions();
        std::vector<VirtualDigitalConfiguration> DeserializeVirtualConfig();
        NetConfiguration DeserializeNetConfiguration();

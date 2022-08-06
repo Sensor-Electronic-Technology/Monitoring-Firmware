@@ -11,7 +11,6 @@ namespace MonitoringComponents {
 	public:
 		int actionId;
 		bool enabled;
-		bool bypass;
 		bool activated;
 		ActionType actionType;
 
@@ -23,7 +22,6 @@ namespace MonitoringComponents {
 			this->actionId = rhs.actionId;
 			this->activated = rhs.activated;
 			this->enabled = rhs.enabled;
-			this->bypass = rhs.bypass;
 			this->actionType = rhs.actionType;
 			return *this;
 		}
@@ -36,16 +34,18 @@ namespace MonitoringComponents {
 	class AnalogAlert :public ChannelAlert {
 	public:
 		float setPoint;
-		float setPointFactor;
 
 		bool Check(float value) {
-			return value >= (this->setPoint-(this->setPoint*0.002f));
+			if(this->enabled){
+				return value >= (this->setPoint-(this->setPoint*0.002f));	
+			}else{
+				return false;
+			}
 		}
 
 		AnalogAlert& operator=(const AnalogAlert& rhs) {
 			ChannelAlert::operator=(rhs);
 			this->setPoint = rhs.setPoint;
-			this->setPointFactor = rhs.setPointFactor;
 			return *this;
 		}
 	};

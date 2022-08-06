@@ -27,12 +27,9 @@ namespace MonitoringComponents {
 			this->channel->SetOutput(this->OffLevel);
 		}
 
-		~ActionOutput() {
-			//delete this->channel;
-		}
+		~ActionOutput() { }
 
 	private:
-		//ChannelAddress channelAddress;
 		State OnLevel;
 		State OffLevel;
 		Ref<DiscreteOutputChannel> channel;

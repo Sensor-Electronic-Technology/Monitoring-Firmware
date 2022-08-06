@@ -127,7 +127,6 @@ namespace MonitoringComponents {
                 this->slope = rhs.slope;
                 this->offset = rhs.offset;
                 this->analogFactor = rhs.analogFactor;
-                this->bypassAlerts = rhs.bypassAlerts;
                 this->alert1 = rhs.alert1;
                 this->alert2 = rhs.alert2;
                 this->alert3 = rhs.alert3;
@@ -143,7 +142,6 @@ namespace MonitoringComponents {
         AnalogAlert alert1;
         AnalogAlert alert2;
         AnalogAlert alert3;
-        bool bypassAlerts;
     };
 
     class OutputConfiguration :public Configuration {
@@ -214,8 +212,6 @@ namespace MonitoringComponents {
         State onLevel3;
         State offLevel3;
 
-        State startState;
-        OutputType type;
         ModbusAddress modbusAddress;
 
         const ActionConfiguration& operator=(const ActionConfiguration& rhs) {
@@ -231,8 +227,6 @@ namespace MonitoringComponents {
                 this->addr3 = rhs.addr3;
                 this->onLevel3 = rhs.onLevel3;
                 this->offLevel3 = rhs.offLevel3;
-                this->startState = rhs.startState;
-                this->type = rhs.type;
                 this->modbusAddress = rhs.modbusAddress;
             }
             return *this;

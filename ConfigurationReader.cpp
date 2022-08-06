@@ -44,7 +44,7 @@ namespace MonitoringComponents {
                     this->SetSize(lineCount, value.toInt());
                     lineCount++;
                     value = "";
-                    if (lineCount > 6) {
+                    if (lineCount > 5) {
                         break;
                     }
                 }else {
@@ -97,11 +97,6 @@ namespace MonitoringComponents {
         if (file) {
             std::cout << NetConfigFile << " Created!" << std::endl;
             file.close();
-        }
-
-        file = SD.open(ModuleFile, FILE_WRITE);
-        if (file) {
-            std::cout << ModuleFile << "Created!" << std::endl;
         }
 
         file = SD.open(SizeFile, FILE_WRITE);
@@ -167,14 +162,9 @@ namespace MonitoringComponents {
                 this->NetConfigSize = value;
                 break;
             }
-
             case 5: {
                 this->VirtualSize = value;
                 break;
-            }
-
-            case 6:{
-                this->ModuleSize = value;
             }
         }
     }
@@ -218,40 +208,31 @@ namespace MonitoringComponents {
                         int reg = elem[F("Register")];
                         float slope = elem[F("Slope")].as<float>();
                         float offset = elem[F("Offset")].as<float>();
-
-                        int analogFactor = elem[F("AnalogFactor")];
-                        int bypassAlerts = elem[F("BypassAlerts")];
+                        int analogFactor = elem[F("AnalogFactor")];      
                         int connected = elem[F("Connected")];
                         
                         AnalogInConfiguration config(input,address, modbusAddress,alertAddress, connected);
                         config.slope = slope;
                         config.offset = offset;
-                        config.bypassAlerts = bypassAlerts;
                         config.analogFactor = analogFactor;
 
                         JsonObject A1 = elem[F("A1")];
                         alert1.setPoint = A1[F("Setpoint")];
                         alert1.actionId = A1[F("Action")];
                         alert1.actionType=(ActionType)A1[F("ActionType")].as<int>();
-                        alert1.bypass = A1[F("Bypass")];
                         alert1.enabled = A1[F("Enabled")];
-                        alert1.setPointFactor = 1;
 
                         JsonObject A2 = elem[F("A2")];
                         alert2.setPoint = A2[F("Setpoint")];
                         alert2.actionId = A2[F("Action")];
                         alert2.actionType=(ActionType)A2[F("ActionType")].as<int>();
-                        alert2.bypass = A2[F("Bypass")];
                         alert2.enabled = A2[F("Enabled")];
-                        alert2.setPointFactor = 1;
 
                         JsonObject A3 = elem["A3"];
                         alert3.setPoint = A3[F("Setpoint")];
                         alert3.actionId = A3[F("Action")];
                         alert3.actionType=(ActionType)A3[F("ActionType")].as<int>();
-                        alert3.bypass = A3[F("Bypass")];
                         alert3.enabled = A3[F("Enabled")];
-                        alert3.setPointFactor = 1;
 
                         config.alert1 = alert1;
                         config.alert2 = alert2;
@@ -345,7 +326,6 @@ namespace MonitoringComponents {
                         config.triggerOn=alert.triggerOn;
                         alert.actionId = Alert[F("Action")];
                         alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
-                        alert.bypass = Alert[F("Bypass")].as<bool>();
                         alert.enabled = Alert[F("Enabled")].as<bool>();   
                         if (alert.actionId == -1 || ((int)alert.actionType < 1 || (int)alert.actionType>6)) {
                             alert.enabled = false;
@@ -400,7 +380,6 @@ namespace MonitoringComponents {
                         alert.triggerOn = (Alert[F("TriggerOn")].as<bool>() == true) ? TriggerOn::High : TriggerOn::Low;
                         alert.actionId = Alert[F("Action")];
                         alert.actionType = (ActionType)Alert[F("ActionType")].as<int>();
-                        alert.bypass = Alert[F("Bypass")].as<bool>();
                         alert.enabled = Alert[F("Enabled")].as<bool>();
                         if (alert.actionId == -1 || ((int)alert.actionType < 1 || (int)alert.actionType>6)) {
                             alert.enabled = false;
@@ -419,32 +398,6 @@ namespace MonitoringComponents {
         } else {
             std::cout << "Error: VirtualDiscreteInput File size is 0, failed to reas configuration" << endl;
             return configurations;
-        }
-    }
-
-    std::vector<const char*> ConfigurationReader::DeserializeModuleConfig() {
-        DynamicJsonDocument doc(this->ModuleSize);
-        std::vector<const char*> modules;
-        File file = SD.open(ModuleFile);
-        if (file) {
-            DeserializationError error = deserializeJson(doc, file);
-            if (error) {
-                file.close();
-                doc.garbageCollect();
-                return modules;
-            }
-            else {
-                int size = doc.as<JsonArray>().size();
-                for (auto elem : doc.as<JsonArray>()) {
-                    const char* mod = doc[F("Module")];
-                    modules.push_back(mod);
-                }
-                file.close();
-                doc.garbageCollect();
-                return modules;
-            }
-        }else {
-            return modules;
         }
     }
 
@@ -484,8 +437,7 @@ namespace MonitoringComponents {
             config.onLevel3 = (O3[F("OnLevel")].as<bool>() == true) ? State::High : State::Low;
             config.offLevel3 = (O3[F("OffLevel")].as<bool>() == true) ? State::High : State::Low;
 
-            config.startState= (elem[F("Start State")].as<bool>()==true)? State::High:State::Low;
-            config.type = (OutputType)elem[F("OutputType")];
+
             config.modbusAddress.address = elem[F("Register")];
             config.modbusAddress.type = RegisterType::DiscreteInput;
             actions.push_back(config);

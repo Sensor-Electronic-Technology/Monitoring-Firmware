@@ -59,6 +59,7 @@
         "queue": "cpp",
         "set": "cpp",
         "stack": "cpp",
-        "string_iostream": "cpp"
+        "string_iostream": "cpp",
+        "random": "cpp"
     }
 }

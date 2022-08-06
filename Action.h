@@ -13,7 +13,6 @@ namespace MonitoringComponents {
 		Action(ActionConfiguration configuration):address(configuration.modbusAddress) {
 			this->actionId = configuration.actionId;
 			this->actionType = configuration.actionType;
-			this->initialState = configuration.startState;
 			this->output1 = nullptr;
 			this->output2 = nullptr;
 			this->output3 = nullptr;
@@ -70,8 +69,6 @@ namespace MonitoringComponents {
 	private:
 		int actionId;
 		ActionType actionType;
-		OutputType type;
-		State initialState;
 		ModbusAddress address;
 		ActionOutput* output1;
 		ActionOutput* output2;
