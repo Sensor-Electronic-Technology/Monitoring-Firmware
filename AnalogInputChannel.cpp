@@ -28,7 +28,7 @@ namespace MonitoringComponents {
 			ModbusService::Update(this->modbusAddress,uint16_t(0));
 			ModbusService::Update(this->alertModAddress,uint16_t(0));
 		}else{
-			if (alert3.Check(this->sensorValue) && alert3.enabled) {
+			if (alert3.Check(this->sensorValue)) {
 				ChannelMessage message;
 				message.actionId = alert3.actionId;
 				message.channelAction = ChannelAction::Trigger;
@@ -37,7 +37,7 @@ namespace MonitoringComponents {
 				alert3.activated = true;
 				ModbusService::Update(this->alertModAddress,uint16_t(alert3.actionType));
 				_on_channel_trigger(message);
-			}else if(alert2.Check(this->sensorValue) && alert2.enabled) {
+			}else if(alert2.Check(this->sensorValue)) {
 				ChannelMessage message;
 				message.actionId = alert2.actionId;
 				message.channelAction = ChannelAction::Trigger;
@@ -46,7 +46,7 @@ namespace MonitoringComponents {
 				alert2.activated = true;
 				ModbusService::Update(this->alertModAddress,uint16_t(alert2.actionType));
 				_on_channel_trigger(message);
-			} else if (alert1.Check(this->sensorValue) && alert1.enabled) {
+			} else if (alert1.Check(this->sensorValue)) {
 				ChannelMessage message;
 				message.actionId = alert1.actionId;
 				message.channelAction = ChannelAction::Trigger;
@@ -93,7 +93,7 @@ namespace MonitoringComponents {
 				ModbusService::Update(this->alertModAddress,uint16_t(alert3.actionType));
 				_on_channel_trigger(message);
 			}
-		} else if(this->sensorValue<alert3.setPoint && alert2.Check(this->sensorValue)) {
+		} else if(alert3.CheckAgainst(this->sensorValue) && alert2.Check(this->sensorValue)) {
 			if(alert3) {
 				alert3.activated = false;
 				ChannelMessage message;
@@ -122,7 +122,7 @@ namespace MonitoringComponents {
 				ModbusService::Update(this->alertModAddress,uint16_t(alert2.actionType));
 				_on_channel_trigger(message);
 			}
-		} else if(this->sensorValue<alert2.setPoint && alert1.Check(this->sensorValue)) {
+		} else if(alert2.CheckAgainst(this->sensorValue) && alert1.Check(this->sensorValue)) {
 			if(alert3) {
 				alert3.activated = false;
 				ChannelMessage message;

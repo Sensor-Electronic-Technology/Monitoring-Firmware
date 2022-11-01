@@ -139,6 +139,7 @@ namespace MonitoringComponents {
         int16_t analogFactor;
         ModbusAddress channelAddress;
         ModbusAddress alertAddress;
+        
         AnalogAlert alert1;
         AnalogAlert alert2;
         AnalogAlert alert3;

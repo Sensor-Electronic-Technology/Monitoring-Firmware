@@ -50,6 +50,11 @@ namespace MonitoringComponents {
 		Input=4
 	};
 
+	enum class CheckType {
+		LessThan=1,
+		GreaterThan=0
+	};
+
 	struct ModbusAddress {
 	public:
 		int address;

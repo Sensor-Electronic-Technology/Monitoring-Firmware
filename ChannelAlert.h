@@ -34,18 +34,34 @@ namespace MonitoringComponents {
 	class AnalogAlert :public ChannelAlert {
 	public:
 		float setPoint;
+		CheckType checkType;
 
 		bool Check(float value) {
 			if(this->enabled){
-				return value >= (this->setPoint-(this->setPoint*0.002f));	
+				if(checkType==CheckType::GreaterThan){
+					return value >= (this->setPoint-(this->setPoint*0.002f));	
+				}else{
+					return value <= (this->setPoint+(this->setPoint*0.002f));
+				}
 			}else{
 				return false;
+			}
+		}
+
+		bool CheckAgainst(float value){
+			if(this->enabled){
+				if(this->checkType==CheckType::GreaterThan){
+					return value < this->setPoint;
+				}else{
+					return value > this->setPoint;
+				}
 			}
 		}
 
 		AnalogAlert& operator=(const AnalogAlert& rhs) {
 			ChannelAlert::operator=(rhs);
 			this->setPoint = rhs.setPoint;
+			this->checkType=rhs.checkType;
 			return *this;
 		}
 	};

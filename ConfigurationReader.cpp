@@ -219,18 +219,21 @@ namespace MonitoringComponents {
                         JsonObject A1 = elem[F("A1")];
                         alert1.setPoint = A1[F("Setpoint")];
                         alert1.actionId = A1[F("Action")];
+                        alert1.checkType=(CheckType)A1[F("CheckType")].as<int>();
                         alert1.actionType=(ActionType)A1[F("ActionType")].as<int>();
                         alert1.enabled = A1[F("Enabled")];
 
                         JsonObject A2 = elem[F("A2")];
                         alert2.setPoint = A2[F("Setpoint")];
                         alert2.actionId = A2[F("Action")];
+                        alert2.checkType=(CheckType)A1[F("CheckType")].as<int>();
                         alert2.actionType=(ActionType)A2[F("ActionType")].as<int>();
                         alert2.enabled = A2[F("Enabled")];
 
                         JsonObject A3 = elem["A3"];
                         alert3.setPoint = A3[F("Setpoint")];
                         alert3.actionId = A3[F("Action")];
+                        alert3.checkType=(CheckType)A1[F("CheckType")].as<int>();
                         alert3.actionType=(ActionType)A3[F("ActionType")].as<int>();
                         alert3.enabled = A3[F("Enabled")];
 
